@@ -1,5 +1,5 @@
 >>SE single cell
-LandisData	"NECN Succession"
+LandisData	"NECN Succession DAMM"
 Timestep  5
 
 SeedingAlgorithm  WardSeedDispersal

@@ -19,7 +19,7 @@ namespace Landis.Extension.Succession.NECN
     public class PlugIn
         : Landis.Library.Succession.ExtensionBase
     {
-        public static readonly string ExtensionName = "NECN Succession";
+        public static readonly string ExtensionName = "NECN Succession DAMM";
         private static ICore modelCore;
         public static IInputParameters Parameters;
         public static double[] ShadeLAI;
