@@ -98,14 +98,14 @@ namespace Landis.Extension.Succession.NECN
             Util.ReadWiltingPointMap(Parameters.SoilWiltingPointMapName);
             Util.ReadPercentSandMap(Parameters.SoilPercentSandMapName);
             Util.ReadPercentClayMap(Parameters.SoilPercentClayMapName);
-            Util.ReadSoilCNMaps(Parameters.InitialSOM1CSurfaceMapName, 
+            Util.ReadSoilCNMaps(Parameters.InitialSOM1CSurfaceMapName,
                 Parameters.InitialSOM1NSurfaceMapName,
                 Parameters.InitialSOM1CSoilMapName,
-                Parameters.InitialSOM1NSoilMapName,
-                Parameters.InitialSOM2CMapName,
-                Parameters.InitialSOM2NMapName,
-                Parameters.InitialSOM3CMapName,
-                Parameters.InitialSOM3NMapName);
+                Parameters.InitialSOM1NSoilMapName);
+                //Parameters.InitialSOM2CMapName,
+                //Parameters.InitialSOM2NMapName,
+                //Parameters.InitialSOM3CMapName,
+                //Parameters.InitialSOM3NMapName);
             Util.ReadDeadWoodMaps(Parameters.InitialDeadSurfaceMapName, Parameters.InitialDeadSoilMapName);
 
             ShadeLAI = Parameters.MaximumShadeLAI; 

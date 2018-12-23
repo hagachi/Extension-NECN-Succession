@@ -10,7 +10,7 @@ using Landis.SpatialModeling;
 namespace Landis.Extension.Succession.NECN
 {
 
-    public enum LayerName {Leaf, FineRoot, Wood, CoarseRoot, Metabolic, Structural, SOM1, SOM2, SOM3, Other};
+    public enum LayerName {Leaf, FineRoot, Wood, CoarseRoot, Metabolic, Structural, SOM1, Other};
     public enum LayerType {Surface, Soil, Other} 
 
     /// <summary>
@@ -208,11 +208,11 @@ namespace Landis.Extension.Succession.NECN
             }
         }
         // --------------------------------------------------
+        // Decomposition of compartment lignin
         public void DecomposeLignin(double totalCFlow, ActiveSite site)
-        // Originally from declig.f for decomposition of compartment lignin
         {
             double carbonToSOM1;    //Net C flow to SOM1
-            double carbonToSOM2;    //Net C flow to SOM2
+            //double carbonToSOM2;    //Net C flow to SOM2
             double litterC = this.Carbon; 
             double ratioCN = litterC / this.Nitrogen;
 
@@ -227,26 +227,27 @@ namespace Landis.Extension.Succession.NECN
                 // Decompose Wood Object to SOM2
                 // -----------------------
                 // Gross C flow to som2
-                carbonToSOM2 = totalCFlow * this.FractionLignin;
+                //carbonToSOM2 = totalCFlow * this.FractionLignin;
 
-                //MicrobialRespiration associated with decomposition to som2
-                double co2loss = carbonToSOM2 * OtherData.LigninRespirationRate;
+                ////MicrobialRespiration associated with decomposition to som2
+                //double co2loss = carbonToSOM2 * OtherData.LigninRespirationRate;
 
-                this.Respiration(co2loss, site);
+                //this.Respiration(co2loss, site);
 
-                //Net C flow to SOM2
-                double netCFlow = carbonToSOM2 - co2loss;
+                ////Net C flow to SOM2
+                //double netCFlow = carbonToSOM2 - co2loss;
 
-                // Partition and schedule C flows 
-                this.TransferCarbon(SiteVars.SOM2[site], netCFlow);
-                this.TransferNitrogen(SiteVars.SOM2[site], netCFlow, litterC, ratioCN, site);
+                //// Partition and schedule C flows 
+                //this.TransferCarbon(SiteVars.SOM2[site], netCFlow);
+                //this.TransferNitrogen(SiteVars.SOM2[site], netCFlow, litterC, ratioCN, site);
                 //PlugIn.ModelCore.UI.WriteLine("Decompose1.  MineralN={0:0.00}.", SiteVars.MineralN[site]);
 
                 // ----------------------------------------------
                 // Decompose Wood Object to SOM1
                 // Gross C flow to som1
 
-                carbonToSOM1 = totalCFlow - carbonToSOM2 - co2loss;
+                carbonToSOM1 = totalCFlow; // - carbonToSOM2 - co2loss;
+                double co2loss = 0.0;
 
                 //MicrobialRespiration associated with decomposition to som1
                 if(this.Type == LayerType.Surface)
@@ -402,22 +403,14 @@ namespace Landis.Extension.Succession.NECN
                //     where immobileN is the extra N needed from the mineral pool
                 double immobileN = (CFlow / ratioCNtoDestination) - NFlow;
                 
-                //PlugIn.ModelCore.UI.WriteLine("     CFlow={0:0.000}, totalC={1:0.000}", CFlow, totalC);
-               
-               // PlugIn.ModelCore.UI.WriteLine("     this.Name={0}, this.Type={1}", this.Name, this.Type);
-                //PlugIn.ModelCore.UI.WriteLine("     NFlow={0:0.000}, SourceN={1:0.000},CNdestination={2:0}", NFlow, this.Nitrogen,ratioCNtoDestination);
-
-                //PlugIn.ModelCore.UI.WriteLine("CalculatingImmobil.  MineralN={0:0.00}.", SiteVars.MineralN[site]);
-                //...Schedule flow from Box A to Box B (outofa)
-                //flow(anps,bnps,time,outofa);
+                //...Schedule flow from Box A to Box B
                 this.Nitrogen -= NFlow;
                 destination.Nitrogen += NFlow;
 
                 //PlugIn.ModelCore.UI.WriteLine("NFlow.  MineralN={0:0.00}, ImmobileN={1:0.000}.", SiteVars.MineralN[site],immobileN);
 
                 // Schedule flow from mineral pool to Box B (immobileN)
-                // flow(labile,bnps,time,immflo);
-                //Don't allow mineral N to go to zero or negative.- ML
+                // Don't allow mineral N to go to zero or negative.- ML
                 
                 if (immobileN > SiteVars.MineralN[site])
                     immobileN = SiteVars.MineralN[site] - 0.01; //leave some small amount of mineral N
@@ -612,7 +605,6 @@ namespace Landis.Extension.Succession.NECN
 
         public static double BelowgroundDecompositionRatio(ActiveSite site, double minCNenter, double maxCNenter, double minContentN)
         {
-            //Originally from bgdrat.f
             //BelowGround Decomposition RATio computation.
             double bgdrat = 0.0;
 
@@ -633,12 +625,12 @@ namespace Landis.Extension.Succession.NECN
         }
 
         public static double AbovegroundDecompositionRatio(double abovegroundN, double abovegroundC)
-        {       //Originally from agdrat.f.
+        {       
 
             double Ncontent, agdrat;
             double biomassConversion = 2.0;
+            
             // cemicb = slope of the regression line for C/N of som1
-
             double cemicb = (OtherData.MinCNSurfMicrobes - OtherData.MaxCNSurfMicrobes) / OtherData.MinNContentCNSurfMicrobes;
 
 

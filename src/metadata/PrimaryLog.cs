@@ -87,18 +87,17 @@ namespace Landis.Extension.Succession.NECN
         [DataFieldAttribute(Unit = FieldUnits.g_C_m2, Desc = "Dead Fine RootMetabolic C", Format = "0.0")]
         public double C_DeadFRoot_Meta { get; set; }
 
-        //log.Write("C:SOM1surf, C:SOM1soil, C:SOM2, C:SOM3, ");
         [DataFieldAttribute(Unit = FieldUnits.g_C_m2, Desc = "SOM1 Surface C", Format = "0.0")]
         public double C_SOM1surf { get; set; }
 
         [DataFieldAttribute(Unit = FieldUnits.g_C_m2, Desc = "SOM1 Soil C", Format = "0.0")]
         public double C_SOM1soil { get; set; }
 
-        [DataFieldAttribute(Unit = FieldUnits.g_C_m2, Desc = "SOM2 C", Format = "0.0")]
-        public double C_SOM2 { get; set; }
+        //[DataFieldAttribute(Unit = FieldUnits.g_C_m2, Desc = "SOM2 C", Format = "0.0")]
+        //public double C_SOM2 { get; set; }
 
-        [DataFieldAttribute(Unit = FieldUnits.g_C_m2, Desc = "SOM3 C", Format = "0.0")]
-        public double C_SOM3 { get; set; }
+        //[DataFieldAttribute(Unit = FieldUnits.g_C_m2, Desc = "SOM3 C", Format = "0.0")]
+        //public double C_SOM3 { get; set; }
 
         //log.Write("N:CohortLeaf, N:CohortWood, N:DeadWood, N:DeadRoot, ");
         [DataFieldAttribute(Unit = FieldUnits.g_N_m2, Desc = "Leaf N", Format = "0.0")]
@@ -119,7 +118,6 @@ namespace Landis.Extension.Succession.NECN
         [DataFieldAttribute(Unit = FieldUnits.g_N_m2, Desc = "Dead Coarse Root N", Format = "0.0")]
         public double N_DeadCRoot { get; set; }
 
-        //log.Write("N:SurfStruc, N:SurfMeta, N:SoilStruc, N:SoilMeta, ");
         [DataFieldAttribute(Unit = FieldUnits.g_N_m2, Desc = "Dead Leaf Structural N", Format = "0.0")]
         public double N_DeadLeaf_Struc { get; set; }
 
@@ -132,20 +130,18 @@ namespace Landis.Extension.Succession.NECN
         [DataFieldAttribute(Unit = FieldUnits.g_N_m2, Desc = "Dead Fine Root Metabolic N", Format = "0.0")]
         public double N_DeadFRoot_Meta { get; set; }
 
-        //log.Write("N:SOM1surf, N:SOM1soil, N:SOM2, N:SOM3, ");
         [DataFieldAttribute(Unit = FieldUnits.g_N_m2, Desc = "SOM1 Surface N", Format = "0.0")]
         public double N_SOM1surf { get; set; }
 
         [DataFieldAttribute(Unit = FieldUnits.g_N_m2, Desc = "SOM1 Soil N", Format = "0.0")]
         public double N_SOM1soil { get; set; }
 
-        [DataFieldAttribute(Unit = FieldUnits.g_N_m2, Desc = "SOM2 N", Format = "0.0")]
-        public double N_SOM2 { get; set; }
+        //[DataFieldAttribute(Unit = FieldUnits.g_N_m2, Desc = "SOM2 N", Format = "0.0")]
+        //public double N_SOM2 { get; set; }
 
-        [DataFieldAttribute(Unit = FieldUnits.g_N_m2, Desc = "SOM3 N", Format = "0.0")]
-        public double N_SOM3 { get; set; }
+        //[DataFieldAttribute(Unit = FieldUnits.g_N_m2, Desc = "SOM3 N", Format = "0.0")]
+        //public double N_SOM3 { get; set; }
 
-        //log.Write("SurfStrucNetMin, SurfMetaNetMin, SoilStrucNetMin, SoilMetaNetMin, ");
         [DataFieldAttribute(Unit = FieldUnits.g_N_m2, Desc = "Surface Structural Net Mineralization", Format = "0.0")]
         public double SurfStrucNetMin { get; set; }
 
@@ -165,11 +161,11 @@ namespace Landis.Extension.Succession.NECN
         [DataFieldAttribute(Unit = FieldUnits.g_N_m2, Desc = "SOM1 Soil Net Mineralization", Format = "0.0")]
         public double SOM1soilNetMin { get; set; }
 
-        [DataFieldAttribute(Unit = FieldUnits.g_N_m2, Desc = "SOM2 Net Mineralization", Format = "0.0")]
-        public double SOM2NetMin { get; set; }
+        //[DataFieldAttribute(Unit = FieldUnits.g_N_m2, Desc = "SOM2 Net Mineralization", Format = "0.0")]
+        //public double SOM2NetMin { get; set; }
 
-        [DataFieldAttribute(Unit = FieldUnits.g_N_m2, Desc = "SOM3 Net Mineralization", Format = "0.0")]
-        public double SOM3NetMin { get; set; }
+        //[DataFieldAttribute(Unit = FieldUnits.g_N_m2, Desc = "SOM3 Net Mineralization", Format = "0.0")]
+        //public double SOM3NetMin { get; set; }
 
         [DataFieldAttribute(Unit = FieldUnits.g_N_m2, Desc = "Total Nitrogen Deposition per Timestep", Format = "0.00")]
         public double TotalNdep { get; set; }

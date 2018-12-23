@@ -140,21 +140,21 @@ namespace Landis.Extension.Succession.NECN
             ReadVar(som1NsoilMapName);
             parameters.InitialSOM1NSoilMapName = som1NsoilMapName.Value;
 
-            InputVar<string> som2CMapName = new InputVar<string>("InitialSOM2CMapName");
-            ReadVar(som2CMapName);
-            parameters.InitialSOM2CMapName = som2CMapName.Value;
+            //InputVar<string> som2CMapName = new InputVar<string>("InitialSOM2CMapName");
+            //ReadVar(som2CMapName);
+            //parameters.InitialSOM2CMapName = som2CMapName.Value;
 
-            InputVar<string> som2NMapName = new InputVar<string>("InitialSOM2NMapName");
-            ReadVar(som2NMapName);
-            parameters.InitialSOM2NMapName = som2NMapName.Value;
+            //InputVar<string> som2NMapName = new InputVar<string>("InitialSOM2NMapName");
+            //ReadVar(som2NMapName);
+            //parameters.InitialSOM2NMapName = som2NMapName.Value;
 
-            InputVar<string> som3CMapName = new InputVar<string>("InitialSOM3CMapName");
-            ReadVar(som3CMapName);
-            parameters.InitialSOM3CMapName = som3CMapName.Value;
+            //InputVar<string> som3CMapName = new InputVar<string>("InitialSOM3CMapName");
+            //ReadVar(som3CMapName);
+            //parameters.InitialSOM3CMapName = som3CMapName.Value;
 
-            InputVar<string> som3NMapName = new InputVar<string>("InitialSOM3NMapName");
-            ReadVar(som3NMapName);
-            parameters.InitialSOM3NMapName = som3NMapName.Value;
+            //InputVar<string> som3NMapName = new InputVar<string>("InitialSOM3NMapName");
+            //ReadVar(som3NMapName);
+            //parameters.InitialSOM3NMapName = som3NMapName.Value;
 
             InputVar<string> deadSurfMapName = new InputVar<string>("InitialDeadWoodSurfaceMapName");
             ReadVar(deadSurfMapName);
@@ -217,13 +217,13 @@ namespace Landis.Extension.Succession.NECN
             ReadVar(drsom1);
             parameters.SetDecayRateSOM1(drsom1.Value);
 
-            InputVar<double> drsom2 = new InputVar<double>("DecayRateSOM2");
-            ReadVar(drsom2);
-            parameters.SetDecayRateSOM2(drsom2.Value);
+            //InputVar<double> drsom2 = new InputVar<double>("DecayRateSOM2");
+            //ReadVar(drsom2);
+            //parameters.SetDecayRateSOM2(drsom2.Value);
 
-            InputVar<double> drsom3 = new InputVar<double>("DecayRateSOM3");
-            ReadVar(drsom3);
-            parameters.SetDecayRateSOM3(drsom3.Value);
+            //InputVar<double> drsom3 = new InputVar<double>("DecayRateSOM3");
+            //ReadVar(drsom3);
+            //parameters.SetDecayRateSOM3(drsom3.Value);
 
             InputVar<string> anppMaps = new InputVar<string>("ANPPMapNames");
             if (ReadOptionalVar(anppMaps))

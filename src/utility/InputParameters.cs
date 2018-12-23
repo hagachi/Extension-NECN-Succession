@@ -34,10 +34,10 @@ namespace Landis.Extension.Succession.NECN
         private string initialSOM1NSurfaceMapName;
         private string initialSOM1CSoilMapName;
         private string initialSOM1NSoilMapName;
-        private string initialSOM2CMapName;
-        private string initialSOM2NMapName;
-        private string initialSOM3CMapName;
-        private string initialSOM3NMapName;
+        //private string initialSOM2CMapName;
+        //private string initialSOM2NMapName;
+        //private string initialSOM3CMapName;
+        //private string initialSOM3NMapName;
         private string initialDeadSurfaceMapName;
         private string initialDeadSoilMapName;
 
@@ -51,8 +51,8 @@ namespace Landis.Extension.Succession.NECN
         private double denitrif;
         private double decayRateSurf;
         private double decayRateSOM1;
-        private double decayRateSOM2;
-        private double decayRateSOM3;
+        //private double decayRateSOM2;
+        //private double decayRateSOM3;
         private double[] maximumShadeLAI;
         private double initMineralN;
         private double initFineFuels;
@@ -450,21 +450,21 @@ namespace Landis.Extension.Succession.NECN
                 return decayRateSOM1;
             }
         }//---------------------------------------------------------------------
-        public double DecayRateSOM2
-        {
-            get
-            {
-                return decayRateSOM2;
-            }
-        }
-        //---------------------------------------------------------------------
-        public double DecayRateSOM3
-        {
-            get
-            {
-                return decayRateSOM3;
-            }
-        }
+        //public double DecayRateSOM2
+        //{
+        //    get
+        //    {
+        //        return decayRateSOM2;
+        //    }
+        //}
+        ////---------------------------------------------------------------------
+        //public double DecayRateSOM3
+        //{
+        //    get
+        //    {
+        //        return decayRateSOM3;
+        //    }
+        //}
         //-----------------------------------------------
         public double DenitrificationRate
         {
@@ -686,70 +686,70 @@ namespace Landis.Extension.Succession.NECN
         }
         //---------------------------------------------------------------------
 
-        public string InitialSOM2CMapName
-        {
-            get
-            {
-                return initialSOM2CMapName;
-            }
-            set
-            {
-                string path = value;
-                if (path.Trim(null).Length == 0)
-                    throw new InputValueException(path, "\"{0}\" is not a valid path.", path);
-                initialSOM2CMapName = value;
-            }
-        }
+        //public string InitialSOM2CMapName
+        //{
+        //    get
+        //    {
+        //        return initialSOM2CMapName;
+        //    }
+        //    set
+        //    {
+        //        string path = value;
+        //        if (path.Trim(null).Length == 0)
+        //            throw new InputValueException(path, "\"{0}\" is not a valid path.", path);
+        //        initialSOM2CMapName = value;
+        //    }
+        //}
 
-        //---------------------------------------------------------------------
+        ////---------------------------------------------------------------------
 
-        public string InitialSOM2NMapName
-        {
-            get
-            {
-                return initialSOM2NMapName;
-            }
-            set
-            {
-                string path = value;
-                if (path.Trim(null).Length == 0)
-                    throw new InputValueException(path, "\"{0}\" is not a valid path.", path);
-                initialSOM2NMapName = value;
-            }
-        }
-        //---------------------------------------------------------------------
+        //public string InitialSOM2NMapName
+        //{
+        //    get
+        //    {
+        //        return initialSOM2NMapName;
+        //    }
+        //    set
+        //    {
+        //        string path = value;
+        //        if (path.Trim(null).Length == 0)
+        //            throw new InputValueException(path, "\"{0}\" is not a valid path.", path);
+        //        initialSOM2NMapName = value;
+        //    }
+        //}
+        ////---------------------------------------------------------------------
 
-        public string InitialSOM3CMapName
-        {
-            get
-            {
-                return initialSOM3CMapName;
-            }
-            set
-            {
-                string path = value;
-                if (path.Trim(null).Length == 0)
-                    throw new InputValueException(path, "\"{0}\" is not a valid path.", path);
-                initialSOM3CMapName = value;
-            }
-        }
+        //public string InitialSOM3CMapName
+        //{
+        //    get
+        //    {
+        //        return initialSOM3CMapName;
+        //    }
+        //    set
+        //    {
+        //        string path = value;
+        //        if (path.Trim(null).Length == 0)
+        //            throw new InputValueException(path, "\"{0}\" is not a valid path.", path);
+        //        initialSOM3CMapName = value;
+        //    }
+        //}
 
-        //---------------------------------------------------------------------
+        ////---------------------------------------------------------------------
 
-        public string InitialSOM3NMapName
-        {
-            get
-            {
-                return initialSOM3NMapName;
-            }
-            set
-            {
-                string path = value;
-                if (path.Trim(null).Length == 0)
-                    throw new InputValueException(path, "\"{0}\" is not a valid path.", path);
-                initialSOM3NMapName = value;
-            }
-        }
+        //public string InitialSOM3NMapName
+        //{
+        //    get
+        //    {
+        //        return initialSOM3NMapName;
+        //    }
+        //    set
+        //    {
+        //        string path = value;
+        //        if (path.Trim(null).Length == 0)
+        //            throw new InputValueException(path, "\"{0}\" is not a valid path.", path);
+        //        initialSOM3NMapName = value;
+        //    }
+        //}
         //---------------------------------------------------------------------
 
         public string InitialDeadSurfaceMapName
@@ -973,15 +973,15 @@ namespace Landis.Extension.Succession.NECN
             decayRateSOM1 = CheckBiomassParm(newValue, 0.0, 10.0);
         }
         //---------------------------------------------------------------------
-        public void SetDecayRateSOM2(InputValue<double> newValue)
-        {
-            decayRateSOM2 = CheckBiomassParm(newValue, 0.0, 1.0);
-        }
-        //---------------------------------------------------------------------
-        public void SetDecayRateSOM3(InputValue<double> newValue)
-        {
-            decayRateSOM3 = CheckBiomassParm(newValue, 0.0, 1.0);
-        }
+        //public void SetDecayRateSOM2(InputValue<double> newValue)
+        //{
+        //    decayRateSOM2 = CheckBiomassParm(newValue, 0.0, 1.0);
+        //}
+        ////---------------------------------------------------------------------
+        //public void SetDecayRateSOM3(InputValue<double> newValue)
+        //{
+        //    decayRateSOM3 = CheckBiomassParm(newValue, 0.0, 1.0);
+        //}
         //---------------------------------------------------------------------
         public void SetDenitrif(InputValue<double> newValue)
         {

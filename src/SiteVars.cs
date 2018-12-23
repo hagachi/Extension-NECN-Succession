@@ -34,8 +34,8 @@ namespace Landis.Extension.Succession.NECN
         // Soil layers
         private static ISiteVar<Layer> som1surface;
         private static ISiteVar<Layer> som1soil;
-        private static ISiteVar<Layer> som2;
-        private static ISiteVar<Layer> som3;
+        //private static ISiteVar<Layer> som2;
+        //private static ISiteVar<Layer> som3;
         private static ISiteVar<int> soilDepth;
         private static ISiteVar<double> soilDrain;
         private static ISiteVar<double> soilBaseFlowFraction;
@@ -130,8 +130,8 @@ namespace Landis.Extension.Succession.NECN
             // Soil Layers
             som1surface         = PlugIn.ModelCore.Landscape.NewSiteVar<Layer>();
             som1soil            = PlugIn.ModelCore.Landscape.NewSiteVar<Layer>();
-            som2                = PlugIn.ModelCore.Landscape.NewSiteVar<Layer>();
-            som3                = PlugIn.ModelCore.Landscape.NewSiteVar<Layer>();
+            //som2                = PlugIn.ModelCore.Landscape.NewSiteVar<Layer>();
+            //som3                = PlugIn.ModelCore.Landscape.NewSiteVar<Layer>();
             soilDepth           = PlugIn.ModelCore.Landscape.NewSiteVar<int>();
             soilDrain           = PlugIn.ModelCore.Landscape.NewSiteVar<double>();
             soilBaseFlowFraction = PlugIn.ModelCore.Landscape.NewSiteVar<double>();
@@ -218,8 +218,8 @@ namespace Landis.Extension.Succession.NECN
                 soilMetabolic[site]         = new Layer(LayerName.Metabolic, LayerType.Soil);
                 som1surface[site]           = new Layer(LayerName.SOM1, LayerType.Surface);
                 som1soil[site]              = new Layer(LayerName.SOM1, LayerType.Soil);
-                som2[site]                  = new Layer(LayerName.SOM2, LayerType.Soil);
-                som3[site]                  = new Layer(LayerName.SOM3, LayerType.Soil);
+                //som2[site]                  = new Layer(LayerName.SOM2, LayerType.Soil);
+                //som3[site]                  = new Layer(LayerName.SOM3, LayerType.Soil);
                 
                 stream[site]                = new Layer(LayerName.Other, LayerType.Other);
                 sourceSink[site]            = new Layer(LayerName.Other, LayerType.Other);
@@ -325,8 +325,8 @@ namespace Landis.Extension.Succession.NECN
             
             SiteVars.SOM1surface[site].NetMineralization = 0.0;
             SiteVars.SOM1soil[site].NetMineralization = 0.0;
-            SiteVars.SOM2[site].NetMineralization = 0.0;
-            SiteVars.SOM3[site].NetMineralization = 0.0;
+            //SiteVars.SOM2[site].NetMineralization = 0.0;
+            //SiteVars.SOM3[site].NetMineralization = 0.0;
             SiteVars.AnnualNEE[site] = 0.0;
             SiteVars.Nvol[site] = 0.0;
             SiteVars.AnnualNEE[site] = 0.0;
@@ -448,23 +448,23 @@ namespace Landis.Extension.Succession.NECN
         /// <summary>
         /// The soil organic matter (SOM2) for the landscape's sites.
         /// </summary>
-        public static ISiteVar<Layer> SOM2
-        {
-            get {
-                return som2;
-            }
-        }
+        //public static ISiteVar<Layer> SOM2
+        //{
+        //    get {
+        //        return som2;
+        //    }
+        //}
         //---------------------------------------------------------------------
 
         /// <summary>
         /// The soil organic matter (SOM3) for the landscape's sites.
         /// </summary>
-        public static ISiteVar<Layer> SOM3
-        {
-            get {
-                return som3;
-            }
-        }
+        //public static ISiteVar<Layer> SOM3
+        //{
+        //    get {
+        //        return som3;
+        //    }
+        //}
         public static ISiteVar<int> SoilDepth {get{return soilDepth;}}
         public static ISiteVar<double> SoilDrain { get { return soilDrain; } }
         public static ISiteVar<double> SoilBaseFlowFraction { get { return soilBaseFlowFraction; } }

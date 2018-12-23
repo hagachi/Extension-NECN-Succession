@@ -29,10 +29,10 @@ namespace Landis.Extension.Succession.NECN
         string InitialSOM1NSurfaceMapName { get; set; }
         string InitialSOM1CSoilMapName { get; set; }
         string InitialSOM1NSoilMapName { get; set; }
-        string InitialSOM2CMapName { get; set; }
-        string InitialSOM2NMapName { get; set; }
-        string InitialSOM3CMapName { get; set; }
-        string InitialSOM3NMapName { get; set; }
+        //string InitialSOM2CMapName { get; set; }
+        //string InitialSOM2NMapName { get; set; }
+        //string InitialSOM3CMapName { get; set; }
+        //string InitialSOM3NMapName { get; set; }
         string InitialDeadSurfaceMapName { get; set; }
         string InitialDeadSoilMapName { get; set; }
 
@@ -106,8 +106,8 @@ namespace Landis.Extension.Succession.NECN
         double Latitude {get;}
         double DecayRateSurf { get; }
         double DecayRateSOM1 { get; }
-        double DecayRateSOM2 { get; }
-        double DecayRateSOM3 { get; }
+        //double DecayRateSOM2 { get; }
+        //double DecayRateSOM3 { get; }
         double DenitrificationRate { get; }
         double InitialMineralN { get; }
         double InitialFineFuels { get; }

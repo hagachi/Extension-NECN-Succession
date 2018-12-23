@@ -27,8 +27,8 @@ namespace Landis.Extension.Succession.NECN
         // P2CO2 & P3CO2 - Controls flow from soil organic matter with intermediate turnover
         // to CO2 (fraction of C lost as CO2 during decomposition).
         // Values from ffix.100 file.
-        public const double FractionSOM2toCO2 = 0.55;
-        public const double FractionSOM3toCO2 = 0.55;
+        //public const double FractionSOM2toCO2 = 0.55;
+        //public const double FractionSOM3toCO2 = 0.55;
 
         public const double StructuralCN = 200;  // (RCESTR)
 
@@ -39,14 +39,12 @@ namespace Landis.Extension.Succession.NECN
         // DAMR(1,1) - Fraction of surface N absorbed by residue. Valid Range: 0.0 to 1.0
         // DAMRMN - Minimum C / N ratio allowed in residue after direct absorption.
         // PABRES - Amount of residue which will give maximum direct absorption of N (g C /m2).
-        // Values from the ffix.100 file
         public const double FractionSurfNAbsorbed    = 0.0;
         public const double MinResidueCN       = 15.0;
         public const double ResidueMaxDirectAbsorb  = 100.0;
 
         // Lignin Respiration Rate (RSPLIG)
         // Lignin Decay Effect (PLIGST)
-        // Values from the ffix.100 file.
         public const double LigninRespirationRate  = 0.3;
         public const double LigninDecayEffect   = 3.0;
 
@@ -56,13 +54,11 @@ namespace Landis.Extension.Succession.NECN
         // 'PPRPTS(2)': The effect of water content on the intercept, allows the user to
         //              increase the value of the intercept and thereby increase the slope of the line.
         // 'PPRPTS(3)': The lowest ratio of available water to PET at which there is no restriction on production.
-        // Values from ffix.100 file.
         public const double MoistureCurve1 = 0.0;
 
         // RAD1P:  C / N ratio of slow SOM formed from surface active pool.
         // Minimum allowable C / N used to calculate addition term for C / N
         // ratio of slow SOM formed from surface active pool.
-        // Values from ffix.100 file.
         public const double SurfaceActivePoolCNIntercept = 12.0;   // RAD1P(1,1)
         public const double SurfaceActivePoolCNSlope = 3.0;        //RAD1P(2,1)
         public const double SurfaceActivePoolCNMinimum = 5.0;      //RAD1P(3,1)
@@ -83,85 +79,67 @@ namespace Landis.Extension.Succession.NECN
         // soil organic matter with slow turnover (fraction of C from SOM1C to SOM3C).
         // PS1S3(2) - Slope for the effect of clay on the control of the flow from
         // soil organic matter with fast turnover to soil organic matter with slow turnover (fraction of C from SOM1C to SOM3C).
-        // Values from the ffix.100 file.
         public const double PS1S3_Intercept = 0.003;
         public const double PS1S3_Slope = 0.032;
 
         public const double PS2S3_Intercept = 0.003;
         public const double PS2S3_Slope = 0.009;
 
-        // OMLECH(1 & 2) Parameters for the effect of sand on leaching of organic compounds. Values from ffix.100 file and
-        // OMLECH(3) - The amount of water in centimeters (cm) that needs to flow
-        // out of water layer 2 to produce leaching of organics.
-        // OMLECH(3):  web site says 1.9; ffix.100 file says 60.0 ???
-        // website:  http://nrel.colostate.edu/projects/century5/reference/html/Century/param-fixed.htm
-        //public const double OMLeachWater   = 1.9;                      // Century:  OMLECH(3)  No longer used.
-        //public const double OMLeachSlope       = 0.12;                  // Century:  OMLECH(2)
-        //public const double OMLeachIntercept   = 0.03;                  // Century:  OMLECH(1)
+        // OMLECH(1 & 2) Parameters for the effect of sand on leaching of organic compounds. 
+        // OMLECH(3) - The amount of water in centimeters (cm) that needs to flow out of water layer 2 to produce leaching of organics.
         public const double OMLeachSlope = 0.25;                  // Adjusted after SoilWater was revamped in 11/2014
         public const double OMLeachIntercept = 0.0;                  // No leaching when there's no sand.  Adjusted after SoilWater was revamped in 11/2014
         
 
         // FLEACH(1 & 2) Parameters for the effect of sand on leaching of mineral N compounds. 
-        // FLEACH(3) - The amount of water in centimeters (cm) that needs to flow
-        // out of water layer 2 to produce leaching of organics.
-       // website:  http://nrel.colostate.edu/projects/century5/reference/html/Century/param-fixed.htm
+        // FLEACH(3) - The amount of water in centimeters (cm) that needs to flow out of water layer 2 to produce leaching of organics.
         
-        //public const double MineralLeachIntercept = 0.6;                  // Century:  FLEACH(1). 
-        //public const double NfracLeachWater = 0.95;                      // Century:  FLEACH(3) Value used before ML made changes in SoilWater.cs 
         public const double MineralLeachSlope = 0.05;                  // Modified parameter so DIN leaching was the correct order of magnitude
         public const double MineralLeachIntercept = 0.0;                  // Reduced intercept so no leaching now when percent sand = 0
-        //public const double NfracLeachWater = 0.25;                      // Reduced the fraction of NH4 leaching
         public const double NO3frac = 0.15;                      // Ratio of export to available N based on HBEF N budget
                        
-        // SPL:  Parameter for metabolic (vs. structural) split.
-        public const double MetaStructSplitIntercept   = 0.85;         // Century:  SPL(1)
-        public const double MetaStructSplitSlope   = 0.013;            // Century:  SPL(2)
+        public const double MetaStructSplitIntercept   = 0.85;         
+        public const double MetaStructSplitSlope   = 0.013;            
 
         // P1CO2 - determines CO2 loss from the surface and soil
-        // Values from ffix.100 file.
-        public const double P1CO2_Surface = 0.6; //P1CO2A(1)
-        public const double P1CO2_Soil_Intercept = 0.17; // P1CO2A(2)
-        public const double P1CO2_Soil_Slope = 0.68; //P1CO2B(2)
+        public const double P1CO2_Surface = 0.6; 
+        public const double P1CO2_Soil_Intercept = 0.17; 
+        public const double P1CO2_Soil_Slope = 0.68; 
 
         // PMCO2(1 and 2) - controls flow from surface/soil metabolic to CO2 (fraction of C lost as CO2 during decomposition).
-        // Values from ffix.100 file.
         public const double MetabolicToCO2Surface = 0.55;
         public const double MetabolicToCO2Soil = 0.55;
 
         // PS1CO2(1 and 2) Controls amount of CO2 loss when structural decomposes to SOM1.
-        // Values from ffix.100 file.
         public const double StructuralToCO2Surface = 0.45;
         public const double StructuralToCO2Soil = 0.55;
 
-        // VARAT1(1,1) - Maximum C / N ratio for material entering SOM1.
-        // VARAT1(2,1) - Minimum C / N ratio for material entering SOM1.
-        // VARAT1(3,1) - Amount N present when minimum ratio applies.
-        // Values from the ffix.100 file.
+        // Maximum C / N ratio for material entering SOM1.
+        // Minimum C / N ratio for material entering SOM1.
+        // Amount N present when minimum ratio applies.
         public const double MaxCNenterSOM1         = 18.0;
         public const double MinCNenterSOM1         = 8.0;
         public const double MinContentN_SOM1  = 2.0;
 
-        // VARAT2(1,1) - Maximum C / N ratio for material entering SOM2.
-        // VARAT2(2,1) - Minimum C / N ratio for material entering SOM2.
-        // VARAT2(3,1) - Amount N present when minimum ratio applies.
-        // Values from the ffix.100 file.
-        public const double MaxCNenterSOM2         = 40.0;
-        public const double MinCNenterSOM2         = 12.0;
-        public const double MinContentN_SOM2  = 2.0;
+        //// VARAT2(1,1) - Maximum C / N ratio for material entering SOM2.
+        //// VARAT2(2,1) - Minimum C / N ratio for material entering SOM2.
+        //// VARAT2(3,1) - Amount N present when minimum ratio applies.
+        //// Values from the ffix.100 file.
+        //public const double MaxCNenterSOM2         = 40.0;
+        //public const double MinCNenterSOM2         = 12.0;
+        //public const double MinContentN_SOM2  = 2.0;
 
-        // VARAT3(1,1) - Maximum C / N ratio for material entering SOM3.
-        // VARAT3(2,1) - Minimum C / N ratio for material entering SOM3.
-        // VARAT3(3,1) - Amount N present when minimum ratio applies.
-        // Values from the ffix.100 file.
-        public const double MaxCNenterSOM3         = 20.0;
-        public const double MinCNenterSOM3         = 6.0;
-        public const double MinContentN_SOM3  = 2.0;
+        //// VARAT3(1,1) - Maximum C / N ratio for material entering SOM3.
+        //// VARAT3(2,1) - Minimum C / N ratio for material entering SOM3.
+        //// VARAT3(3,1) - Amount N present when minimum ratio applies.
+        //// Values from the ffix.100 file.
+        //public const double MaxCNenterSOM3         = 20.0;
+        //public const double MinCNenterSOM3         = 6.0;
+        //public const double MinContentN_SOM3  = 2.0;
 
-        // PCEMIC(1,1) - Maximum C / N ratio for surface microbial pool.
-        // PCEMIC(2,1) - Minimum C / N ratio for surface microbial pool.
-        // PCEMIC(3,1) - Minimum N content of decomposing aboveground material,
-        // above which the C / N ratio of the surface microbes equals PCEMIC(2,*).
+        // Maximum C / N ratio for surface microbial pool.
+        // Minimum C / N ratio for surface microbial pool.
+        // Minimum N content of decomposing aboveground material, above which the C / N ratio of the surface microbes equals PCEMIC(2,*).
         
         public const double MaxCNSurfMicrobes          = 16.0;
         public const double MinCNSurfMicrobes          = 10.0;
@@ -176,7 +154,6 @@ namespace Landis.Extension.Succession.NECN
         
         // TMELT(1) - Minimum temperature above which at least some snow will melt.
         // TMELT(2) - Ratio between degrees above the minimum and centimeters of snow that will melt.
-        // Values from the ffix.100 file.
         public const double TMelt1 = -8.0;
         public const double TMelt2 = 4.0;
 
@@ -197,7 +174,6 @@ namespace Landis.Extension.Succession.NECN
         // TEFF(1) - Intercept value for determining the temperature component of DEFAC, the decomposition factor.
         // TEFF(2) - Slope value for determining the temperature component of DEFAC, the decomposition factor.
         // TEFF(3) - Exponent value for determining the temperature component of DEFAC, the decomposition factor.
-        /// from the ffix.100 file.
         public const double TemperatureEffectIntercept = 0.0;
         public const double TemperatureEffectSlope = 0.125;
         public const double TemperatureEffectExponent = 0.06;
@@ -209,9 +185,6 @@ namespace Landis.Extension.Succession.NECN
         public const double RatioPrecipPETMinimum = 3.0;
         public const double AnerobicEffectMinimum = 0.3;
 
-        //public const double MinDeadWoodCN = 50.0;
-
-        // dtm
         public const double MonthAdjust = 1.0;
 
         //---------------------------------------------------------------------
@@ -223,17 +196,17 @@ namespace Landis.Extension.Succession.NECN
             LitterType litterParmsSoil = new LitterType();
 
             // Structural decomposition rate, the fraction of the pool that turns over each year.
-            litterParmsSurface.DecayRateStrucC = 3.9;//DEC1(1)  
-            litterParmsSoil.DecayRateStrucC = 4.9; //DEC1(2)  
+            litterParmsSurface.DecayRateStrucC = 3.9;
+            litterParmsSoil.DecayRateStrucC = 4.9; 
 
             // Metabolic decomposition rate, the fraction of the pool that turns over each year.
-            litterParmsSurface.DecayRateMetabolicC = 1.48; //DEC2(1)  //modified assuming they meant, 'percentage'
-            litterParmsSoil.DecayRateMetabolicC = 1.85; //DEC2(2)  //modified assuming they meant, 'percentage'
+            litterParmsSurface.DecayRateMetabolicC = 1.48; 
+            litterParmsSoil.DecayRateMetabolicC = 1.85; 
 
             // Decomposition rate of organic matter with active turnover, the fraction of the pool
             // that turns over each year (SOM1)
-            litterParmsSurface.DecayRateMicrobes = 1.0; // 6.0; //DEC3(1)  set to 1.0 until meaning of 'fraction' is determined.
-            litterParmsSoil.DecayRateMicrobes = 1.0; // 7.3; //DEC3(2)  
+            litterParmsSurface.DecayRateMicrobes = 1.0; 
+            litterParmsSoil.DecayRateMicrobes = 1.0; 
 
             LitterParameters[0] = litterParmsSurface;
             LitterParameters[1] = litterParmsSoil;
