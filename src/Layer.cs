@@ -169,21 +169,21 @@ namespace Landis.Extension.Succession.NECN
         }
 
         // --------------------------------------------------
-        public Layer Clone()
-        {
-            Layer newLayer = new Layer(this.Name, this.Type);
+        //public Layer Clone()
+        //{
+        //    Layer newLayer = new Layer(this.Name, this.Type);
 
-            newLayer.carbon = this.carbon;
-            newLayer.nitrogen = this.nitrogen ;
+        //    newLayer.carbon = this.carbon;
+        //    newLayer.nitrogen = this.nitrogen ;
 
-            newLayer.decayValue = this.decayValue ;
-            newLayer.fractionLignin = this.fractionLignin ;
+        //    newLayer.decayValue = this.decayValue ;
+        //    newLayer.fractionLignin = this.fractionLignin ;
 
-            newLayer.netMineralization = this.netMineralization ;
-            newLayer.grossMineralization = this.grossMineralization ;
+        //    newLayer.netMineralization = this.netMineralization ;
+        //    newLayer.grossMineralization = this.grossMineralization ;
 
-            return newLayer;
-        }
+        //    return newLayer;
+        //}
 
         // --------------------------------------------------
         public void DecomposeStructural(ActiveSite site)
