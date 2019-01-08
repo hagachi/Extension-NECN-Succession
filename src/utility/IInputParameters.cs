@@ -25,8 +25,8 @@ namespace Landis.Extension.Succession.NECN
         string SoilWiltingPointMapName { get; set; }
         string SoilPercentSandMapName { get; set; }
         string SoilPercentClayMapName { get; set; }
-        string InitialSOM1CSurfaceMapName { get; set; }
-        string InitialSOM1NSurfaceMapName { get; set; }
+        //string InitialSOM1CSurfaceMapName { get; set; }
+        //string InitialSOM1NSurfaceMapName { get; set; }
         string InitialSOM1CSoilMapName { get; set; }
         string InitialSOM1NSoilMapName { get; set; }
         //string InitialSOM2CMapName { get; set; }
@@ -35,6 +35,8 @@ namespace Landis.Extension.Succession.NECN
         //string InitialSOM3NMapName { get; set; }
         string InitialDeadSurfaceMapName { get; set; }
         string InitialDeadSoilMapName { get; set; }
+        string SoilBulkDensityMapName { get; set; }
+        string SoilParticleDensityMapName { get; set; }
 
         bool CalibrateMode { get; set; }
         WaterType WType {get;set;}
@@ -104,13 +106,14 @@ namespace Landis.Extension.Succession.NECN
         double AtmosNslope {get;}
         double AtmosNintercept {get;}
         double Latitude {get;}
-        double DecayRateSurf { get; }
-        double DecayRateSOM1 { get; }
+        //double DecayRateSurf { get; }
+        //double DecayRateSOM1 { get; }
         //double DecayRateSOM2 { get; }
         //double DecayRateSOM3 { get; }
         double DenitrificationRate { get; }
         double InitialMineralN { get; }
         double InitialFineFuels { get; }
+        double FractionLitterDecayToDOC { get; }
    
         
     }

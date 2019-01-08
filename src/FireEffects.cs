@@ -186,18 +186,18 @@ namespace Landis.Extension.Succession.NECN
 
             double SOM_Multiplier = ReductionsTable[severity].SOMReduction;
 
-            carbonLoss = SiteVars.SOM1surface[site].Carbon * SOM_Multiplier;
-            nitrogenLoss = SiteVars.SOM1surface[site].Nitrogen * SOM_Multiplier;
-            summaryNLoss += nitrogenLoss;
+            //carbonLoss = SiteVars.SOM1surface[site].Carbon * SOM_Multiplier;
+            //nitrogenLoss = SiteVars.SOM1surface[site].Nitrogen * SOM_Multiplier;
+            //summaryNLoss += nitrogenLoss;
 
-            SiteVars.SOM1surface[site].Carbon -= carbonLoss;
-            SiteVars.SourceSink[site].Carbon += carbonLoss;
-            SiteVars.FireCEfflux[site] += carbonLoss;
+            //SiteVars.SOM1surface[site].Carbon -= carbonLoss;
+            //SiteVars.SourceSink[site].Carbon += carbonLoss;
+            //SiteVars.FireCEfflux[site] += carbonLoss;
 
-            SiteVars.SOM1surface[site].Nitrogen -= nitrogenLoss;
-            SiteVars.SourceSink[site].Nitrogen += nitrogenLoss;
-            SiteVars.FireNEfflux[site] += nitrogenLoss;
-            SiteVars.SmolderConsumption[site] += carbonLoss * 2.0;  
+            //SiteVars.SOM1surface[site].Nitrogen -= nitrogenLoss;
+            //SiteVars.SourceSink[site].Nitrogen += nitrogenLoss;
+            //SiteVars.FireNEfflux[site] += nitrogenLoss;
+            //SiteVars.SmolderConsumption[site] += carbonLoss * 2.0;  
 
             // Transfer 1% to mineral N.
             SiteVars.MineralN[site] += summaryNLoss * 0.01;

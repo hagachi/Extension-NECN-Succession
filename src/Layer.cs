@@ -260,16 +260,16 @@ namespace Landis.Extension.Succession.NECN
                 //Net C flow to SOM1
                 carbonToSOM1 -= co2loss;
 
-                if(this.Type == LayerType.Surface)
-                {
-                    this.TransferCarbon(SiteVars.SOM1surface[site], carbonToSOM1);
-                    this.TransferNitrogen(SiteVars.SOM1surface[site], carbonToSOM1, litterC, ratioCN, site);
-                }
-                else
-                {
+                //if(this.Type == LayerType.Surface)
+                //{
+                //    this.TransferCarbon(SiteVars.SOM1surface[site], carbonToSOM1);
+                //    this.TransferNitrogen(SiteVars.SOM1surface[site], carbonToSOM1, litterC, ratioCN, site);
+                //}
+                //else
+                //{
                     this.TransferCarbon(SiteVars.SOM1soil[site], carbonToSOM1);
                     this.TransferNitrogen(SiteVars.SOM1soil[site], carbonToSOM1, litterC, ratioCN, site);
-                }
+                //}
             }
             //PlugIn.ModelCore.UI.WriteLine("Decompose2.  MineralN={0:0.00}.", SiteVars.MineralN[site]);
             return;
@@ -334,17 +334,17 @@ namespace Landis.Extension.Succession.NECN
                     // -- CARBON AND NITROGEN ---------------------------
                     // Partition and schedule C flows
                     // Compute and schedule N flows and update mineralization accumulators.
-                    if((int) this.Type == (int) LayerType.Surface)
-                    {
-                        this.TransferCarbon(SiteVars.SOM1surface[site], netCFlow);
-                        this.TransferNitrogen(SiteVars.SOM1surface[site], netCFlow, litterC, ratioCNtoSOM1, site);
-                        //PlugIn.ModelCore.UI.WriteLine("DecomposeMetabolic.  MineralN={0:0.00}.", SiteVars.MineralN[site]);
-                    }
-                    else
-                    {
+                    //if((int) this.Type == (int) LayerType.Surface)
+                    //{
+                    //    this.TransferCarbon(SiteVars.SOM1surface[site], netCFlow);
+                    //    this.TransferNitrogen(SiteVars.SOM1surface[site], netCFlow, litterC, ratioCNtoSOM1, site);
+                    //    //PlugIn.ModelCore.UI.WriteLine("DecomposeMetabolic.  MineralN={0:0.00}.", SiteVars.MineralN[site]);
+                    //}
+                    //else
+                    //{
                         this.TransferCarbon(SiteVars.SOM1soil[site], netCFlow);
                         this.TransferNitrogen(SiteVars.SOM1soil[site], netCFlow, litterC, ratioCNtoSOM1, site);
-                    }
+                    //}
 
                 }
             }

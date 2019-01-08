@@ -30,8 +30,8 @@ namespace Landis.Extension.Succession.NECN
         private string soilWiltingPointMapName;
         private string soilPercentSandMapName;
         private string soilPercentClayMapName;
-        private string initialSOM1CSurfaceMapName;
-        private string initialSOM1NSurfaceMapName;
+        //private string initialSOM1CSurfaceMapName;
+        //private string initialSOM1NSurfaceMapName;
         private string initialSOM1CSoilMapName;
         private string initialSOM1NSoilMapName;
         //private string initialSOM2CMapName;
@@ -40,6 +40,8 @@ namespace Landis.Extension.Succession.NECN
         //private string initialSOM3NMapName;
         private string initialDeadSurfaceMapName;
         private string initialDeadSoilMapName;
+        private string soilBulkDensityMapName;
+        private string soilParticleDensityMapName;
 
         private bool calibrateMode;
         private bool smokeModelOutputs;
@@ -49,13 +51,14 @@ namespace Landis.Extension.Succession.NECN
         private double atmosNintercept;
         private double latitude;
         private double denitrif;
-        private double decayRateSurf;
-        private double decayRateSOM1;
+        //private double decayRateSurf;
+        //private double decayRateSOM1;
         //private double decayRateSOM2;
         //private double decayRateSOM3;
         private double[] maximumShadeLAI;
         private double initMineralN;
         private double initFineFuels;
+        private double fractionLitterDecayToDOC;
 
         private ISpeciesDataset speciesDataset;
         
@@ -434,22 +437,22 @@ namespace Landis.Extension.Succession.NECN
                 return latitude;
             }
         }
+        ////-----------------------------------------------
+        //public double DecayRateSurf
+        //{
+        //    get
+        //    {
+        //        return decayRateSurf;
+        //    }
+        //}
         //-----------------------------------------------
-        public double DecayRateSurf
-        {
-            get
-            {
-                return decayRateSurf;
-            }
-        }
-        //-----------------------------------------------
-        public double DecayRateSOM1
-        {
-            get
-            {
-                return decayRateSOM1;
-            }
-        }//---------------------------------------------------------------------
+        //public double DecayRateSOM1
+        //{
+        //    get
+        //    {
+        //        return decayRateSOM1;
+        //    }
+        //}//---------------------------------------------------------------------
         //public double DecayRateSOM2
         //{
         //    get
@@ -475,6 +478,7 @@ namespace Landis.Extension.Succession.NECN
         }
         public double InitialMineralN { get { return initMineralN; } }
         public double InitialFineFuels { get { return initFineFuels; } }
+        public double FractionLitterDecayToDOC { get { return fractionLitterDecayToDOC; } }
 
         //---------------------------------------------------------------------
 
@@ -620,37 +624,69 @@ namespace Landis.Extension.Succession.NECN
         }
         //---------------------------------------------------------------------
 
-        public string InitialSOM1CSurfaceMapName
+        public string SoilBulkDensityMapName
         {
             get
             {
-                return initialSOM1CSurfaceMapName;
+                return soilBulkDensityMapName;
             }
             set
             {
                 string path = value;
                 if (path.Trim(null).Length == 0)
                     throw new InputValueException(path, "\"{0}\" is not a valid path.", path);
-                initialSOM1CSurfaceMapName = value;
+                soilBulkDensityMapName = value;
             }
         }
-
         //---------------------------------------------------------------------
 
-        public string InitialSOM1NSurfaceMapName
+        public string SoilParticleDensityMapName
         {
             get
             {
-                return initialSOM1NSurfaceMapName;
+                return soilParticleDensityMapName;
             }
             set
             {
                 string path = value;
                 if (path.Trim(null).Length == 0)
                     throw new InputValueException(path, "\"{0}\" is not a valid path.", path);
-                initialSOM1NSurfaceMapName = value;
+                soilParticleDensityMapName = value;
             }
         }
+        //---------------------------------------------------------------------
+
+        //public string InitialSOM1CSurfaceMapName
+        //{
+        //    get
+        //    {
+        //        return initialSOM1CSurfaceMapName;
+        //    }
+        //    set
+        //    {
+        //        string path = value;
+        //        if (path.Trim(null).Length == 0)
+        //            throw new InputValueException(path, "\"{0}\" is not a valid path.", path);
+        //        initialSOM1CSurfaceMapName = value;
+        //    }
+        //}
+
+        ////---------------------------------------------------------------------
+
+        //public string InitialSOM1NSurfaceMapName
+        //{
+        //    get
+        //    {
+        //        return initialSOM1NSurfaceMapName;
+        //    }
+        //    set
+        //    {
+        //        string path = value;
+        //        if (path.Trim(null).Length == 0)
+        //            throw new InputValueException(path, "\"{0}\" is not a valid path.", path);
+        //        initialSOM1NSurfaceMapName = value;
+        //    }
+        //}
         //---------------------------------------------------------------------
 
         public string InitialSOM1CSoilMapName
@@ -963,15 +999,15 @@ namespace Landis.Extension.Succession.NECN
         }
         //---------------------------------------------------------------------
        
-        public void SetDecayRateSurf(InputValue<double> newValue)
-        {
-            decayRateSurf = CheckBiomassParm(newValue, 0.0, 10.0);
-        }
+        //public void SetDecayRateSurf(InputValue<double> newValue)
+        //{
+        //    decayRateSurf = CheckBiomassParm(newValue, 0.0, 10.0);
+        //}
         //---------------------------------------------------------------------
-        public void SetDecayRateSOM1(InputValue<double> newValue)
-        {
-            decayRateSOM1 = CheckBiomassParm(newValue, 0.0, 10.0);
-        }
+        //public void SetDecayRateSOM1(InputValue<double> newValue)
+        //{
+        //    decayRateSOM1 = CheckBiomassParm(newValue, 0.0, 10.0);
+        //}
         //---------------------------------------------------------------------
         //public void SetDecayRateSOM2(InputValue<double> newValue)
         //{
@@ -997,6 +1033,11 @@ namespace Landis.Extension.Succession.NECN
         public void SetInitFineFuels(InputValue<double> newValue)
         {
             initFineFuels = CheckBiomassParm(newValue, 0.0, 1.0);
+        }
+        //---------------------------------------------------------------------
+        public void SetFractionDOC(InputValue<double> newValue)
+        {
+            fractionLitterDecayToDOC = CheckBiomassParm(newValue, 0.0, 1.0);
         }
         //---------------------------------------------------------------------
 

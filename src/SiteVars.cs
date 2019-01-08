@@ -32,7 +32,7 @@ namespace Landis.Extension.Succession.NECN
         private static ISiteVar<Layer> soilMetabolic;
                        
         // Soil layers
-        private static ISiteVar<Layer> som1surface;
+        //private static ISiteVar<Layer> som1surface;
         private static ISiteVar<Layer> som1soil;
         //private static ISiteVar<Layer> som2;
         //private static ISiteVar<Layer> som3;
@@ -91,7 +91,8 @@ namespace Landis.Extension.Succession.NECN
         private static ISiteVar<double> annualPPT_AET; //Annual water budget calculation. I'm coppying LAI implementation
         private static ISiteVar<double> annualClimaticWaterDeficit; //Annual soil moisture calculation, defined as pet - aet
         private static ISiteVar<int> dryDays;
-                
+        private static ISiteVar<double> fineFuels;
+
         public static ISiteVar<double> TotalWoodBiomass;
         public static ISiteVar<int> PrevYearMortality;
         public static ISiteVar<byte> FireSeverity;
@@ -99,9 +100,10 @@ namespace Landis.Extension.Succession.NECN
         public static ISiteVar<string> HarvestPrescriptionName;
         public static ISiteVar<int> HarvestTime;
         public static ISiteVar<Dictionary<int, Dictionary<int, double>>> CohortResorbedNallocation;
-        public static ISiteVar<double> fineFuels;
         public static ISiteVar<double> SmolderConsumption;
         public static ISiteVar<double> FlamingConsumption;
+        public static ISiteVar<double> SoilBulkDensity;
+        public static ISiteVar<double> SoilParticleDensity;
 
 
         //---------------------------------------------------------------------
@@ -128,7 +130,7 @@ namespace Landis.Extension.Succession.NECN
             soilMetabolic       = PlugIn.ModelCore.Landscape.NewSiteVar<Layer>();
             
             // Soil Layers
-            som1surface         = PlugIn.ModelCore.Landscape.NewSiteVar<Layer>();
+            //som1surface         = PlugIn.ModelCore.Landscape.NewSiteVar<Layer>();
             som1soil            = PlugIn.ModelCore.Landscape.NewSiteVar<Layer>();
             //som2                = PlugIn.ModelCore.Landscape.NewSiteVar<Layer>();
             //som3                = PlugIn.ModelCore.Landscape.NewSiteVar<Layer>();
@@ -216,7 +218,7 @@ namespace Landis.Extension.Succession.NECN
                 surfaceMetabolic[site]      = new Layer(LayerName.Metabolic, LayerType.Surface);
                 soilStructural[site]        = new Layer(LayerName.Structural, LayerType.Soil);
                 soilMetabolic[site]         = new Layer(LayerName.Metabolic, LayerType.Soil);
-                som1surface[site]           = new Layer(LayerName.SOM1, LayerType.Surface);
+                //som1surface[site]           = new Layer(LayerName.SOM1, LayerType.Surface);
                 som1soil[site]              = new Layer(LayerName.SOM1, LayerType.Soil);
                 //som2[site]                  = new Layer(LayerName.SOM2, LayerType.Soil);
                 //som3[site]                  = new Layer(LayerName.SOM3, LayerType.Soil);
@@ -323,7 +325,7 @@ namespace Landis.Extension.Succession.NECN
             SiteVars.SoilStructural[site].NetMineralization = 0.0;
             SiteVars.SoilMetabolic[site].NetMineralization = 0.0;
             
-            SiteVars.SOM1surface[site].NetMineralization = 0.0;
+            //SiteVars.SOM1surface[site].NetMineralization = 0.0;
             SiteVars.SOM1soil[site].NetMineralization = 0.0;
             //SiteVars.SOM2[site].NetMineralization = 0.0;
             //SiteVars.SOM3[site].NetMineralization = 0.0;
@@ -426,12 +428,12 @@ namespace Landis.Extension.Succession.NECN
         /// <summary>
         /// The soil organic matter (SOM1-Surface) for the landscape's sites.
         /// </summary>
-        public static ISiteVar<Layer> SOM1surface
-        {
-            get {
-                return som1surface;
-            }
-        }
+        //public static ISiteVar<Layer> SOM1surface
+        //{
+        //    get {
+        //        return som1surface;
+        //    }
+        //}
         //---------------------------------------------------------------------
 
         /// <summary>

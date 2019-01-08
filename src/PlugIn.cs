@@ -40,7 +40,7 @@ namespace Landis.Extension.Succession.NECN
         public static double ProbEstablishAdjust;
 
         public static int FutureClimateBaseYear;
-        public static int B_MAX;
+        //public static int B_MAX;
 
         //---------------------------------------------------------------------
 
@@ -98,8 +98,8 @@ namespace Landis.Extension.Succession.NECN
             Util.ReadWiltingPointMap(Parameters.SoilWiltingPointMapName);
             Util.ReadPercentSandMap(Parameters.SoilPercentSandMapName);
             Util.ReadPercentClayMap(Parameters.SoilPercentClayMapName);
-            Util.ReadSoilCNMaps(Parameters.InitialSOM1CSurfaceMapName,
-                Parameters.InitialSOM1NSurfaceMapName,
+            Util.ReadSoilCNMaps(//Parameters.InitialSOM1CSurfaceMapName,
+                //Parameters.InitialSOM1NSurfaceMapName,
                 Parameters.InitialSOM1CSoilMapName,
                 Parameters.InitialSOM1NSoilMapName);
                 //Parameters.InitialSOM2CMapName,
@@ -107,6 +107,7 @@ namespace Landis.Extension.Succession.NECN
                 //Parameters.InitialSOM3CMapName,
                 //Parameters.InitialSOM3NMapName);
             Util.ReadDeadWoodMaps(Parameters.InitialDeadSurfaceMapName, Parameters.InitialDeadSoilMapName);
+            Util.ReadMap(Parameters.SoilBulkDensityMapName, SiteVars.SoilBulkDensity);
 
             ShadeLAI = Parameters.MaximumShadeLAI; 
             OtherData.Initialize(Parameters);
@@ -135,12 +136,12 @@ namespace Landis.Extension.Succession.NECN
                 Outputs.CreateCalibrateLogFile();
             Establishment.InitializeLogFile();
 
-            B_MAX = 0;
-            foreach(ISpecies species in ModelCore.Species)
-            {
-                if (SpeciesData.Max_Biomass[species] > B_MAX)
-                    B_MAX = SpeciesData.Max_Biomass[species];
-            }
+            //B_MAX = 0;
+            //foreach(ISpecies species in ModelCore.Species)
+            //{
+            //    if (SpeciesData.Max_Biomass[species] > B_MAX)
+            //        B_MAX = SpeciesData.Max_Biomass[species];
+            //}
 
             foreach (ActiveSite site in PlugIn.ModelCore.Landscape)
                 Main.ComputeTotalCohortCN(site, SiteVars.Cohorts[site]);

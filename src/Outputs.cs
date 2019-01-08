@@ -242,7 +242,7 @@ namespace Landis.Extension.Succession.NECN
                 avgSoilStrucC[ecoregion.Index] += SiteVars.SoilStructural[site].Carbon;
                 avgSoilMetaC[ecoregion.Index] += SiteVars.SoilMetabolic[site].Carbon;
 
-                avgSOM1surfC[ecoregion.Index] += SiteVars.SOM1surface[site].Carbon;
+                //avgSOM1surfC[ecoregion.Index] += SiteVars.SOM1surface[site].Carbon;
                 avgSOM1soilC[ecoregion.Index] += SiteVars.SOM1soil[site].Carbon;
                 //avgSOM2C[ecoregion.Index] += SiteVars.SOM2[site].Carbon;
                 //avgSOM3C[ecoregion.Index] += SiteVars.SOM3[site].Carbon;
@@ -259,7 +259,7 @@ namespace Landis.Extension.Succession.NECN
                 avgSoilStrucN[ecoregion.Index] += SiteVars.SoilStructural[site].Nitrogen;
                 avgSoilMetaN[ecoregion.Index] += SiteVars.SoilMetabolic[site].Nitrogen;
 
-                avgSOM1surfN[ecoregion.Index] += SiteVars.SOM1surface[site].Nitrogen;
+                //avgSOM1surfN[ecoregion.Index] += SiteVars.SOM1surface[site].Nitrogen;
                 avgSOM1soilN[ecoregion.Index] += SiteVars.SOM1soil[site].Nitrogen;
                 //avgSOM2N[ecoregion.Index] += SiteVars.SOM2[site].Nitrogen;
                 //avgSOM3N[ecoregion.Index] += SiteVars.SOM3[site].Nitrogen;
@@ -270,7 +270,7 @@ namespace Landis.Extension.Succession.NECN
                 avgSoilStrucNetMin[ecoregion.Index] += SiteVars.SoilStructural[site].NetMineralization;
                 avgSoilMetaNetMin[ecoregion.Index] += SiteVars.SoilMetabolic[site].NetMineralization;
 
-                avgSOM1surfNetMin[ecoregion.Index] += SiteVars.SOM1surface[site].NetMineralization;
+                //avgSOM1surfNetMin[ecoregion.Index] += SiteVars.SOM1surface[site].NetMineralization;
                 avgSOM1soilNetMin[ecoregion.Index] += SiteVars.SOM1soil[site].NetMineralization;
                 //avgSOM2NetMin[ecoregion.Index] += SiteVars.SOM2[site].NetMineralization;
                 //avgSOM3NetMin[ecoregion.Index] += SiteVars.SOM3[site].NetMineralization;
@@ -521,24 +521,24 @@ namespace Landis.Extension.Succession.NECN
 
                 }
 
-            string path = MapNames.ReplaceTemplateVars(@"NECN\SOMTC-{timestep}.img", PlugIn.ModelCore.CurrentTime);
-            using (IOutputRaster<IntPixel> outputRaster = PlugIn.ModelCore.CreateRaster<IntPixel>(path, PlugIn.ModelCore.Landscape.Dimensions))
-            {
-                IntPixel pixel = outputRaster.BufferPixel;
-                foreach (Site site in PlugIn.ModelCore.Landscape.AllSites)
-                {
-                    if (site.IsActive)
-                    {
-                        pixel.MapCode.Value = (int)((SiteVars.SOM1surface[site].Carbon + SiteVars.SOM1soil[site].Carbon));// + SiteVars.SOM2[site].Carbon + SiteVars.SOM3[site].Carbon));
-                    }
-                    else
-                    {
-                        //  Inactive site
-                        pixel.MapCode.Value = 0;
-                    }
-                    outputRaster.WriteBufferPixel();
-                }
-            }
+            //string path = MapNames.ReplaceTemplateVars(@"NECN\SOMTC-{timestep}.img", PlugIn.ModelCore.CurrentTime);
+            //using (IOutputRaster<IntPixel> outputRaster = PlugIn.ModelCore.CreateRaster<IntPixel>(path, PlugIn.ModelCore.Landscape.Dimensions))
+            //{
+            //    IntPixel pixel = outputRaster.BufferPixel;
+            //    foreach (Site site in PlugIn.ModelCore.Landscape.AllSites)
+            //    {
+            //        if (site.IsActive)
+            //        {
+            //            pixel.MapCode.Value = (int)((SiteVars.SOM1surface[site].Carbon + SiteVars.SOM1soil[site].Carbon));// + SiteVars.SOM2[site].Carbon + SiteVars.SOM3[site].Carbon));
+            //        }
+            //        else
+            //        {
+            //            //  Inactive site
+            //            pixel.MapCode.Value = 0;
+            //        }
+            //        outputRaster.WriteBufferPixel();
+            //    }
+            //}
 
             string path2 = MapNames.ReplaceTemplateVars(@"NECN\SoilN-{timestep}.img", PlugIn.ModelCore.CurrentTime);
                     using (IOutputRaster<ShortPixel> outputRaster = PlugIn.ModelCore.CreateRaster<ShortPixel>(path2, PlugIn.ModelCore.Landscape.Dimensions))
@@ -705,24 +705,24 @@ namespace Landis.Extension.Succession.NECN
                     }
                 }
 
-                string pathDuff = MapNames.ReplaceTemplateVars(@"NECN\SurfaceDuffBiomass-{timestep}.img", PlugIn.ModelCore.CurrentTime);
-                using (IOutputRaster<IntPixel> outputRaster = PlugIn.ModelCore.CreateRaster<IntPixel>(pathDuff, PlugIn.ModelCore.Landscape.Dimensions))
-                {
-                    IntPixel pixel = outputRaster.BufferPixel;
-                    foreach (Site site in PlugIn.ModelCore.Landscape.AllSites)
-                    {
-                        if (site.IsActive)
-                        {
-                            pixel.MapCode.Value = (int)(SiteVars.SOM1surface[site].Carbon * 2.0);
-                        }
-                        else
-                        {
-                            //  Inactive site
-                            pixel.MapCode.Value = 0;
-                        }
-                        outputRaster.WriteBufferPixel();
-                    }
-                }
+                //string pathDuff = MapNames.ReplaceTemplateVars(@"NECN\SurfaceDuffBiomass-{timestep}.img", PlugIn.ModelCore.CurrentTime);
+                //using (IOutputRaster<IntPixel> outputRaster = PlugIn.ModelCore.CreateRaster<IntPixel>(pathDuff, PlugIn.ModelCore.Landscape.Dimensions))
+                //{
+                //    IntPixel pixel = outputRaster.BufferPixel;
+                //    foreach (Site site in PlugIn.ModelCore.Landscape.AllSites)
+                //    {
+                //        if (site.IsActive)
+                //        {
+                //            pixel.MapCode.Value = (int)(SiteVars.SOM1surface[site].Carbon * 2.0);
+                //        }
+                //        else
+                //        {
+                //            //  Inactive site
+                //            pixel.MapCode.Value = 0;
+                //        }
+                //        outputRaster.WriteBufferPixel();
+                //    }
+                //}
             }
         }
         
@@ -747,7 +747,7 @@ namespace Landis.Extension.Succession.NECN
                     + SiteVars.SurfaceMetabolic[site].Nitrogen
                     + SiteVars.SoilMetabolic[site].Nitrogen
 
-                    + SiteVars.SOM1surface[site].Nitrogen
+                    //+ SiteVars.SOM1surface[site].Nitrogen
                     + SiteVars.SOM1soil[site].Nitrogen
                     //+ SiteVars.SOM2[site].Nitrogen
                     //+ SiteVars.SOM3[site].Nitrogen
@@ -772,7 +772,7 @@ namespace Landis.Extension.Succession.NECN
                     + SiteVars.SurfaceMetabolic[site].Nitrogen
             +SiteVars.SoilMetabolic[site].Nitrogen
 
-            + SiteVars.SOM1surface[site].Nitrogen
+            //+ SiteVars.SOM1surface[site].Nitrogen
             + SiteVars.SOM1soil[site].Nitrogen
             //+ SiteVars.SOM2[site].Nitrogen
             //+ SiteVars.SOM3[site].Nitrogen;
@@ -785,8 +785,8 @@ namespace Landis.Extension.Succession.NECN
         {
             double totalC = 
                     
-                    SiteVars.SOM1surface[site].Carbon
-                    + SiteVars.SOM1soil[site].Carbon
+                    //SiteVars.SOM1surface[site].Carbon
+                    SiteVars.SOM1soil[site].Carbon
                     //+ SiteVars.SOM2[site].Carbon
                     //+ SiteVars.SOM3[site].Carbon
                     ;

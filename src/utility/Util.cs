@@ -305,49 +305,49 @@ namespace Landis.Extension.Succession.NECN
                 }
             }
         }
-        public static void ReadSoilCNMaps(string path, string path2, string path3, string path4)//, string path5, string path6, string path7, string path8)
+        public static void ReadSoilCNMaps(string path, string path2)//, string path3, string path4)//, string path5, string path6, string path7, string path8)
         {
             IInputRaster<DoublePixel> map = MakeDoubleMap(path);
 
-            using (map)
-            {
-                DoublePixel pixel = map.BufferPixel;
-                foreach (Site site in PlugIn.ModelCore.Landscape.AllSites)
-                {
-                    map.ReadBufferPixel();
-                    double mapValue = pixel.MapCode.Value;
-                    if (site.IsActive)
-                    {
-                        if (mapValue <= 0.0 || mapValue > 10000.0)
-                            throw new InputValueException(mapValue.ToString(),
-                                                          "SOM1surf C value {0} is not between {1:0.0} and {2:0.0}. Site_Row={3:0}, Site_Column={4:0}",
-                                                          mapValue, 0.0, 10000.0, site.Location.Row, site.Location.Column);
-                        SiteVars.SOM1surface[site].Carbon = mapValue;
-                    }
-                }
-            }
+            //using (map)
+            //{
+            //    DoublePixel pixel = map.BufferPixel;
+            //    foreach (Site site in PlugIn.ModelCore.Landscape.AllSites)
+            //    {
+            //        map.ReadBufferPixel();
+            //        double mapValue = pixel.MapCode.Value;
+            //        if (site.IsActive)
+            //        {
+            //            if (mapValue <= 0.0 || mapValue > 10000.0)
+            //                throw new InputValueException(mapValue.ToString(),
+            //                                              "SOM1surf C value {0} is not between {1:0.0} and {2:0.0}. Site_Row={3:0}, Site_Column={4:0}",
+            //                                              mapValue, 0.0, 10000.0, site.Location.Row, site.Location.Column);
+            //            SiteVars.SOM1surface[site].Carbon = mapValue;
+            //        }
+            //    }
+            //}
             
-            map = MakeDoubleMap(path2);
+            //map = MakeDoubleMap(path2);
 
-            using (map)
-            {
-                DoublePixel pixel = map.BufferPixel;
-                foreach (Site site in PlugIn.ModelCore.Landscape.AllSites)
-                {
-                    map.ReadBufferPixel();
-                    double mapValue = pixel.MapCode.Value;
-                    if (site.IsActive)
-                    {
-                        if (mapValue <= 0.0 || mapValue > 500.0)
-                            throw new InputValueException(mapValue.ToString(),
-                                                          "SOM1surf N value {0} is not between {1:0.0} and {2:0.0}. Site_Row={3:0}, Site_Column={4:0}",
-                                                          mapValue, 0.0, 500.0, site.Location.Row, site.Location.Column);
-                        SiteVars.SOM1surface[site].Nitrogen = mapValue;
-                    }
-                }
-            }
+            //using (map)
+            //{
+            //    DoublePixel pixel = map.BufferPixel;
+            //    foreach (Site site in PlugIn.ModelCore.Landscape.AllSites)
+            //    {
+            //        map.ReadBufferPixel();
+            //        double mapValue = pixel.MapCode.Value;
+            //        if (site.IsActive)
+            //        {
+            //            if (mapValue <= 0.0 || mapValue > 500.0)
+            //                throw new InputValueException(mapValue.ToString(),
+            //                                              "SOM1surf N value {0} is not between {1:0.0} and {2:0.0}. Site_Row={3:0}, Site_Column={4:0}",
+            //                                              mapValue, 0.0, 500.0, site.Location.Row, site.Location.Column);
+            //            SiteVars.SOM1surface[site].Nitrogen = mapValue;
+            //        }
+            //    }
+            //}
             
-            map = MakeDoubleMap(path3);
+            map = MakeDoubleMap(path);
 
             using (map)
             {
@@ -367,7 +367,7 @@ namespace Landis.Extension.Succession.NECN
                 }
             }
 
-            map = MakeDoubleMap(path4);
+            map = MakeDoubleMap(path2);
 
             using (map)
             {
@@ -544,5 +544,42 @@ namespace Landis.Extension.Succession.NECN
             }
         }
         //---------------------------------------------------------------------
+        //---------------------------------------------------------------------
+
+        public static void ReadMap(string path, ISiteVar<double> siteVar)
+        {
+            IInputRaster<IntPixel> map;
+
+            try
+            {
+                map = PlugIn.ModelCore.OpenRaster<IntPixel>(path);
+            }
+            catch (FileNotFoundException)
+            {
+                string messege = string.Format("Error: The file {0} does not exist", path);
+                throw new System.ApplicationException(messege);
+            }
+
+            if (map.Dimensions != PlugIn.ModelCore.Landscape.Dimensions)
+            {
+                string messege = string.Format("Error: The input map {0} does not have the same dimension (row, column) as the ecoregions map", path);
+                throw new System.ApplicationException(messege);
+            }
+
+            using (map)
+            {
+                IntPixel pixel = map.BufferPixel;
+                foreach (Site site in PlugIn.ModelCore.Landscape.AllSites)
+                {
+                    map.ReadBufferPixel();
+                    double mapCode = (int)pixel.MapCode.Value;
+
+                    if (site.IsActive)
+                    {
+                        siteVar[site] = mapCode;
+                    }
+                }
+            }
+        }
     }
 }

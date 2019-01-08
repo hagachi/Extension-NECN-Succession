@@ -124,13 +124,21 @@ namespace Landis.Extension.Succession.NECN
             ReadVar(soilClayMapName);
             parameters.SoilPercentClayMapName = soilClayMapName.Value;
 
-            InputVar<string> som1CsurfMapName = new InputVar<string>("InitialSOM1CsurfMapName");
-            ReadVar(som1CsurfMapName);
-            parameters.InitialSOM1CSurfaceMapName = som1CsurfMapName.Value;
+            InputVar<string> soilBDMapName = new InputVar<string>("SoilBulkDensityMapName");
+            ReadVar(soilBDMapName);
+            parameters.SoilBulkDensityMapName = soilBDMapName.Value;
 
-            InputVar<string> som1NsurfMapName = new InputVar<string>("InitialSOM1NsurfMapName");
-            ReadVar(som1NsurfMapName);
-            parameters.InitialSOM1NSurfaceMapName = som1NsurfMapName.Value;
+            InputVar<string> soilPDMapName = new InputVar<string>("SoilParticleDensityMapName");
+            ReadVar(soilPDMapName);
+            parameters.SoilParticleDensityMapName = soilPDMapName.Value;
+
+            //InputVar<string> som1CsurfMapName = new InputVar<string>("InitialSOM1CsurfMapName");
+            //ReadVar(som1CsurfMapName);
+            //parameters.InitialSOM1CSurfaceMapName = som1CsurfMapName.Value;
+
+            //InputVar<string> som1NsurfMapName = new InputVar<string>("InitialSOM1NsurfMapName");
+            //ReadVar(som1NsurfMapName);
+            //parameters.InitialSOM1NSurfaceMapName = som1NsurfMapName.Value;
 
             InputVar<string> som1CsoilMapName = new InputVar<string>("InitialSOM1CsoilMapName");
             ReadVar(som1CsoilMapName);
@@ -209,13 +217,17 @@ namespace Landis.Extension.Succession.NECN
             ReadVar(denits);
             parameters.SetDenitrif(denits.Value);
 
-            InputVar<double> drsoms = new InputVar<double>("DecayRateSurf");
-            ReadVar(drsoms);
-            parameters.SetDecayRateSurf(drsoms.Value);
+            InputVar<double> fracDOC = new InputVar<double>("FractionLitterToDOC");
+            ReadVar(fracDOC);
+            parameters.SetFractionDOC(fracDOC.Value);
 
-            InputVar<double> drsom1 = new InputVar<double>("DecayRateSOM1");
-            ReadVar(drsom1);
-            parameters.SetDecayRateSOM1(drsom1.Value);
+            //InputVar<double> drsoms = new InputVar<double>("DecayRateSurf");
+            //ReadVar(drsoms);
+            //parameters.SetDecayRateSurf(drsoms.Value);
+
+            //InputVar<double> drsom1 = new InputVar<double>("DecayRateSOM1");
+            //ReadVar(drsom1);
+            //parameters.SetDecayRateSOM1(drsom1.Value);
 
             //InputVar<double> drsom2 = new InputVar<double>("DecayRateSOM2");
             //ReadVar(drsom2);
