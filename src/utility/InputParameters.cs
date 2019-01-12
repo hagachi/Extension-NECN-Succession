@@ -30,18 +30,18 @@ namespace Landis.Extension.Succession.NECN
         private string soilWiltingPointMapName;
         private string soilPercentSandMapName;
         private string soilPercentClayMapName;
-        //private string initialSOM1CSurfaceMapName;
-        //private string initialSOM1NSurfaceMapName;
         private string initialSOM1CSoilMapName;
         private string initialSOM1NSoilMapName;
-        //private string initialSOM2CMapName;
-        //private string initialSOM2NMapName;
-        //private string initialSOM3CMapName;
-        //private string initialSOM3NMapName;
         private string initialDeadSurfaceMapName;
         private string initialDeadSoilMapName;
         private string soilBulkDensityMapName;
         private string soilParticleDensityMapName;
+        //private string initialSOM1CSurfaceMapName;
+        //private string initialSOM1NSurfaceMapName;
+        //private string initialSOM2CMapName;
+        //private string initialSOM2NMapName;
+        //private string initialSOM3CMapName;
+        //private string initialSOM3NMapName;
 
         private bool calibrateMode;
         private bool smokeModelOutputs;
@@ -51,14 +51,15 @@ namespace Landis.Extension.Succession.NECN
         private double atmosNintercept;
         private double latitude;
         private double denitrif;
+        private double[] maximumShadeLAI;
+        private double initMineralN;
+        private double initDOC;
+        private double initFineFuels;
+        private double fractionLitterDecayToDOC;
         //private double decayRateSurf;
         //private double decayRateSOM1;
         //private double decayRateSOM2;
         //private double decayRateSOM3;
-        private double[] maximumShadeLAI;
-        private double initMineralN;
-        private double initFineFuels;
-        private double fractionLitterDecayToDOC;
 
         private ISpeciesDataset speciesDataset;
         
@@ -477,6 +478,7 @@ namespace Landis.Extension.Succession.NECN
             }
         }
         public double InitialMineralN { get { return initMineralN; } }
+        public double InitialDOC { get { return initDOC; } }
         public double InitialFineFuels { get { return initFineFuels; } }
         public double FractionLitterDecayToDOC { get { return fractionLitterDecayToDOC; } }
 
@@ -1027,7 +1029,12 @@ namespace Landis.Extension.Succession.NECN
         //---------------------------------------------------------------------
         public void SetInitMineralN(InputValue<double> newValue)
         {
-            initMineralN = CheckBiomassParm(newValue, 0.0, 5000.0);
+            initMineralN = CheckBiomassParm(newValue, 0.0, 50.0);
+        }
+        //---------------------------------------------------------------------
+        public void SetInitDOC(InputValue<double> newValue)
+        {
+            initDOC = CheckBiomassParm(newValue, 0.0, 5.0);
         }
         //---------------------------------------------------------------------
         public void SetInitFineFuels(InputValue<double> newValue)

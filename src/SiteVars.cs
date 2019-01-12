@@ -34,6 +34,7 @@ namespace Landis.Extension.Succession.NECN
         // Soil layers
         //private static ISiteVar<Layer> som1surface;
         private static ISiteVar<Layer> som1soil;
+        private static ISiteVar<Layer> dissolved_organic;
         //private static ISiteVar<Layer> som2;
         //private static ISiteVar<Layer> som3;
         private static ISiteVar<int> soilDepth;
@@ -128,13 +129,14 @@ namespace Landis.Extension.Succession.NECN
             surfaceMetabolic    = PlugIn.ModelCore.Landscape.NewSiteVar<Layer>();
             soilStructural      = PlugIn.ModelCore.Landscape.NewSiteVar<Layer>();
             soilMetabolic       = PlugIn.ModelCore.Landscape.NewSiteVar<Layer>();
-            
+
             // Soil Layers
             //som1surface         = PlugIn.ModelCore.Landscape.NewSiteVar<Layer>();
-            som1soil            = PlugIn.ModelCore.Landscape.NewSiteVar<Layer>();
             //som2                = PlugIn.ModelCore.Landscape.NewSiteVar<Layer>();
             //som3                = PlugIn.ModelCore.Landscape.NewSiteVar<Layer>();
-            soilDepth           = PlugIn.ModelCore.Landscape.NewSiteVar<int>();
+            som1soil = PlugIn.ModelCore.Landscape.NewSiteVar<Layer>();
+            dissolved_organic = PlugIn.ModelCore.Landscape.NewSiteVar<Layer>();
+            soilDepth = PlugIn.ModelCore.Landscape.NewSiteVar<int>();
             soilDrain           = PlugIn.ModelCore.Landscape.NewSiteVar<double>();
             soilBaseFlowFraction = PlugIn.ModelCore.Landscape.NewSiteVar<double>();
             soilStormFlowFraction = PlugIn.ModelCore.Landscape.NewSiteVar<double>();
@@ -218,11 +220,12 @@ namespace Landis.Extension.Succession.NECN
                 surfaceMetabolic[site]      = new Layer(LayerName.Metabolic, LayerType.Surface);
                 soilStructural[site]        = new Layer(LayerName.Structural, LayerType.Soil);
                 soilMetabolic[site]         = new Layer(LayerName.Metabolic, LayerType.Soil);
-                //som1surface[site]           = new Layer(LayerName.SOM1, LayerType.Surface);
                 som1soil[site]              = new Layer(LayerName.SOM1, LayerType.Soil);
+                dissolved_organic[site] = new Layer(LayerName.DO, LayerType.Soil);
+                //som1surface[site]           = new Layer(LayerName.SOM1, LayerType.Surface);
                 //som2[site]                  = new Layer(LayerName.SOM2, LayerType.Soil);
                 //som3[site]                  = new Layer(LayerName.SOM3, LayerType.Soil);
-                
+
                 stream[site]                = new Layer(LayerName.Other, LayerType.Other);
                 sourceSink[site]            = new Layer(LayerName.Other, LayerType.Other);
                 
@@ -443,6 +446,18 @@ namespace Landis.Extension.Succession.NECN
         {
             get {
                 return som1soil;
+            }
+        }
+        //---------------------------------------------------------------------
+
+        /// <summary>
+        /// The soil organic matter (SOM1-Soil) for the landscape's sites.
+        /// </summary>
+        public static ISiteVar<Layer> DissolvedOrganic
+        {
+            get
+            {
+                return dissolved_organic;
             }
         }
         //---------------------------------------------------------------------

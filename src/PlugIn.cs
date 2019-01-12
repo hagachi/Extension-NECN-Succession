@@ -229,6 +229,8 @@ namespace Landis.Extension.Succession.NECN
 
             InitialBiomass initialBiomass = InitialBiomass.Compute(site, initialCommunity);
             SiteVars.MineralN[site] = Parameters.InitialMineralN;
+            SiteVars.DissolvedOrganic[site].Carbon = Parameters.InitialDOC;
+            SiteVars.DissolvedOrganic[site].Nitrogen = SiteVars.DissolvedOrganic[site].Carbon / SoilLayer.CN_DOCN;
         }
 
 

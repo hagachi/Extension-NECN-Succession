@@ -11,7 +11,39 @@ namespace Landis.Extension.Succession.NECN
     /// </summary>
     public class SoilLayer 
     {
-        
+
+        // fitted2009 NOTE:  p[n] indicates the field from the prior csv input file.
+        private static double ea_dep = 64.34135015;        //p[1]  #activation energy of SOM depolymerization
+        private static double ea_upt = 60.26134704;        //p[2]  #activation energy of DOC uptake
+        private static double a_dep = 1.05598E+11;         //p[3]   #pre-exponential constant for SOM depolymerization
+        private static double a_upt = 1.07944E+11;         //p[4]  #pre-exponential constant for uptake
+        private static double frac = 0.000378981;          //p[5]  #fraction of unprotected SOM, Magill et al. 2000
+                                                    // p[6] 0.000466501;  NOT USED
+                                                    // p[7] 0.000486085;  NOT USED
+        //private static double cn_litter = 48.81375915;     //p[8] #C:N of litter (was: cnl) [Not used]
+        public static double CN_DOCN = 28.089739;         //p[9] #C:N of soil (was: cns)  // Rob: only used for initializing DON
+        private static double cn_microbial = 9.803885526;  //p[10] #C:N of microbial biomass (was: cnm)
+        private static double cn_enzymes = 2.857178317;    //p[11] #C:N of enzymes (was: cne)
+        private static double km_dep = 0.002467667;        //p[12] #half-saturation constant for SOM depolymerization
+        private static double km_upt = 0.289955018;        //p[13] #half-saturation constant for DOC uptake
+        private static double r_ecloss = 0.00098887;       //p[14] #enzyme turnover rate
+        private static double r_death = 0.000150496;       //p[15] #microbial turnover rate
+        private static double c_use_efficiency = 0.299595251;           //p[16] #carbon use efficiency (was: cue)
+        private static double p_enz_SOC = 0.50853192;      //p[17] #proportion of enzyme pool acting on SOC (was: a)
+        private static double pconst = 0.481045149;        //p[18] #proportion of assimilated C allocated to enzyme production
+        private static double qconst = 0.491011779;        //p[19] #proportion of assimilated N allocated to enzyme production
+        private static double mic_to_som = 0.493381459;    //p[20] #fraction of dead microbial biomass allocated to SOM
+        private static double km_o2 = 0.115473482;         //p[21] #Michaelis constant for O2
+        private static double dgas = 1.631550734;          //p[22] #diffusion coefficient for O2 in air
+        private static double dliq = 3.135405232;          //p[23] #diffusion coefficient for unprotected SOM and DOM in liquid
+        private static double o2airfrac = 0.202587072;     //p[24] #volume fraction of O2 in air
+        //private double bulk_density = 0.75743956;   //p[25] #bulk density (was: bd)
+        //private double particle_density = 2.50156948;             //p[26] #particle density (was: pd)
+        private static double soilMoistureA = -1.92593874; //p[27]
+        private static double soilMoistureB = 9.774504229; //p[28]                     
+        private static double saturation = 0.492526228;    //p[29] #saturation level (was: sat)
+
+
         public static void Decompose(ActiveSite site)
         {
 
@@ -73,11 +105,13 @@ namespace Landis.Extension.Succession.NECN
                 double SoilMoisture = SiteVars.SoilWaterContent[site]; 
                 double SOC = SiteVars.SOM1soil[site].Carbon;
                 double SON = SiteVars.SOM1soil[site].Nitrogen;
-                double DOC = 0.0020;
-                double DON = 0.0011;
+                double bulk_density = SiteVars.SoilBulkDensity[site];
+                double particle_density = SiteVars.SoilParticleDensity[site];
+                double DOC = SiteVars.DissolvedOrganic[site].Carbon;
+                double DON = SiteVars.DissolvedOrganic[site].Nitrogen; 
                 double microbial_C = 1.9703;
                 double microbial_N = 0.1970;
-                double enzymatic_concentration = 0.0339;  
+                double enzymatic_concentration = 0.0339;
 
                 // Note: We are initially going to forgo DOC as it is a very minor component of overall C cycling
                 // seasonal DOC input:
@@ -88,42 +122,14 @@ namespace Landis.Extension.Succession.NECN
                 // double DOC_input = dref + A1 * Math.Sin(w1 * t - Math.PI / 2);  // # mg C cm-3 soil 
 
 
-                // fitted2009 NOTE:  p[n] indicates the field from the prior csv input file.
-                double ea_dep = 64.34135015;        //p[1]  #activation energy of SOM depolymerization
-                double ea_upt = 60.26134704;        //p[2]  #activation energy of DOC uptake
-                double a_dep = 1.05598E+11;         //p[3]   #pre-exponential constant for SOM depolymerization
-                double a_upt = 1.07944E+11;         //p[4]  #pre-exponential constant for uptake
-                double frac = 0.000378981;          //p[5]  #fraction of unprotected SOM, Magill et al. 2000
-                                                    // p[6] 0.000466501;  NOT USED
-                                                    // p[7] 0.000486085;  NOT USED
-                double cn_litter = 48.81375915;     //p[8] #C:N of litter (was: cnl)
-                double cn_DOCN = 28.089739;         //p[9] #C:N of soil (was: cns)
-                double cn_microbial = 9.803885526;  //p[10] #C:N of microbial biomass (was: cnm)
-                double cn_enzymes = 2.857178317;    //p[11] #C:N of enzymes (was: cne)
-                double km_dep = 0.002467667;        //p[12] #half-saturation constant for SOM depolymerization
-                double km_upt = 0.289955018;        //p[13] #half-saturation constant for DOC uptake
-                double r_ecloss = 0.00098887;       //p[14] #enzyme turnover rate
-                double r_death = 0.000150496;       //p[15] #microbial turnover rate
-                double c_use_efficiency = 0.299595251;           //p[16] #carbon use efficiency (was: cue)
-                double p_enz_SOC = 0.50853192;      //p[17] #proportion of enzyme pool acting on SOC (was: a)
-                double pconst = 0.481045149;        //p[18] #proportion of assimilated C allocated to enzyme production
-                double qconst = 0.491011779;        //p[19] #proportion of assimilated N allocated to enzyme production
-                double mic_to_som = 0.493381459;    //p[20] #fraction of dead microbial biomass allocated to SOM
-                double km_o2 = 0.115473482;         //p[21] #Michaelis constant for O2
-                double dgas = 1.631550734;          //p[22] #diffusion coefficient for O2 in air
-                double dliq = 3.135405232;          //p[23] #diffusion coefficient for unprotected SOM and DOM in liquid
-                double o2airfrac = 0.202587072;     //p[24] #volume fraction of O2 in air
-                double bulk_density = 0.75743956;   //p[25] #bulk density (was: bd)
-                double particle_density = 2.50156948;             //p[26] #particle density (was: pd)
-                double soilMoistureA = -1.92593874; //p[27]
-                double soilMoistureB = 9.774504229; //p[28]                     
-                double saturation = 0.492526228;    //p[29] #saturation level (was: sat)
 
-                // Calculated internally or otherwise
-                double litter_c = 20;
-                double litter_n = litter_c / cn_litter;    //#litter N input to SOC
-                double doc_input = -99.99;            //#litter C input to DOC
-                double don_input = doc_input / cn_DOCN;  //litter N input to DOC
+                // Litter inputs are calculated via DecomposeMetabolic and DecomposeStructural and DecomposeLignin
+                //double litter_c = 20;
+                //double litter_n = litter_c / cn_litter;    //#litter N input to SOC
+
+                // DOC now tracked as it's own Layer
+                //double doc_input = -99.99;            //#litter C input to DOC
+                //double don_input = doc_input / cn_DOCN;  //litter N input to DOC
 
                 double porosity = 1 - bulk_density / particle_density;                                              //calculate porosity
                 double soilm = soilMoistureA + soilMoistureB * SoilMoisture;                //calculate soil moisture scalar
@@ -161,10 +167,16 @@ namespace Landis.Extension.Succession.NECN
                 double decom_n = vmax_dep * (1 - p_enz_SOC) * enzymatic_concentration * sol_son / (km_dep + sol_son + enzymatic_concentration); //calculate depolymerization of SON using ECA kinetics 
 
 
-                double dsoc = litter_c + death_c * mic_to_som - decom_c;                    //calculate change in SOC pool
-                double dson = litter_n + death_n * mic_to_som - decom_n;                    //calculate change in SON pool
-                double ddoc = doc_input + decom_c + death_c * (1 - mic_to_som) + cn_enzymes * eloss - upt_c; //calculate change in DOC pool
-                double ddon = don_input + decom_n + death_n * (1 - mic_to_som) + eloss - upt_n; //calculate change in DON pool
+                double dsoc = death_c * mic_to_som - decom_c;                    //calculate change in SOC pool
+                double dson = death_n * mic_to_som - decom_n;                    //calculate change in SON pool
+                double ddoc = decom_c + death_c * (1 - mic_to_som) + cn_enzymes * eloss - upt_c; //calculate change in DOC pool
+                double ddon = decom_n + death_n * (1 - mic_to_som) + eloss - upt_n; //calculate change in DON pool
+
+                SiteVars.SOM1soil[site].Carbon += dsoc;
+                SiteVars.SOM1soil[site].Nitrogen += dson;
+                SiteVars.DissolvedOrganic[site].Carbon += ddoc;
+                SiteVars.DissolvedOrganic[site].Nitrogen += ddon;
+
                 double dcout = cmin + overflow;                                             //calculate C efflux
 
                 double co2loss = dcout;
