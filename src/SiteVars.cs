@@ -33,8 +33,8 @@ namespace Landis.Extension.Succession.NECN
                        
         // Soil layers
         //private static ISiteVar<Layer> som1surface;
-        private static ISiteVar<Layer> som1soil;
-        private static ISiteVar<Layer> dissolved_organic;
+        private static ISiteVar<SoilLayer> soilPrimary;
+        //private static ISiteVar<Layer> dissolved_organic;
         //private static ISiteVar<Layer> som2;
         //private static ISiteVar<Layer> som3;
         private static ISiteVar<int> soilDepth;
@@ -134,8 +134,7 @@ namespace Landis.Extension.Succession.NECN
             //som1surface         = PlugIn.ModelCore.Landscape.NewSiteVar<Layer>();
             //som2                = PlugIn.ModelCore.Landscape.NewSiteVar<Layer>();
             //som3                = PlugIn.ModelCore.Landscape.NewSiteVar<Layer>();
-            som1soil = PlugIn.ModelCore.Landscape.NewSiteVar<Layer>();
-            dissolved_organic = PlugIn.ModelCore.Landscape.NewSiteVar<Layer>();
+            soilPrimary = PlugIn.ModelCore.Landscape.NewSiteVar<SoilLayer>();
             soilDepth = PlugIn.ModelCore.Landscape.NewSiteVar<int>();
             soilDrain           = PlugIn.ModelCore.Landscape.NewSiteVar<double>();
             soilBaseFlowFraction = PlugIn.ModelCore.Landscape.NewSiteVar<double>();
@@ -220,8 +219,7 @@ namespace Landis.Extension.Succession.NECN
                 surfaceMetabolic[site]      = new Layer(LayerName.Metabolic, LayerType.Surface);
                 soilStructural[site]        = new Layer(LayerName.Structural, LayerType.Soil);
                 soilMetabolic[site]         = new Layer(LayerName.Metabolic, LayerType.Soil);
-                som1soil[site]              = new Layer(LayerName.SOM1, LayerType.Soil);
-                dissolved_organic[site] = new Layer(LayerName.DO, LayerType.Soil);
+                soilPrimary[site] = new SoilLayer(SoilName.Primary); //, LayerType.Soil);
                 //som1surface[site]           = new Layer(LayerName.SOM1, LayerType.Surface);
                 //som2[site]                  = new Layer(LayerName.SOM2, LayerType.Soil);
                 //som3[site]                  = new Layer(LayerName.SOM3, LayerType.Soil);
@@ -312,7 +310,7 @@ namespace Landis.Extension.Succession.NECN
             SiteVars.CohortCRootN[site] = 0.0;
             SiteVars.CohortWoodC[site] = 0.0;
             SiteVars.CohortCRootC[site] = 0.0;
-            SiteVars.GrossMineralization[site] = 0.0;
+            //SiteVars.GrossMineralization[site] = 0.0;
             SiteVars.AGNPPcarbon[site] = 0.0;
             SiteVars.BGNPPcarbon[site] = 0.0;
             SiteVars.LitterfallC[site] = 0.0;
@@ -320,16 +318,16 @@ namespace Landis.Extension.Succession.NECN
             SiteVars.Stream[site]          = new Layer(LayerName.Other, LayerType.Other);
             SiteVars.SourceSink[site]      = new Layer(LayerName.Other, LayerType.Other);
             
-            SiteVars.SurfaceDeadWood[site].NetMineralization = 0.0;
-            SiteVars.SurfaceStructural[site].NetMineralization = 0.0;
-            SiteVars.SurfaceMetabolic[site].NetMineralization = 0.0;
+            //SiteVars.SurfaceDeadWood[site].NetMineralization = 0.0;
+            //SiteVars.SurfaceStructural[site].NetMineralization = 0.0;
+            //SiteVars.SurfaceMetabolic[site].NetMineralization = 0.0;
             
-            SiteVars.SoilDeadWood[site].NetMineralization = 0.0;
-            SiteVars.SoilStructural[site].NetMineralization = 0.0;
-            SiteVars.SoilMetabolic[site].NetMineralization = 0.0;
+            //SiteVars.SoilDeadWood[site].NetMineralization = 0.0;
+            //SiteVars.SoilStructural[site].NetMineralization = 0.0;
+            //SiteVars.SoilMetabolic[site].NetMineralization = 0.0;
             
             //SiteVars.SOM1surface[site].NetMineralization = 0.0;
-            SiteVars.SOM1soil[site].NetMineralization = 0.0;
+            //SiteVars.SoilPrimary[site].NetMineralization = 0.0;
             //SiteVars.SOM2[site].NetMineralization = 0.0;
             //SiteVars.SOM3[site].NetMineralization = 0.0;
             SiteVars.AnnualNEE[site] = 0.0;
@@ -440,24 +438,12 @@ namespace Landis.Extension.Succession.NECN
         //---------------------------------------------------------------------
 
         /// <summary>
-        /// The soil organic matter (SOM1-Soil) for the landscape's sites.
+        /// The Primary soil.
         /// </summary>
-        public static ISiteVar<Layer> SOM1soil
+        public static ISiteVar<SoilLayer> SoilPrimary
         {
             get {
-                return som1soil;
-            }
-        }
-        //---------------------------------------------------------------------
-
-        /// <summary>
-        /// The soil organic matter (SOM1-Soil) for the landscape's sites.
-        /// </summary>
-        public static ISiteVar<Layer> DissolvedOrganic
-        {
-            get
-            {
-                return dissolved_organic;
+                return soilPrimary;
             }
         }
         //---------------------------------------------------------------------
@@ -790,10 +776,12 @@ namespace Landis.Extension.Succession.NECN
         /// </summary>
         public static ISiteVar<double> GrossMineralization
         {
-            get {
+            get
+            {
                 return grossMineralization;
             }
-            set {
+            set
+            {
                 grossMineralization = value;
             }
         }

@@ -10,7 +10,7 @@ using Landis.SpatialModeling;
 namespace Landis.Extension.Succession.NECN
 {
 
-    public enum LayerName {Leaf, FineRoot, Wood, CoarseRoot, Metabolic, Structural, SOM1, DO, Other};
+    public enum LayerName { Leaf, FineRoot, Wood, CoarseRoot, Metabolic, Structural, Other }; //, SOM1, DO, Other};
     public enum LayerType {Surface, Soil, Other} 
 
     /// <summary>
@@ -24,8 +24,8 @@ namespace Landis.Extension.Succession.NECN
         private double nitrogen;
         private double decayValue;
         private double fractionLignin;
-        private double netMineralization;
-        private double grossMineralization;
+        //private double netMineralization;
+        //private double grossMineralization;
 
 
         //---------------------------------------------------------------------
@@ -39,8 +39,8 @@ namespace Landis.Extension.Succession.NECN
             this.decayValue = 0.0;
             this.fractionLignin = 0.0;
 
-            this.netMineralization = 0.0;
-            this.grossMineralization = 0.0;
+            //this.netMineralization = 0.0;
+            //this.grossMineralization = 0.0;
 
         }
         //---------------------------------------------------------------------
@@ -141,32 +141,32 @@ namespace Landis.Extension.Succession.NECN
         /// <summary>
         /// Net Mineralization
         /// </summary>
-        public double NetMineralization
-        {
-            get
-            {
-                return netMineralization;
-            }
-            set
-            {
-                netMineralization = value;
-            }
-        }
-        //---------------------------------------------------------------------
-        /// <summary>
-        /// Gross Mineralization
-        /// </summary>
-        public double GrossMineralization
-        {
-            get
-            {
-                return grossMineralization;
-            }
-            set
-            {
-                grossMineralization = value;
-            }
-        }
+        //public double NetMineralization
+        //{
+        //    get
+        //    {
+        //        return netMineralization;
+        //    }
+        //    set
+        //    {
+        //        netMineralization = value;
+        //    }
+        //}
+        ////---------------------------------------------------------------------
+        ///// <summary>
+        ///// Gross Mineralization
+        ///// </summary>
+        //public double GrossMineralization
+        //{
+        //    get
+        //    {
+        //        return grossMineralization;
+        //    }
+        //    set
+        //    {
+        //        grossMineralization = value;
+        //    }
+        //}
 
         // --------------------------------------------------
         //public Layer Clone()
@@ -267,8 +267,8 @@ namespace Landis.Extension.Succession.NECN
                 //}
                 //else
                 //{
-                    this.TransferCarbon(SiteVars.SOM1soil[site], carbonToSOM1);
-                    this.TransferNitrogen(SiteVars.SOM1soil[site], carbonToSOM1, litterC, ratioCN, site);
+                    this.TransferCarbon(SiteVars.SoilPrimary[site], carbonToSOM1);
+                    this.TransferNitrogen(SiteVars.SoilPrimary[site], carbonToSOM1, litterC, ratioCN, site);
                 //}
             }
             //PlugIn.ModelCore.UI.WriteLine("Decompose2.  MineralN={0:0.00}.", SiteVars.MineralN[site]);
@@ -342,8 +342,8 @@ namespace Landis.Extension.Succession.NECN
                     //}
                     //else
                     //{
-                        this.TransferCarbon(SiteVars.SOM1soil[site], netCFlow);
-                        this.TransferNitrogen(SiteVars.SOM1soil[site], netCFlow, litterC, ratioCNtoSOM1, site);
+                        this.TransferCarbon(SiteVars.SoilPrimary[site], netCFlow);
+                        this.TransferNitrogen(SiteVars.SoilPrimary[site], netCFlow, litterC, ratioCNtoSOM1, site);
                     //}
 
                 }
@@ -351,7 +351,7 @@ namespace Landis.Extension.Succession.NECN
         //}
         }
         //---------------------------------------------------------------------
-        public void TransferCarbon(Layer destination, double netCFlow)
+        public void TransferCarbon(SoilLayer destination, double netCFlow)
         {
             if (netCFlow < 0)
             {
@@ -363,13 +363,13 @@ namespace Landis.Extension.Succession.NECN
             //PlugIn.ModelCore.UI.WriteLine("C FLOW EXCEEDS SOURCE!  Source: {0},{1}; Destination: {2},{3}.", this.Name, this.Type, destination.Name, destination.Type);
 
             //round these to avoid unexpected behavior
-            this.Carbon = Math.Round((this.Carbon - netCFlow),2);
+            this.Carbon = Math.Round((this.Carbon - netCFlow));
             //this.Carbon -= netCFlow;
-            destination.Carbon = Math.Round((destination.Carbon + netCFlow),2);
+            destination.Carbon = Math.Round((destination.Carbon + netCFlow));
             //destination.Carbon += netCFlow;
         }
 
-        public void TransferNitrogen(Layer destination, double CFlow, double totalC, double ratioCNtoDestination, ActiveSite site)
+        public void TransferNitrogen(SoilLayer destination, double CFlow, double totalC, double ratioCNtoDestination, ActiveSite site)
         {
             // this is the source.
 
@@ -468,7 +468,7 @@ namespace Landis.Extension.Succession.NECN
                 SiteVars.GrossMineralization[site] += mineralNFlow;
 
             //...Net mineralization
-            this.NetMineralization += mineralNFlow;
+            //this.NetMineralization += mineralNFlow;
 
             //PlugIn.ModelCore.UI.WriteLine("     this.Nitrogen={0:0.000}.", this.Nitrogen);
 
@@ -505,7 +505,12 @@ namespace Landis.Extension.Succession.NECN
                 co2loss = this.Carbon;
             }
 
-            this.TransferCarbon(SiteVars.SourceSink[site], co2loss);
+            if (co2loss > this.Carbon)
+                co2loss = this.Carbon;
+
+            //round these to avoid unexpected behavior
+            this.Carbon = Math.Round((this.Carbon - co2loss));
+            SiteVars.SourceSink[site].Carbon = Math.Round((SiteVars.SourceSink[site].Carbon + co2loss));
 
             //Add lost CO2 to monthly heterotrophic respiration
             SiteVars.MonthlyResp[site][Main.Month] += co2loss;
@@ -526,7 +531,7 @@ namespace Landis.Extension.Succession.NECN
                 SiteVars.GrossMineralization[site] += mineralNFlow;
 
             //c...Update net mineralization
-            this.NetMineralization += mineralNFlow;
+            //this.NetMineralization += mineralNFlow;
 
             return;
         }

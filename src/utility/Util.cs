@@ -362,7 +362,7 @@ namespace Landis.Extension.Succession.NECN
                             throw new InputValueException(mapValue.ToString(),
                                                           "SOM1C value {0} is not between {1:0.0} and {2:0.0}. Site_Row={3:0}, Site_Column={4:0}",
                                                           mapValue, 1.0, 10000.0, site.Location.Row, site.Location.Column);
-                        SiteVars.SOM1soil[site].Carbon = mapValue;
+                        SiteVars.SoilPrimary[site].Carbon = mapValue;
                     }
                 }
             }
@@ -382,7 +382,7 @@ namespace Landis.Extension.Succession.NECN
                             throw new InputValueException(mapValue.ToString(),
                                                           "SOM1N value {0} is not between {1:0.0} and {2:0.0}. Site_Row={3:0}, Site_Column={4:0}",
                                                           mapValue, 0.0, 500.0, site.Location.Row, site.Location.Column);
-                        SiteVars.SOM1soil[site].Nitrogen = mapValue;
+                        SiteVars.SoilPrimary[site].Nitrogen = mapValue;
                     }
                 }
             }
