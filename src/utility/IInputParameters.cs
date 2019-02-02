@@ -25,12 +25,12 @@ namespace Landis.Extension.Succession.NECN
         string SoilWiltingPointMapName { get; set; }
         string SoilPercentSandMapName { get; set; }
         string SoilPercentClayMapName { get; set; }
-        string InitialSOM1CSoilMapName { get; set; }
-        string InitialSOM1NSoilMapName { get; set; }
         string InitialDeadSurfaceMapName { get; set; }
         string InitialDeadSoilMapName { get; set; }
         string SoilBulkDensityMapName { get; set; }
         string SoilParticleDensityMapName { get; set; }
+        string InitialSOC_PrimaryMapName { get; set; }
+        string InitialSON_PrimaryMapName { get; set; }
         //string InitialSOM1CSurfaceMapName { get; set; }
         //string InitialSOM1NSurfaceMapName { get; set; }
         //string InitialSOM2CMapName { get; set; }

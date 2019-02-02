@@ -30,12 +30,12 @@ namespace Landis.Extension.Succession.NECN
         private string soilWiltingPointMapName;
         private string soilPercentSandMapName;
         private string soilPercentClayMapName;
-        private string initialSOM1CSoilMapName;
-        private string initialSOM1NSoilMapName;
         private string initialDeadSurfaceMapName;
         private string initialDeadSoilMapName;
         private string soilBulkDensityMapName;
         private string soilParticleDensityMapName;
+        private string initialSOC_PrimaryMapName;
+        private string initialSON_PrimaryMapName;
         //private string initialSOM1CSurfaceMapName;
         //private string initialSOM1NSurfaceMapName;
         //private string initialSOM2CMapName;
@@ -658,70 +658,70 @@ namespace Landis.Extension.Succession.NECN
         }
         //---------------------------------------------------------------------
 
-        //public string InitialSOM1CSurfaceMapName
+        public string InitialSOC_PrimaryMapName
+        {
+            get
+            {
+                return initialSOC_PrimaryMapName;
+            }
+            set
+            {
+                string path = value;
+                if (path.Trim(null).Length == 0)
+                    throw new InputValueException(path, "\"{0}\" is not a valid path.", path);
+                initialSOC_PrimaryMapName = value;
+            }
+        }
+
+        //---------------------------------------------------------------------
+
+        public string InitialSON_PrimaryMapName
+        {
+            get
+            {
+                return initialSON_PrimaryMapName;
+            }
+            set
+            {
+                string path = value;
+                if (path.Trim(null).Length == 0)
+                    throw new InputValueException(path, "\"{0}\" is not a valid path.", path);
+                initialSON_PrimaryMapName = value;
+            }
+        }
+        //---------------------------------------------------------------------
+
+        //public string InitialSOM1CSoilMapName
         //{
         //    get
         //    {
-        //        return initialSOM1CSurfaceMapName;
+        //        return initialSOM1CSoilMapName;
         //    }
         //    set
         //    {
         //        string path = value;
         //        if (path.Trim(null).Length == 0)
         //            throw new InputValueException(path, "\"{0}\" is not a valid path.", path);
-        //        initialSOM1CSurfaceMapName = value;
+        //        initialSOM1CSoilMapName = value;
         //    }
         //}
 
         ////---------------------------------------------------------------------
 
-        //public string InitialSOM1NSurfaceMapName
+        //public string InitialSOM1NSoilMapName
         //{
         //    get
         //    {
-        //        return initialSOM1NSurfaceMapName;
+        //        return initialSOM1NSoilMapName;
         //    }
         //    set
         //    {
         //        string path = value;
         //        if (path.Trim(null).Length == 0)
         //            throw new InputValueException(path, "\"{0}\" is not a valid path.", path);
-        //        initialSOM1NSurfaceMapName = value;
+        //        initialSOM1NSoilMapName = value;
         //    }
         //}
-        //---------------------------------------------------------------------
-
-        public string InitialSOM1CSoilMapName
-        {
-            get
-            {
-                return initialSOM1CSoilMapName;
-            }
-            set
-            {
-                string path = value;
-                if (path.Trim(null).Length == 0)
-                    throw new InputValueException(path, "\"{0}\" is not a valid path.", path);
-                initialSOM1CSoilMapName = value;
-            }
-        }
-
-        //---------------------------------------------------------------------
-
-        public string InitialSOM1NSoilMapName
-        {
-            get
-            {
-                return initialSOM1NSoilMapName;
-            }
-            set
-            {
-                string path = value;
-                if (path.Trim(null).Length == 0)
-                    throw new InputValueException(path, "\"{0}\" is not a valid path.", path);
-                initialSOM1NSoilMapName = value;
-            }
-        }
         //---------------------------------------------------------------------
 
         //public string InitialSOM2CMapName

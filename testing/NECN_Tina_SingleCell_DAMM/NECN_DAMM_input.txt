@@ -9,18 +9,18 @@ InitialCommunitiesMap   	./ICval10_TM.img
 ClimateConfigFile		./climate_gen_baselineTM.txt
 
 
-SoilDepthMapName				./SingleCellRastersTina/singlecell_100.tif
-SoilDrainMapName				./SingleCellRastersTina/singlecell_point9.tif
-SoilBaseFlowMapName				./SingleCellRastersTina/singlecell_point1.tif
+SoilDepthMapName			./SingleCellRastersTina/singlecell_100.tif
+SoilDrainMapName			./SingleCellRastersTina/singlecell_point9.tif
+SoilBaseFlowMapName			./SingleCellRastersTina/singlecell_point1.tif
 SoilStormFlowMapName			./SingleCellRastersTina/singlecell_point4.tif
 SoilFieldCapacityMapName		./SingleCellRastersTina/singlecell_point24.tif
 SoilWiltingPointMapName			./SingleCellRastersTina/singlecell_point16.tif
 SoilPercentSandMapName			./SingleCellRastersTina/singlecell_point56.tif
 SoilPercentClayMapName			./SingleCellRastersTina/singlecell_point3.tif
-InitialSOM1CsurfMapName			./SingleCellRastersTina/singlecell_31point5.tif
-InitialSOM1NsurfMapName			./SingleCellRastersTina/singlecell_1point55.tif
-InitialSOM1CsoilMapName			./SingleCellRastersTina/singlecell_31point5.tif
-InitialSOM1NsoilMapName			./SingleCellRastersTina/singlecell_2point62.tif
+SoilBulkDensityMapName			./SingleCellRastersTina/singlecell_point56.tif
+SoilParticleDensityMapName		./SingleCellRastersTina/singlecell_2point62.tif
+InitialSOC_PrimaryMapName			./SingleCellRastersTina/singlecell_31point5.tif
+InitialSON_PrimaryMapName			./SingleCellRastersTina/singlecell_2point62.tif
 InitialDeadWoodSurfaceMapName	./SingleCellRastersTina/singlecell_0.tif
 InitialDeadCoarseRootsMapName	./SingleCellRastersTina/singlecell_0.tif
 
@@ -30,13 +30,13 @@ WaterDecayFunction Ratio <<Linear or Ratio
 
 ProbabilityEstablishAdjust 	1.0
 InitialMineralN			4.0
+InitialDOC			3.0  <<arbitrary and small
 InitialFineFuels		0.1
 AtmosphericNSlope		0.0001
 AtmosphericNIntercept	0.259
 Latitude				35.5
 DenitrificationRate		0.01
-DecayRateSurf			0.16
-DecayRateSOM1			0.12
+FractionLitterToDOC		0.05  << some fraction of litter goes immediately to DOC
 
 MaximumLAI
 

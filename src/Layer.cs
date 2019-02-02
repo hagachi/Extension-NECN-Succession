@@ -203,7 +203,7 @@ namespace Landis.Extension.Succession.NECN
                                 * System.Math.Exp(-1.0 * OtherData.LigninDecayEffect * this.FractionLignin)
                                 * OtherData.MonthAdjust;
 
-                //Decompose structural into som1 and som2 with CO2 loss.
+                //Decompose structural into SOC with CO2 loss.
                 this.DecomposeLignin(totalCFlow, site);
             }
         }
@@ -304,9 +304,17 @@ namespace Landis.Extension.Succession.NECN
                                 * OtherData.LitterParameters[(int) this.Type].DecayRateMetabolicC
                                 * OtherData.MonthAdjust;
 
-                //PlugIn.ModelCore.UI.WriteLine("DecomposeMeta1.  MineralN={0:0.00}.", SiteVars.MineralN[site]);
-                //Added impact of soil anerobic conditions
+                //Effect of soil anerobic conditions: 
                 if (this.Type == LayerType.Soil) totalCFlow *= anerb;
+
+                // Rob, Melissa, Jason: Need to add some DOC from litter to soils.
+                double flowToDOC = totalCFlow * PlugIn.Parameters.FractionLitterDecayToDOC;
+                double flowToDON = flowToDOC / ratioCNtoSOM1;
+                this.Carbon -= Math.Min(flowToDOC, this.Carbon);
+                SiteVars.SoilPrimary[site].DOC += flowToDOC;
+                this.Nitrogen -= Math.Min(flowToDON, this.Nitrogen);
+                SiteVars.SoilPrimary[site].DON += flowToDON;
+
 
                 //Make sure metabolic C does not go negative.
                 if (totalCFlow > litterC)
@@ -321,15 +329,17 @@ namespace Landis.Extension.Succession.NECN
                     else
                         co2loss = totalCFlow * OtherData.MetabolicToCO2Soil;
 
-                    //PlugIn.ModelCore.UI.WriteLine("BeforeResp.  MineralN={0:0.00}.", SiteVars.MineralN[site]);
                     this.Respiration(co2loss, site);
-                    //PlugIn.ModelCore.UI.WriteLine("AfterResp.  MineralN={0:0.00}.", SiteVars.MineralN[site]);
 
-                    //Decompose metabolic into som1
+
+                    //Decompose metabolic into SOC / SON
                     double netCFlow = totalCFlow - co2loss;
 
                     if (netCFlow > litterC)
                         PlugIn.ModelCore.UI.WriteLine("   ERROR:  Decompose Metabolic:  netCFlow={0:0.000} > layer.Carbon={0:0.000}.", netCFlow, this.Carbon);
+
+                    this.TransferCarbon(SiteVars.SoilPrimary[site], netCFlow);
+                    this.TransferNitrogen(SiteVars.SoilPrimary[site], netCFlow, litterC, ratioCNtoSOM1, site);
 
                     // -- CARBON AND NITROGEN ---------------------------
                     // Partition and schedule C flows
@@ -342,8 +352,6 @@ namespace Landis.Extension.Succession.NECN
                     //}
                     //else
                     //{
-                        this.TransferCarbon(SiteVars.SoilPrimary[site], netCFlow);
-                        this.TransferNitrogen(SiteVars.SoilPrimary[site], netCFlow, litterC, ratioCNtoSOM1, site);
                     //}
 
                 }
@@ -363,10 +371,8 @@ namespace Landis.Extension.Succession.NECN
             //PlugIn.ModelCore.UI.WriteLine("C FLOW EXCEEDS SOURCE!  Source: {0},{1}; Destination: {2},{3}.", this.Name, this.Type, destination.Name, destination.Type);
 
             //round these to avoid unexpected behavior
-            this.Carbon = Math.Round((this.Carbon - netCFlow));
-            //this.Carbon -= netCFlow;
-            destination.Carbon = Math.Round((destination.Carbon + netCFlow));
-            //destination.Carbon += netCFlow;
+            this.Carbon = Math.Round((this.Carbon - netCFlow), 2);
+            destination.Carbon = Math.Round((destination.Carbon + netCFlow), 2);
         }
 
         public void TransferNitrogen(SoilLayer destination, double CFlow, double totalC, double ratioCNtoDestination, ActiveSite site)
@@ -457,11 +463,6 @@ namespace Landis.Extension.Succession.NECN
                 this.Nitrogen -= mineralNFlow;
 
                 SiteVars.MineralN[site] += mineralNFlow;
-                //PlugIn.ModelCore.UI.WriteLine("     this.Name={0}, this.Type={1}", this.Name, this.Type);
-                //PlugIn.ModelCore.UI.WriteLine("IfMinOccurs.  MineralN={0:0.00}.", SiteVars.MineralN[site]);
-
-                //PlugIn.ModelCore.UI.WriteLine("  TransferN NFlow={0:0.000}, mineralizedN = {1:0.000}, N mineralalization = {1:0.000}", NFlow, mineralizedN, mineralNFlow);
-                //PlugIn.ModelCore.UI.WriteLine("     Source:  this.Name={0}, this.Type={1}", this.Name, this.Type);
             }
 
             if (mineralNFlow > 0)

@@ -11,7 +11,7 @@ CellLength  100 << meters
 
 >> Succession Extension     Initialization File
 >> --------------------     -------------------
-"NECN Succession DAMM"	   "./NECN_input_TM.txt"
+"NECN Succession DAMM"	   "./NECN_DAMM_input.txt"
 
 
 >> Disturbance Extensions   Initialization File

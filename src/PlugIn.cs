@@ -83,11 +83,6 @@ namespace Landis.Extension.Succession.NECN
             ProbEstablishAdjust = Parameters.ProbEstablishAdjustment;
             MetadataHandler.InitializeMetadata(Timestep, modelCore, SoilCarbonMapNames, SoilNitrogenMapNames, ANPPMapNames, ANEEMapNames, TotalCMapNames); //,LAIMapNames, ShadeClassMapNames);
             
-            //Initialize climate.
-            Climate.Initialize(Parameters.ClimateConfigFile, false, modelCore);
-            FutureClimateBaseYear = Climate.Future_MonthlyData.Keys.Min();
-
-            ClimateRegionData.Initialize(Parameters);
             FunctionalType.Initialize(Parameters);
             SpeciesData.Initialize(Parameters);
             Util.ReadSoilDepthMap(Parameters.SoilDepthMapName);
@@ -98,16 +93,24 @@ namespace Landis.Extension.Succession.NECN
             Util.ReadWiltingPointMap(Parameters.SoilWiltingPointMapName);
             Util.ReadPercentSandMap(Parameters.SoilPercentSandMapName);
             Util.ReadPercentClayMap(Parameters.SoilPercentClayMapName);
-            Util.ReadSoilCNMaps(//Parameters.InitialSOM1CSurfaceMapName,
-                //Parameters.InitialSOM1NSurfaceMapName,
-                Parameters.InitialSOM1CSoilMapName,
-                Parameters.InitialSOM1NSoilMapName);
+            Util.ReadSoilCNMaps(Parameters.InitialSOC_PrimaryMapName, Parameters.InitialSON_PrimaryMapName);
+                //Parameters.InitialSOM1CSurfaceMapName,
+            //    //Parameters.InitialSOM1NSurfaceMapName,
+            //    Parameters.InitialSOM1CSoilMapName,
+            //    Parameters.InitialSOM1NSoilMapName);
                 //Parameters.InitialSOM2CMapName,
                 //Parameters.InitialSOM2NMapName,
                 //Parameters.InitialSOM3CMapName,
                 //Parameters.InitialSOM3NMapName);
             Util.ReadDeadWoodMaps(Parameters.InitialDeadSurfaceMapName, Parameters.InitialDeadSoilMapName);
-            Util.ReadMap(Parameters.SoilBulkDensityMapName, SiteVars.SoilBulkDensity);
+            Util.ReadDoubleMap(Parameters.SoilBulkDensityMapName, SiteVars.SoilBulkDensity);
+            Util.ReadDoubleMap(Parameters.SoilParticleDensityMapName, SiteVars.SoilParticleDensity);
+
+            //Initialize climate.
+            Climate.Initialize(Parameters.ClimateConfigFile, false, modelCore);
+            FutureClimateBaseYear = Climate.Future_MonthlyData.Keys.Min();
+            ClimateRegionData.Initialize(Parameters);
+
 
             ShadeLAI = Parameters.MaximumShadeLAI; 
             OtherData.Initialize(Parameters);

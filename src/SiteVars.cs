@@ -143,7 +143,9 @@ namespace Landis.Extension.Succession.NECN
             soilWiltingPoint = PlugIn.ModelCore.Landscape.NewSiteVar<double>();
             soilPercentSand = PlugIn.ModelCore.Landscape.NewSiteVar<double>();
             soilPercentClay = PlugIn.ModelCore.Landscape.NewSiteVar<double>();
-            
+            SoilBulkDensity = PlugIn.ModelCore.Landscape.NewSiteVar<double>();
+            SoilParticleDensity = PlugIn.ModelCore.Landscape.NewSiteVar<double>();
+
             // Other Layers
             stream              = PlugIn.ModelCore.Landscape.NewSiteVar<Layer>();
             sourceSink          = PlugIn.ModelCore.Landscape.NewSiteVar<Layer>();

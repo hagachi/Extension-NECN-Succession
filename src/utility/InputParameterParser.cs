@@ -132,21 +132,25 @@ namespace Landis.Extension.Succession.NECN
             ReadVar(soilPDMapName);
             parameters.SoilParticleDensityMapName = soilPDMapName.Value;
 
-            //InputVar<string> som1CsurfMapName = new InputVar<string>("InitialSOM1CsurfMapName");
-            //ReadVar(som1CsurfMapName);
-            //parameters.InitialSOM1CSurfaceMapName = som1CsurfMapName.Value;
+            InputVar<string> socMapName = new InputVar<string>("InitialSOC_PrimaryMapName");
+            ReadVar(socMapName);
+            parameters.InitialSOC_PrimaryMapName = socMapName.Value;
+
+            InputVar<string> sonMapName = new InputVar<string>("InitialSON_PrimaryMapName");
+            ReadVar(sonMapName);
+            parameters.InitialSON_PrimaryMapName = sonMapName.Value;
 
             //InputVar<string> som1NsurfMapName = new InputVar<string>("InitialSOM1NsurfMapName");
             //ReadVar(som1NsurfMapName);
             //parameters.InitialSOM1NSurfaceMapName = som1NsurfMapName.Value;
 
-            InputVar<string> som1CsoilMapName = new InputVar<string>("InitialSOM1CsoilMapName");
-            ReadVar(som1CsoilMapName);
-            parameters.InitialSOM1CSoilMapName = som1CsoilMapName.Value;
+            //InputVar<string> som1CsoilMapName = new InputVar<string>("InitialSOM1CsoilMapName");
+            //ReadVar(som1CsoilMapName);
+            //parameters.InitialSOM1CSoilMapName = som1CsoilMapName.Value;
 
-            InputVar<string> som1NsoilMapName = new InputVar<string>("InitialSOM1NsoilMapName");
-            ReadVar(som1NsoilMapName);
-            parameters.InitialSOM1NSoilMapName = som1NsoilMapName.Value;
+            //InputVar<string> som1NsoilMapName = new InputVar<string>("InitialSOM1NsoilMapName");
+            //ReadVar(som1NsoilMapName);
+            //parameters.InitialSOM1NSoilMapName = som1NsoilMapName.Value;
 
             //InputVar<string> som2CMapName = new InputVar<string>("InitialSOM2CMapName");
             //ReadVar(som2CMapName);
