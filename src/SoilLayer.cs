@@ -4,6 +4,7 @@ using Landis.Core;
 using Landis.SpatialModeling;
 using Landis.Utilities;
 using System;
+using Landis.Library.Climate;
 
 namespace Landis.Extension.Succession.NECN
 {
@@ -192,21 +193,23 @@ namespace Landis.Extension.Succession.NECN
         private static double dgas = 1.631550734;          //p[22] #diffusion coefficient for O2 in air
         private static double dliq = 3.135405232;          //p[23] #diffusion coefficient for unprotected SOM and DOM in liquid
         private static double o2airfrac = 0.202587072;     //p[24] #volume fraction of O2 in air
-        //private double bulk_density = 0.75743956;   //p[25] #bulk density (was: bd)
-        //private double particle_density = 2.50156948;             //p[26] #particle density (was: pd)
-        private static double soilMoistureA = -1.92593874; //p[27]
-        private static double soilMoistureB = 9.774504229; //p[28]                     
-        private static double saturation = 0.492526228;    //p[29] #saturation level (was: sat)
-        public static double r = -0.008314; // gas constant
+        //private double bulk_density = 0.75743956;         //p[25] #bulk density (was: bd)
+        //private double particle_density = 2.50156948;     //p[26] #particle density (was: pd)
+        private static double soilMoistureA = -1.92593874;  //p[27]
+        private static double soilMoistureB = 9.774504229;  //p[28]                     
+        private static double saturation = 0.492526228;     //p[29] #saturation level (was: sat)
+        public static double r = -0.008314;                 // gas constant
 
 
-        public static void Decompose(ActiveSite site)
+        public static void Decompose(int Year, int Month, ActiveSite site)
         {
             
             double som1c_soil = SiteVars.SoilPrimary[site].Carbon;
+
+            double hours_to_month = 24.0 * (double) AnnualClimate.DaysInMonth(Month, Year);
             //PlugIn.ModelCore.UI.WriteLine("SoilPrimary[site].Carbon={0:0.00}", som1c_soil);
             //PlugIn.ModelCore.UI.WriteLine("SiteVars.MineralN = {0:0.00} - pre SOM1.", SiteVars.MineralN[site]);
-          
+
             if (som1c_soil > 0.0000001)
             {
 
@@ -229,27 +232,21 @@ namespace Landis.Extension.Succession.NECN
                 //double t = 1.0;
                 // double DOC_input = dref + A1 * Math.Sin(w1 * t - Math.PI / 2);  // # mg C cm-3 soil 
 
+                double porosity = 1 - bulk_density / particle_density;                                      //calculate porosity
+                double soilm = soilMoistureA + soilMoistureB * SoilMoisture;                                //calculate soil moisture scalar
+                soilm = (soilm > saturation) ? saturation : soilm;                                          //set upper bound on soil moisture (saturation)
+                soilm = (soilm < 0.1) ? 0.1 : soilm;                                                        //set lower bound on soil moisture
+                double o2 = dgas * o2airfrac * Math.Pow((porosity - soilm), (4.0 / 3.0));                   //calculate oxygen concentration
+                double sol_soc = dliq * Math.Pow(soilm, 3) * frac * SOC;                                    //calculate unprotected SOC
+                double sol_son = dliq * Math.Pow(soilm, 3) * frac * SON;                                    //calculate unprotected SON
+                double vmax_dep = a_dep * Math.Exp(-ea_dep / (r * (SoilT + 273)));                          //calculate maximum depolymerization rate
+                double vmax_upt = a_upt * Math.Exp(-ea_upt / (r * (SoilT + 273)));                          //calculate maximum depolymerization rate
 
-
-                // Litter inputs are calculated via DecomposeMetabolic and DecomposeStructural and DecomposeLignin
-                //double litter_c = 20;
-                //double litter_n = litter_c / cn_litter;    //#litter N input to SOC
-
-                double porosity = 1 - bulk_density / particle_density;                                              //calculate porosity
-                double soilm = soilMoistureA + soilMoistureB * SoilMoisture;                //calculate soil moisture scalar
-                soilm = (soilm > saturation) ? saturation : soilm;                                        //set upper bound on soil moisture (saturation)
-                soilm = (soilm < 0.1) ? 0.1 : soilm;                                        //set lower bound on soil moisture
-                double o2 = dgas * o2airfrac * Math.Pow((porosity - soilm), (4.0 / 3.0));    //calculate oxygen concentration
-                double sol_soc = dliq * Math.Pow(soilm, 3) * frac * SOC;                     //calculate unprotected SOC
-                double sol_son = dliq * Math.Pow(soilm, 3) * frac * SON;                     //calculate unprotected SON
-                double vmax_dep = a_dep * Math.Exp(-ea_dep / (r * (SoilT + 273)));          //calculate maximum depolymerization rate
-                double vmax_upt = a_upt * Math.Exp(-ea_upt / (r * (SoilT + 273)));          //calculate maximum depolymerization rate
-
-                double upt_c = microbial_C * vmax_upt * DOC / (km_upt + DOC) * o2 / (km_o2 + o2); //calculate DOC uptake
-                double cmin = upt_c * (1 - c_use_efficiency);                                            //calculate initial C mineralization
-                double upt_n = microbial_N * vmax_upt * DON / (km_upt + DON) * o2 / (km_o2 + o2); //calculate DON uptake
-                double death_c = r_death * Math.Pow(microbial_C, 2);                         //calculate density-dependent microbial C turnover
-                double death_n = r_death * Math.Pow(microbial_N, 2);                         //calculate density-dependent microbial N turnover
+                double upt_c = microbial_C * vmax_upt * DOC / (km_upt + DOC) * o2 / (km_o2 + o2);           //calculate DOC uptake
+                double c_mineralization = upt_c * (1 - c_use_efficiency);                                   //calculate initial C mineralization
+                double upt_n = microbial_N * vmax_upt * DON / (km_upt + DON) * o2 / (km_o2 + o2);           //calculate DON uptake
+                double death_c = r_death * Math.Pow(microbial_C, 2);                                        //calculate density-dependent microbial C turnover
+                double death_n = r_death * Math.Pow(microbial_N, 2);                                        //calculate density-dependent microbial N turnover
 
                 double enz_c = pconst * c_use_efficiency * upt_c;                                           //calculate potential enzyme C production
                 double enz_n = qconst * upt_n;                                                              //calculate potential enzyme N production
@@ -276,17 +273,17 @@ namespace Landis.Extension.Succession.NECN
                 double ddoc = decom_c + death_c * (1 - mic_to_som) + cn_enzymes * eloss - upt_c; //calculate change in DOC pool
                 double ddon = decom_n + death_n * (1 - mic_to_som) + eloss - upt_n; //calculate change in DON pool
 
-                SiteVars.SoilPrimary[site].Carbon += dsoc;
-                SiteVars.SoilPrimary[site].Nitrogen += dson;
-                SiteVars.SoilPrimary[site].DOC += ddoc;
-                SiteVars.SoilPrimary[site].DON += ddon;
-                SiteVars.SoilPrimary[site].MicrobialCarbon += dmic_c;
-                SiteVars.SoilPrimary[site].MicrobialNitrogen += dmic_n;
-                SiteVars.SoilPrimary[site].EnzymaticConcentration += dec;
+                SiteVars.SoilPrimary[site].Carbon += dsoc; // * hours_to_month;
+                SiteVars.SoilPrimary[site].Nitrogen += dson; // * hours_to_month;
+                SiteVars.SoilPrimary[site].DOC += ddoc; // * hours_to_month;
+                SiteVars.SoilPrimary[site].DON += ddon; // * hours_to_month;
+                SiteVars.SoilPrimary[site].MicrobialCarbon += dmic_c; // * hours_to_month;
+                SiteVars.SoilPrimary[site].MicrobialNitrogen += dmic_n; // * hours_to_month;
+                SiteVars.SoilPrimary[site].EnzymaticConcentration += dec; // * hours_to_month;
 
                 //double dcout = cmin + overflow;                                             //calculate C efflux
 
-                double c_loss = cmin + overflow;                //calculate C efflux
+                double c_loss = (c_mineralization + overflow) * hours_to_month;                //calculate C efflux
 
                 SiteVars.SoilPrimary[site].Respiration(c_loss, site);
 
@@ -350,7 +347,7 @@ namespace Landis.Extension.Succession.NECN
                 co2loss = this.Carbon;
 
             //round these to avoid unexpected behavior
-            this.Carbon = Math.Round((this.Carbon - co2loss));
+            // this.Carbon = Math.Round((this.Carbon - co2loss)); Is this double-counting of dscoc (above)?
             SiteVars.SourceSink[site].Carbon = Math.Round((SiteVars.SourceSink[site].Carbon + co2loss));
 
             //Add lost CO2 to monthly heterotrophic respiration

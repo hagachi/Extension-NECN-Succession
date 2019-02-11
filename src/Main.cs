@@ -104,7 +104,7 @@ namespace Landis.Extension.Succession.NECN
 
                     WoodLayer.Decompose(site);
                     LitterLayer.Decompose(site);
-                    SoilLayer.Decompose(site);
+                    SoilLayer.Decompose(y, Month, site);
 
                     // Volatilization loss as a function of the mineral N which remains after uptake by plants.  
                     // ML added a correction factor for wetlands since their denitrification rate is double that of wetlands

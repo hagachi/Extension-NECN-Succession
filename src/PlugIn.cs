@@ -94,14 +94,6 @@ namespace Landis.Extension.Succession.NECN
             Util.ReadPercentSandMap(Parameters.SoilPercentSandMapName);
             Util.ReadPercentClayMap(Parameters.SoilPercentClayMapName);
             Util.ReadSoilCNMaps(Parameters.InitialSOC_PrimaryMapName, Parameters.InitialSON_PrimaryMapName);
-                //Parameters.InitialSOM1CSurfaceMapName,
-            //    //Parameters.InitialSOM1NSurfaceMapName,
-            //    Parameters.InitialSOM1CSoilMapName,
-            //    Parameters.InitialSOM1NSoilMapName);
-                //Parameters.InitialSOM2CMapName,
-                //Parameters.InitialSOM2NMapName,
-                //Parameters.InitialSOM3CMapName,
-                //Parameters.InitialSOM3NMapName);
             Util.ReadDeadWoodMaps(Parameters.InitialDeadSurfaceMapName, Parameters.InitialDeadSoilMapName);
             Util.ReadDoubleMap(Parameters.SoilBulkDensityMapName, SiteVars.SoilBulkDensity);
             Util.ReadDoubleMap(Parameters.SoilParticleDensityMapName, SiteVars.SoilParticleDensity);
@@ -138,13 +130,6 @@ namespace Landis.Extension.Succession.NECN
             if (Parameters.CalibrateMode)
                 Outputs.CreateCalibrateLogFile();
             Establishment.InitializeLogFile();
-
-            //B_MAX = 0;
-            //foreach(ISpecies species in ModelCore.Species)
-            //{
-            //    if (SpeciesData.Max_Biomass[species] > B_MAX)
-            //        B_MAX = SpeciesData.Max_Biomass[species];
-            //}
 
             foreach (ActiveSite site in PlugIn.ModelCore.Landscape)
                 Main.ComputeTotalCohortCN(site, SiteVars.Cohorts[site]);
