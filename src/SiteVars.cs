@@ -45,8 +45,10 @@ namespace Landis.Extension.Succession.NECN
         private static ISiteVar<double> soilWiltingPoint;
         private static ISiteVar<double> soilPercentSand;
         private static ISiteVar<double> soilPercentClay;
+        private static ISiteVar<double> soilBulkDensity;
+        private static ISiteVar<double> soilParticleDensity;
 
-        
+
         // Similar to soil layers with respect to their pools:
         private static ISiteVar<Layer> stream;
         private static ISiteVar<Layer> sourceSink;
@@ -103,8 +105,7 @@ namespace Landis.Extension.Succession.NECN
         public static ISiteVar<Dictionary<int, Dictionary<int, double>>> CohortResorbedNallocation;
         public static ISiteVar<double> SmolderConsumption;
         public static ISiteVar<double> FlamingConsumption;
-        public static ISiteVar<double> SoilBulkDensity;
-        public static ISiteVar<double> SoilParticleDensity;
+        
 
 
         //---------------------------------------------------------------------
@@ -143,8 +144,8 @@ namespace Landis.Extension.Succession.NECN
             soilWiltingPoint = PlugIn.ModelCore.Landscape.NewSiteVar<double>();
             soilPercentSand = PlugIn.ModelCore.Landscape.NewSiteVar<double>();
             soilPercentClay = PlugIn.ModelCore.Landscape.NewSiteVar<double>();
-            SoilBulkDensity = PlugIn.ModelCore.Landscape.NewSiteVar<double>();
-            SoilParticleDensity = PlugIn.ModelCore.Landscape.NewSiteVar<double>();
+            soilBulkDensity = PlugIn.ModelCore.Landscape.NewSiteVar<double>();
+            soilParticleDensity = PlugIn.ModelCore.Landscape.NewSiteVar<double>();
 
             // Other Layers
             stream              = PlugIn.ModelCore.Landscape.NewSiteVar<Layer>();
@@ -476,6 +477,8 @@ namespace Landis.Extension.Succession.NECN
         public static ISiteVar<double> SoilStormFlowFraction { get { return soilStormFlowFraction; } }
         public static ISiteVar<double> SoilFieldCapacity { get { return soilFieldCapacity; } }
         public static ISiteVar<double> SoilWiltingPoint { get { return soilWiltingPoint; } }
+        public static ISiteVar<double> SoilBulkDensity { get { return soilBulkDensity; } }
+        public static ISiteVar<double> SoilParticleDensity { get { return soilParticleDensity; } }
         public static ISiteVar<double> SoilPercentSand { get { return soilPercentSand; } }
         public static ISiteVar<double> SoilPercentClay { get { return soilPercentClay; } }
         //---------------------------------------------------------------------

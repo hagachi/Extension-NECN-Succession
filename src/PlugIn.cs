@@ -93,10 +93,11 @@ namespace Landis.Extension.Succession.NECN
             Util.ReadWiltingPointMap(Parameters.SoilWiltingPointMapName);
             Util.ReadPercentSandMap(Parameters.SoilPercentSandMapName);
             Util.ReadPercentClayMap(Parameters.SoilPercentClayMapName);
+            Util.ReadSoilBulkDensityMap(Parameters.SoilBulkDensityMapName);
+            Util.ReadSoilParticleDensityMap(Parameters.SoilParticleDensityMapName);
+            //Util.ReadDoubleMap(Parameters.SoilParticleDensityMapName);
             Util.ReadSoilCNMaps(Parameters.InitialSOC_PrimaryMapName, Parameters.InitialSON_PrimaryMapName);
             Util.ReadDeadWoodMaps(Parameters.InitialDeadSurfaceMapName, Parameters.InitialDeadSoilMapName);
-            Util.ReadDoubleMap(Parameters.SoilBulkDensityMapName, SiteVars.SoilBulkDensity);
-            Util.ReadDoubleMap(Parameters.SoilParticleDensityMapName, SiteVars.SoilParticleDensity);
 
             //Initialize climate.
             Climate.Initialize(Parameters.ClimateConfigFile, false, modelCore);

@@ -305,12 +305,62 @@ namespace Landis.Extension.Succession.NECN
                 }
             }
         }
+        //---------------------------------------------------------------------
+
+        public static void ReadSoilBulkDensityMap(string path)
+        {
+            IInputRaster<DoublePixel> map = MakeDoubleMap(path);
+
+            using (map)
+            {
+                DoublePixel pixel = map.BufferPixel;
+                foreach (Site site in PlugIn.ModelCore.Landscape.AllSites)
+                {
+                    map.ReadBufferPixel();
+                    double mapValue = pixel.MapCode.Value;
+                    if (site.IsActive)
+                    {
+                        if (mapValue < 0.0 || mapValue > 1.0)
+                            throw new InputValueException(mapValue.ToString(),
+                                                          "Bulk density value {0} is not between {1:0.0} and {2:0.0}. Site_Row={3:0}, Site_Column={4:0}",
+                                                          mapValue, 0.0, 1.0, site.Location.Row, site.Location.Column);
+                        SiteVars.SoilBulkDensity[site] = mapValue;
+                    }
+                }
+            }
+        }
+
+        //---------------------------------------------------------------------
+
+        public static void ReadSoilParticleDensityMap(string path)
+        {
+            IInputRaster<DoublePixel> map = MakeDoubleMap(path);
+
+            using (map)
+            {
+                DoublePixel pixel = map.BufferPixel;
+                foreach (Site site in PlugIn.ModelCore.Landscape.AllSites)
+                {
+                    map.ReadBufferPixel();
+                    double mapValue = pixel.MapCode.Value;
+                    if (site.IsActive)
+                    {
+                        if (mapValue < 0.0 || mapValue > 1.0)
+                            throw new InputValueException(mapValue.ToString(),
+                                                          "Bulk density value {0} is not between {1:0.0} and {2:0.0}. Site_Row={3:0}, Site_Column={4:0}",
+                                                          mapValue, 0.0, 1.0, site.Location.Row, site.Location.Column);
+                        SiteVars.SoilParticleDensity[site] = mapValue;
+                    }
+                }
+            }
+        }
+
         public static void ReadSoilCNMaps(string pathSOC, string pathSON)
         {
             IInputRaster<DoublePixel> map = MakeDoubleMap(pathSOC);
 
             
-            map = MakeDoubleMap(pathSOC);
+            //map = MakeDoubleMap(pathSOC);
 
             using (map)
             {
@@ -350,7 +400,7 @@ namespace Landis.Extension.Succession.NECN
                 }
             }
         }
-        //---------------------------------------------------------------------
+        ////---------------------------------------------------------------------
         private static IInputRaster<DoublePixel> MakeDoubleMap(string path)
         {
             PlugIn.ModelCore.UI.WriteLine("  Read in data from {0}", path);
@@ -431,40 +481,40 @@ namespace Landis.Extension.Succession.NECN
         //---------------------------------------------------------------------
         //---------------------------------------------------------------------
 
-        public static void ReadDoubleMap(string path, ISiteVar<double> siteVar)
-        {
-            IInputRaster<DoublePixel> map;
+        //public static void ReadDoubleMap(string path, ISiteVar<double> siteVar)
+        //{
+        //    IInputRaster<DoublePixel> map;
 
-            try
-            {
-                map = PlugIn.ModelCore.OpenRaster<DoublePixel>(path);
-            }
-            catch (FileNotFoundException)
-            {
-                string messege = string.Format("Error: The file {0} does not exist", path);
-                throw new System.ApplicationException(messege);
-            }
+        //    try
+        //    {
+        //        map = PlugIn.ModelCore.OpenRaster<DoublePixel>(path);
+        //    }
+        //    catch (FileNotFoundException)
+        //    {
+        //        string messege = string.Format("Error: The file {0} does not exist", path);
+        //        throw new System.ApplicationException(messege);
+        //    }
 
-            if (map.Dimensions != PlugIn.ModelCore.Landscape.Dimensions)
-            {
-                string messege = string.Format("Error: The input map {0} does not have the same dimension (row, column) as the ecoregions map", path);
-                throw new System.ApplicationException(messege);
-            }
+        //    if (map.Dimensions != PlugIn.ModelCore.Landscape.Dimensions)
+        //    {
+        //        string messege = string.Format("Error: The input map {0} does not have the same dimension (row, column) as the ecoregions map", path);
+        //        throw new System.ApplicationException(messege);
+        //    }
 
-            using (map)
-            {
-                DoublePixel pixel = map.BufferPixel;
-                foreach (Site site in PlugIn.ModelCore.Landscape.AllSites)
-                {
-                    map.ReadBufferPixel();
-                    double mapCode = pixel.MapCode.Value;
+        //    using (map)
+        //    {
+        //        DoublePixel pixel = map.BufferPixel;
+        //        foreach (Site site in PlugIn.ModelCore.Landscape.AllSites)
+        //        {
+        //            map.ReadBufferPixel();
+        //            double mapCode = pixel.MapCode.Value;
 
-                    if (site.IsActive)
-                    {
-                        siteVar[site] = mapCode;
-                    }
-                }
-            }
-        }
+        //            if (site.IsActive)
+        //            {
+        //                siteVar[site] = mapCode;
+        //            }
+                //}
+            //}
+        //}
     }
 }
