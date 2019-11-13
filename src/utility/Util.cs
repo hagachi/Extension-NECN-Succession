@@ -383,6 +383,14 @@ namespace Landis.Extension.Succession.NECN
                     }
                 }
             }
+
+            // Initialize other components:
+            foreach (Site site in PlugIn.ModelCore.Landscape.AllSites)
+            {
+                SiteVars.SoilPrimary[site].EnzymaticConcentration = 1.0;
+                SiteVars.SoilPrimary[site].MicrobialCarbon = 1.0;
+                SiteVars.SoilPrimary[site].MicrobialNitrogen = 1.0;
+            }
         }
         ////---------------------------------------------------------------------
         private static IInputRaster<DoublePixel> MakeDoubleMap(string path)

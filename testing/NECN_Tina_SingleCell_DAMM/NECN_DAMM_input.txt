@@ -29,7 +29,7 @@ SmokeModelOutputs yes
 WaterDecayFunction Ratio <<Linear or Ratio
 
 ProbabilityEstablishAdjust 	1.0
-InitialMineralN			4.0
+InitialMineralN			2.0
 InitialDOC			3.0  <<arbitrary and small
 InitialFineFuels		0.1
 AtmosphericNSlope		0.0001

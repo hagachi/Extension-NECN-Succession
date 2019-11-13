@@ -23,6 +23,7 @@ namespace Landis.Extension.Succession.NECN
         private double microbial_carbon;
         private double microbial_nitrogen;
         private double enzymatic_concentration;
+        private double monthlyCinputs;
         //private double decayValue;
         //private double fractionLignin;
         //private double netMineralization;
@@ -41,6 +42,7 @@ namespace Landis.Extension.Succession.NECN
             this.microbial_carbon = 0.0;
             this.microbial_nitrogen = 0.0;
             this.enzymatic_concentration = 0.0;
+            this.monthlyCinputs = 0.0;
 
         }
         //---------------------------------------------------------------------
@@ -71,6 +73,21 @@ namespace Landis.Extension.Succession.NECN
             set
             {
                 o_carbon = value;
+            }
+        }
+        //---------------------------------------------------------------------
+        /// <summary>
+        /// Soil Organic Carbon
+        /// </summary>
+        public double MonthlyCarbonInputs
+        {
+            get
+            {
+                return monthlyCinputs;
+            }
+            set
+            {
+                monthlyCinputs = value;
             }
         }
         //---------------------------------------------------------------------
@@ -210,7 +227,7 @@ namespace Landis.Extension.Succession.NECN
             //double som1c_soil = SiteVars.SoilPrimary[site].Carbon;
 
             double hours_to_month = 24.0 * (double) AnnualClimate.DaysInMonth(Month, Year);
-            double mg_to_g = 1000;
+            double mg_to_g = 1; // 000;
 
             if (SiteVars.SoilPrimary[site].Carbon > 0.0000001)
             {
@@ -229,7 +246,7 @@ namespace Landis.Extension.Succession.NECN
                 double microbial_N = SiteVars.SoilPrimary[site].MicrobialNitrogen;
                 double enzymatic_concentration = SiteVars.SoilPrimary[site].EnzymaticConcentration;
                 //double LitterCinput = 4.748544E-10;
-                double LitterCinput = SiteVars.LitterfallC[site] / hours_to_month * mg_to_g / 12.0;
+                double LitterCinput = SiteVars.SoilPrimary[site].MonthlyCarbonInputs / hours_to_month * mg_to_g;
 
                 // seasonal DOC input:
                 //double A1 = 0.0005; //       #seasonal amplitude
@@ -271,7 +288,9 @@ namespace Landis.Extension.Succession.NECN
                 double decom_c = vmax_dep * p_enz_SOC * enzymatic_concentration * sol_soc / (km_dep + sol_soc + enzymatic_concentration);     //calculate depolymerization of SOC using ECA kinetics (Tang 2015 GMD)
                 double decom_n = vmax_dep * (1 - p_enz_SOC) * enzymatic_concentration * sol_son / (km_dep + sol_son + enzymatic_concentration); //calculate depolymerization of SON using ECA kinetics 
 
-                double dsoc = ((LitterCinput + death_c) * mic_to_som) - decom_c;                    //calculate change in SOC pool
+                double dsoc = LitterCinput + (death_c * mic_to_som) - decom_c;                    //calculate change in SOC pool
+                PlugIn.ModelCore.UI.WriteLine(" DSOC:  LitterInput={0}, MicrobialDeath={1}, Decom_C={2}", LitterCinput, death_c, decom_c);
+
                 double dson = (((LitterCinput/ cn_litter) + death_n) * mic_to_som) - decom_n;                    //calculate change in SON pool
 
                 double ddoc = decom_c + death_c * (1 - mic_to_som) + cn_enzymes * eloss - upt_c; //calculate change in DOC pool
@@ -288,9 +307,11 @@ namespace Landis.Extension.Succession.NECN
                 //double dcout = cmin + overflow;                                             //calculate C efflux
 
                 double c_loss = (c_mineralization + overflow) * (hours_to_month / mg_to_g);                //calculate C efflux
-                //double c_loss_m2 = (c_mineralization + overflow) * (hours_to_month *10000*10/mg_to_g);                //calculate C efflux from cm3 to m2
-                
-                SiteVars.SoilPrimary[site].Respiration(c_loss, site);
+                                                                                                           //double c_loss_m2 = (c_mineralization + overflow) * (hours_to_month *10000*10/mg_to_g);                //calculate C efflux from cm3 to m2
+
+                //SiteVars.SoilPrimary[site].Respiration(c_loss, site);  // RMS: 11-13-2019: This causes negative mineral N.  
+
+                SiteVars.SoilPrimary[site].MonthlyCarbonInputs = 0.0;  // Done with these now.
 
                 double cLeached = 0.0;  // Carbon leached to a stream
 
@@ -352,13 +373,13 @@ namespace Landis.Extension.Succession.NECN
                 co2loss = this.Carbon;
 
             //round these to avoid unexpected behavior
-             this.Carbon = Math.Round((this.Carbon - co2loss)); //Is this double-counting of dscoc (above)?
+            // this.Carbon = Math.Round((this.Carbon - co2loss)); //Is this double-counting of dscoc (above)?  YES.
             SiteVars.SourceSink[site].Carbon = Math.Round((SiteVars.SourceSink[site].Carbon + co2loss));
 
             //Add lost CO2 to monthly heterotrophic respiration
             SiteVars.MonthlyResp[site][Main.Month] += co2loss;
 
-            this.Nitrogen -= mineralNFlow;
+            //this.Nitrogen -= mineralNFlow;  // Also double-counting.
             SiteVars.MineralN[site] += mineralNFlow;
 
             //PlugIn.ModelCore.UI.WriteLine("     Source:  this.Name={0}, this.Type={1}", this.Name, this.Type);
@@ -366,8 +387,8 @@ namespace Landis.Extension.Succession.NECN
 
             //c...Update gross mineralization
             // this.GrossMineralization += mineralNFlow;
-            if (mineralNFlow > 0)
-                SiteVars.GrossMineralization[site] += mineralNFlow;
+            //if (mineralNFlow > 0)
+            //    SiteVars.GrossMineralization[site] += mineralNFlow;
 
             //c...Update net mineralization
             //this.NetMineralization += mineralNFlow;

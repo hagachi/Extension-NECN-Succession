@@ -372,7 +372,7 @@ namespace Landis.Extension.Succession.NECN
 
             //round these to avoid unexpected behavior
             this.Carbon = Math.Round((this.Carbon - netCFlow), 2);
-            destination.Carbon = Math.Round((destination.Carbon + netCFlow), 2);
+            destination.MonthlyCarbonInputs += Math.Round(netCFlow, 2);
         }
 
         public void TransferNitrogen(SoilLayer destination, double CFlow, double totalC, double ratioCNtoDestination, ActiveSite site)
