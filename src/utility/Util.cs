@@ -271,22 +271,6 @@ namespace Landis.Extension.Succession.NECN
         {
             IInputRaster<DoublePixel> map = MakeDoubleMap(path);
 
-            //try
-            //{
-            //    map = PlugIn.ModelCore.OpenRaster<DoublePixel>(path);
-            //}
-            //catch (FileNotFoundException)
-            //{
-            //    string mesg = string.Format("Error: The file {0} does not exist", path);
-            //    throw new System.ApplicationException(mesg);
-            //}
-
-            //if (map.Dimensions != PlugIn.ModelCore.Landscape.Dimensions)
-            //{
-            //    string mesg = string.Format("Error: The input map {0} does not have the same dimension (row, column) as the ecoregions map", path);
-            //    throw new System.ApplicationException(mesg);
-            //}
-
             using (map)
             {
                 DoublePixel pixel = map.BufferPixel;
@@ -320,10 +304,10 @@ namespace Landis.Extension.Succession.NECN
                     double mapValue = pixel.MapCode.Value;
                     if (site.IsActive)
                     {
-                        if (mapValue < 0.0 || mapValue > 1.0)
+                        if (mapValue < 0.0 || mapValue > 10.0)
                             throw new InputValueException(mapValue.ToString(),
                                                           "Bulk density value {0} is not between {1:0.0} and {2:0.0}. Site_Row={3:0}, Site_Column={4:0}",
-                                                          mapValue, 0.0, 1.0, site.Location.Row, site.Location.Column);
+                                                          mapValue, 0.0, 10.0, site.Location.Row, site.Location.Column);
                         SiteVars.SoilBulkDensity[site] = mapValue;
                     }
                 }
@@ -345,10 +329,10 @@ namespace Landis.Extension.Succession.NECN
                     double mapValue = pixel.MapCode.Value;
                     if (site.IsActive)
                     {
-                        if (mapValue < 0.0 || mapValue > 1.0)
+                        if (mapValue < 0.0 || mapValue > 10.0)
                             throw new InputValueException(mapValue.ToString(),
-                                                          "Bulk density value {0} is not between {1:0.0} and {2:0.0}. Site_Row={3:0}, Site_Column={4:0}",
-                                                          mapValue, 0.0, 1.0, site.Location.Row, site.Location.Column);
+                                                          "Particle density value {0} is not between {1:0.0} and {2:0.0}. Site_Row={3:0}, Site_Column={4:0}",
+                                                          mapValue, 0.0, 10.0, site.Location.Row, site.Location.Column);
                         SiteVars.SoilParticleDensity[site] = mapValue;
                     }
                 }

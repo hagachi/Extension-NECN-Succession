@@ -19,8 +19,8 @@ SoilPercentSandMapName			./SingleCellRastersTina/singlecell_point56.tif
 SoilPercentClayMapName			./SingleCellRastersTina/singlecell_point3.tif
 SoilBulkDensityMapName			./SingleCellRastersTina/singlecell_point56.tif
 SoilParticleDensityMapName		./SingleCellRastersTina/singlecell_2point62.tif
-InitialSOC_PrimaryMapName			./SingleCellRastersTina/singlecell_31point5.tif
-InitialSON_PrimaryMapName			./SingleCellRastersTina/singlecell_2point62.tif
+InitialSOC_PrimaryMapName			./SingleCellRastersTina/singlecell_441point4.tif
+InitialSON_PrimaryMapName			./SingleCellRastersTina/singlecell_31point5.tif
 InitialDeadWoodSurfaceMapName	./SingleCellRastersTina/singlecell_0.tif
 InitialDeadCoarseRootsMapName	./SingleCellRastersTina/singlecell_0.tif
 
