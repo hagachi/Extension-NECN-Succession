@@ -146,6 +146,7 @@ namespace Landis.Extension.Succession.NECN
                         //PlugIn.ModelCore.UI.WriteLine("DON Leaching. ratioCN_SOM1soil={0:0.00}, DON={1:0.00}.", ratioCN_SOM1soil, orgflow);
 
                         SiteVars.MonthlyStreamN[site][Main.Month] += orgflow;
+                        SiteVars.MonthlyStreamDON[site][Main.Month] = orgflow; // Chihiro
 
                         //PlugIn.ModelCore.UI.WriteLine("DON Leaching. totalNLeach={0:0.0}, MineralN={1:0.00}", totalNleached, SiteVars.MineralN[site]);         
 

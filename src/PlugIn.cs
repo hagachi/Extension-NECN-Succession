@@ -181,6 +181,7 @@ namespace Landis.Extension.Succession.NECN
                 {
                     int month = months[i];
                     Outputs.WriteMonthlyLogFile(month);
+                    Outputs.WriteMonthlyMaps(month); // Chihiro; add monthly output files
                 }
                 Outputs.WritePrimaryLogFile(PlugIn.ModelCore.CurrentTime);
                 Outputs.WriteShortPrimaryLogFile(PlugIn.ModelCore.CurrentTime);

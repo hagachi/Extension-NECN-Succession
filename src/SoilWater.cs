@@ -184,7 +184,7 @@ namespace Landis.Extension.Succession.NECN
             }
                      
             // Calculate actual evapotranspiration.  This equation is derived from the stand equation for calculating AET from PET
-            //  Bergström, 1992
+            //  Bergstrï¿½m, 1992
 
             double waterEmpty = wiltingPoint * soilDepth;
 
@@ -230,8 +230,19 @@ namespace Landis.Extension.Succession.NECN
             SiteVars.SoilWaterContent[site] = soilWaterContent;
             SiteVars.SoilTemperature[site] = CalculateSoilTemp(tmin, tmax, liveBiomass, litterBiomass, month);
             SiteVars.DecayFactor[site] = CalculateDecayFactor((int)OtherData.WType, SiteVars.SoilTemperature[site], relativeWaterContent, ratioPrecipPET, month);
-            SiteVars.AnaerobicEffect[site] = CalculateAnaerobicEffect(drain, ratioPrecipPET, pet, tave);
-            if (month == 0)
+            SiteVars.AnaerobicEffect[site] = CalculateAnaerobicEffect(drain, ratioPrecipPET, pet, tave, site);
+            // chihiro; add monthly variables
+            SiteVars.MonthlyWaterMovement[site][month]      = waterMovement;
+            SiteVars.MonthlyBaseFlow[site][month]           = baseFlow;
+            SiteVars.MonthlyStormFlow[site][month]          = stormFlow;
+            SiteVars.MonthlyPet[site][month]                = pet;
+            SiteVars.MonthlyLiquidSnowPack[site][month]     = liquidSnowpack;
+            SiteVars.MonthlyAvailableWater[site][month]     = availableWater;
+            SiteVars.MonthlySoilWaterContent[site][month]   = soilWaterContent;
+            SiteVars.MonthlySoilTemperature[site][month]    = SiteVars.SoilTemperature[site];
+            SiteVars.MonthlyDecayFactor[site][month]        = SiteVars.DecayFactor[site];
+            SiteVars.MonthlyAnaerobicEffect[site][month]    = SiteVars.AnaerobicEffect[site];
+if (month == 0)
                 SiteVars.DryDays[site] = 0;
             else
                 SiteVars.DryDays[site] += CalculateDryDays(month, beginGrowing, endGrowing, waterEmpty, availableWater, priorWaterAvail);
@@ -376,7 +387,7 @@ namespace Landis.Extension.Succession.NECN
             return r;
         }
         //---------------------------------------------------------------------------
-        private static double CalculateAnaerobicEffect(double drain, double ratioPrecipPET, double pet, double tave)
+        private static double CalculateAnaerobicEffect(double drain, double ratioPrecipPET, double pet, double tave, Site site)
         {
 
             //Originally from anerob.f of Century
@@ -418,9 +429,11 @@ namespace Landis.Extension.Succession.NECN
                 if (anerob < aneref3)
                     anerob = aneref3;
                 //PlugIn.ModelCore.UI.WriteLine("Lower than threshold. Anaerobic={0}", anerob);      
+                SiteVars.MonthlyXh2o[site][Main.Month] = xh2o; // Chihiro
             }
             //PlugIn.ModelCore.UI.WriteLine("ratioPrecipPET={0:0.0}, tave={1:0.00}, pet={2:0.00}, AnaerobicFactor={3:0.00}, Drainage={4:0.00}", ratioPrecipPET, tave, pet, anerob, drain);         
             //PlugIn.ModelCore.UI.WriteLine("Anaerobic Effect = {0:0.00}.", anerob);
+
             return anerob;
         }
         //---------------------------------------------------------------------------
@@ -492,6 +505,9 @@ namespace Landis.Extension.Succession.NECN
             SiteVars.MonthlyStreamN[site][Main.Month] += totalNleached;
             //PlugIn.ModelCore.UI.WriteLine("AfterSoilWaterLeaching. totalNLeach={0:0.0}, MineralN={1:0.00}", totalNleached, SiteVars.MineralN[site]);        
 
+            // Chihiro; to input into water model
+            SiteVars.MonthlyAmtNLeached[site][Main.Month] = amtNLeached;
+            SiteVars.MonthlyStreamNitrate[site][Main.Month] = totalNleached;
             return;
         }
 

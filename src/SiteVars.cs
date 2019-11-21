@@ -60,6 +60,19 @@ namespace Landis.Extension.Succession.NECN
         private static ISiteVar<double> decayFactor;
         private static ISiteVar<double> soilTemperature;
         private static ISiteVar<double> anaerobicEffect;
+        // Chihiro; add
+        private static ISiteVar<double[]> monthlyAmtNLeached;
+        private static ISiteVar<double[]> monthlyWaterMovement;
+        private static ISiteVar<double[]> monthlyBaseFlow;
+        private static ISiteVar<double[]> monthlyStormFlow;
+        private static ISiteVar<double[]> monthlyPet;
+        private static ISiteVar<double[]> monthlyAvailableWater;
+        private static ISiteVar<double[]> monthlySoilWaterContent;
+        private static ISiteVar<double[]> monthlyLiquidSnowPack;
+        private static ISiteVar<double[]> monthlyDecayFactor;
+        private static ISiteVar<double[]> monthlySoilTemperature;
+        private static ISiteVar<double[]> monthlyXh2o;
+        private static ISiteVar<double[]> monthlyAnaerobicEffect;
         
         // Annual accumulators for reporting purposes.
         private static ISiteVar<double> grossMineralization;
@@ -78,6 +91,8 @@ namespace Landis.Extension.Succession.NECN
         private static ISiteVar<double[]> monthlyBGNPPC;
         private static ISiteVar<double[]> monthlyNEE;
         private static ISiteVar<double[]> monthlyStreamN;
+        private static ISiteVar<double[]> monthlyStreamDON;     // Chihiro
+        private static ISiteVar<double[]> monthlyStreamNitrate; // Chihiro
         private static ISiteVar<double[]> monthlyLAI;
         public static ISiteVar<double> AnnualNEE;
         public static ISiteVar<double> FireCEfflux;
@@ -157,6 +172,19 @@ namespace Landis.Extension.Succession.NECN
             soilTemperature     = PlugIn.ModelCore.Landscape.NewSiteVar<double>();
             anaerobicEffect     = PlugIn.ModelCore.Landscape.NewSiteVar<double>();
             dryDays             = PlugIn.ModelCore.Landscape.NewSiteVar<int>();
+            // chihiro
+            monthlyAmtNLeached      = PlugIn.ModelCore.Landscape.NewSiteVar<double[]>();
+            monthlyWaterMovement = PlugIn.ModelCore.Landscape.NewSiteVar<double[]>();
+            monthlyBaseFlow         = PlugIn.ModelCore.Landscape.NewSiteVar<double[]>();
+            monthlyStormFlow        = PlugIn.ModelCore.Landscape.NewSiteVar<double[]>();
+            monthlyPet              = PlugIn.ModelCore.Landscape.NewSiteVar<double[]>();
+            monthlyAvailableWater   = PlugIn.ModelCore.Landscape.NewSiteVar<double[]>();
+            monthlyLiquidSnowPack   = PlugIn.ModelCore.Landscape.NewSiteVar<double[]>();
+            monthlySoilWaterContent = PlugIn.ModelCore.Landscape.NewSiteVar<double[]>();
+            monthlyDecayFactor      = PlugIn.ModelCore.Landscape.NewSiteVar<double[]>();
+            monthlySoilTemperature  = PlugIn.ModelCore.Landscape.NewSiteVar<double[]>();
+            monthlyXh2o             = PlugIn.ModelCore.Landscape.NewSiteVar<double[]>();
+            monthlyAnaerobicEffect  = PlugIn.ModelCore.Landscape.NewSiteVar<double[]>();
             
             // Annual accumulators
             grossMineralization = PlugIn.ModelCore.Landscape.NewSiteVar<double>();
@@ -167,6 +195,8 @@ namespace Landis.Extension.Succession.NECN
             monthlyBGNPPC       = PlugIn.ModelCore.Landscape.NewSiteVar<double[]>();
             monthlyNEE          = PlugIn.ModelCore.Landscape.NewSiteVar<double[]>();
             monthlyStreamN      = PlugIn.ModelCore.Landscape.NewSiteVar<double[]>();
+            monthlyStreamDON    = PlugIn.ModelCore.Landscape.NewSiteVar<double[]>();    // Chihiro
+            monthlyStreamNitrate= PlugIn.ModelCore.Landscape.NewSiteVar<double[]>();    // Chihiro
             AnnualNEE           = PlugIn.ModelCore.Landscape.NewSiteVar<double>();
             FireCEfflux         = PlugIn.ModelCore.Landscape.NewSiteVar<double>();
             FireNEfflux         = PlugIn.ModelCore.Landscape.NewSiteVar<double>();
@@ -229,9 +259,25 @@ namespace Landis.Extension.Succession.NECN
                 monthlyBGNPPC[site]           = new double[12];
                 monthlyNEE[site]            = new double[12];
                 monthlyStreamN[site]         = new double[12];
+                monthlyStreamDON[site]      = new double[12];   // Chihiro; To input into water model
+                monthlyStreamNitrate[site]  = new double[12];   // Chihiro; To input into water model
                 monthlyResp[site]           = new double[12];
                 monthlyLAI[site] = new double[12];
                 //monthlymineralN[site]       = new double[12];
+
+                // chihiro
+                monthlyAmtNLeached[site]        = new double[12];
+                monthlyWaterMovement[site]      = new double[12];
+                monthlyBaseFlow[site]           = new double[12];
+                monthlyStormFlow[site]          = new double[12];
+                monthlyPet[site]                = new double[12];
+                monthlyAvailableWater[site]     = new double[12];
+                monthlyLiquidSnowPack[site]     = new double[12];
+                monthlySoilWaterContent[site]   = new double[12];
+                monthlyDecayFactor[site]        = new double[12];
+                monthlySoilTemperature[site]    = new double[12];
+                monthlyXh2o[site]               = new double[12];
+                monthlyAnaerobicEffect[site]    = new double[12];
 
                 CohortResorbedNallocation[site] = new Dictionary<int, Dictionary<int, double>>();
             }
@@ -649,6 +695,214 @@ namespace Landis.Extension.Succession.NECN
         }
         //---------------------------------------------------------------------
 
+        // chihiro; add
+        // <summary>
+        // Monthly amtNLeached
+        // </summary>
+        public static ISiteVar<double[]> MonthlyAmtNLeached
+        {
+            get
+            {
+                return monthlyAmtNLeached;
+            }
+            set
+            {
+                monthlyAmtNLeached = value;
+            }
+        }
+        //---------------------------------------------------------------------
+
+        /// <summary>
+        /// Monthly water movement [cm m^-2].
+        /// </summary>
+        public static ISiteVar<double[]> MonthlyWaterMovement
+        {
+            get
+            {
+                return monthlyWaterMovement;
+            }
+            set
+            {
+                monthlyWaterMovement = value;
+            }
+        }
+        //---------------------------------------------------------------------
+
+        // chihiro; add
+        /// <summary>
+        /// Monthly Base flow [cm m^-2].
+        /// </summary>
+        public static ISiteVar<double[]> MonthlyBaseFlow
+        {
+            get
+            {
+                return monthlyBaseFlow;
+            }
+            set
+            {
+                monthlyBaseFlow = value;
+            }
+        }
+        //---------------------------------------------------------------------
+
+        // chihiro; add
+        /// <summary>
+        /// Monthly Storm flow [cm m^-2].
+        /// </summary>
+        public static ISiteVar<double[]> MonthlyStormFlow
+        {
+            get
+            {
+                return monthlyStormFlow;
+            }
+            set
+            {
+                monthlyStormFlow = value;
+            }
+        }
+        //---------------------------------------------------------------------
+
+        // chihiro; add
+        /// <summary>
+        /// Monthly potential evapotranspiration [cm m^-2].
+        /// </summary>
+        public static ISiteVar<double[]> MonthlyPet
+        {
+            get
+            {
+                return monthlyPet;
+            }
+            set
+            {
+                monthlyPet = value;
+            }
+        }
+        //---------------------------------------------------------------------
+
+
+        // chihiro; add
+        /// <summary>
+        /// monthly available water for plant [cm m^-2]
+        /// </summary>
+        public static ISiteVar<double[]> MonthlyAvailableWater
+        {
+            get
+            {
+                return monthlyAvailableWater;
+            }
+            set
+            {
+                monthlyAvailableWater = value;
+            }
+        }
+        //---------------------------------------------------------------------
+
+        // chihiro; add
+        /// <summary>
+        /// Monthly liquid snow pack [cm m^-2].
+        /// </summary>
+        public static ISiteVar<double[]> MonthlyLiquidSnowPack
+        {
+            get
+            {
+                return monthlyLiquidSnowPack;
+            }
+            set
+            {
+                monthlyLiquidSnowPack = value;
+            }
+        }
+        //---------------------------------------------------------------------
+
+        // chihiro; add
+        /// <summary>
+        /// Monthly soil water content [cm m^-2].
+        /// </summary>
+        public static ISiteVar<double[]> MonthlySoilWaterContent
+        {
+            get
+            {
+                return monthlySoilWaterContent;
+            }
+            set
+            {
+                monthlySoilWaterContent = value;
+            }
+        }
+        //---------------------------------------------------------------------
+
+
+        // chihiro; add
+        /// <summary>
+        /// monthly decay factor for calculation of decay rate of soil organic matters
+        /// </summary>
+        public static ISiteVar<double[]> MonthlyDecayFactor
+        {
+            get
+            {
+                return monthlyDecayFactor;
+            }
+            set
+            {
+                monthlyDecayFactor = value;
+            }
+        }
+        //---------------------------------------------------------------------
+
+        // chihiro; add
+        /// <summary>
+        /// monthly soil temperature.
+        /// </summary>
+        public static ISiteVar<double[]> MonthlySoilTemperature
+        {
+            get
+            {
+                return monthlySoilTemperature;
+            }
+            set
+            {
+                monthlySoilTemperature = value;
+            }
+        }
+        //---------------------------------------------------------------------
+
+        // chihiro; add
+        /// <summary>
+        /// monthly excess water for decay rate [cm m^-2].
+        /// </summary>
+        public static ISiteVar<double[]> MonthlyXh2o
+        {
+            get
+            {
+                return monthlyXh2o;
+            }
+            set
+            {
+                monthlyXh2o = value;
+            }
+        }
+        //---------------------------------------------------------------------
+
+        // chihiro; add
+        /// <summary>
+        /// monthly anaerobic effect for decay rate [-].
+        /// </summary>
+        public static ISiteVar<double[]> MonthlyAnaerobicEffect
+        {
+            get
+            {
+                return monthlyAnaerobicEffect;
+            }
+            set
+            {
+                monthlyAnaerobicEffect = value;
+            }
+        }
+        //---------------------------------------------------------------------
+
+        
+        /////////
+
         /// <summary>
         /// A summary of all Leaf Nitrogen in the Cohorts.
         /// </summary>
@@ -887,6 +1141,41 @@ namespace Landis.Extension.Succession.NECN
         }
         //---------------------------------------------------------------------
 
+        //---------------------------------------------------------------------
+        /// <summary>
+        /// A summary of DON leaching
+        /// </summary>
+        // Chihiro; To input into water model
+        public static ISiteVar<double[]> MonthlyStreamDON
+        {
+            get
+            {
+                return monthlyStreamDON;
+            }
+            set
+            {
+                monthlyStreamDON = value;
+            }
+        }
+
+        //---------------------------------------------------------------------
+        /// <summary>
+        /// A summary of Nitrate leaching
+        /// </summary>
+        // Chihiro; To input into water model
+        public static ISiteVar<double[]> MonthlyStreamNitrate
+        {
+            get
+            {
+                return monthlyStreamNitrate;
+            }
+            set
+            {
+                monthlyStreamNitrate = value;
+            }
+        }
+        //---------------------------------------------------------------------
+        
         /// <summary>
         /// A summary of Monthly LAI
         /// </summary>

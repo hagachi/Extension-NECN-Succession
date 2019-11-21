@@ -43,5 +43,42 @@ namespace Landis.Extension.Succession.NECN
 
         [DataFieldAttribute(Unit = FieldUnits.g_N_m2, Desc = "N Leaching", Format = "0.00")]
         public double StreamN { get; set; }
+
+        // chihiro; add additional outputs
+        [DataFieldAttribute(Unit = "", Desc = "AmtNLeached", Format = "0.00")]
+        public double AmtNLeached { get; set; }
+
+        [DataFieldAttribute(Unit = FieldUnits.cm, Desc = "Water Movement", Format = "0.00")]
+        public double WaterMovement { get; set; }
+
+        [DataFieldAttribute(Unit = FieldUnits.cm, Desc = "Storm Flow", Format = "0.00")]
+        public double StormFlow { get; set; }
+
+        [DataFieldAttribute(Unit = FieldUnits.cm, Desc = "Base Flow", Format = "0.00")]
+        public double BaseFlow { get; set; }
+
+        [DataFieldAttribute(Unit = FieldUnits.cm, Desc = "PET", Format = "0.00")]
+        public double Pet { get; set; }
+
+        [DataFieldAttribute(Unit = FieldUnits.cm, Desc = "Available Water", Format = "0.00")]
+        public double AvailableWater { get; set; }
+
+        [DataFieldAttribute(Unit = FieldUnits.cm, Desc = "Liquid Snow Pack", Format = "0.00")]
+        public double LiquidSnowPack { get; set; }
+
+        [DataFieldAttribute(Unit = FieldUnits.cm, Desc = "Soil Water Content", Format = "0.00")]
+        public double SoilWaterContent { get; set; }
+
+        [DataFieldAttribute(Unit = "", Desc = "Decay Factor", Format = "0.00")]
+        public double DecayFactor { get; set; }
+
+        [DataFieldAttribute(Unit = FieldUnits.DegreeC, Desc = "Soil Temperature", Format = "0.00")]
+        public double SoilTemperature { get; set; }
+
+        [DataFieldAttribute(Unit = FieldUnits.cm, Desc = "xh2o", Format = "0.00")]
+        public double Xh2o { get; set; }
+
+        [DataFieldAttribute(Unit = "", Desc = "Anaerobic Effect", Format = "0.00")]
+        public double AnaerobicEffect { get; set; }
     }
 }
