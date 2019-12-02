@@ -1,4 +1,5 @@
 //  Author: Robert Scheller, Melissa Lucash
+//  Modified: Chihiro Haga (chihiro.haga@ge.see.eng.osaka-u.ac.jp)
 
 using System.Collections.Generic;
 using System.IO;
@@ -25,6 +26,8 @@ namespace Landis.Extension.Succession.NECN
         private static int daysInMonth;
         private static int beginGrowing;
         private static int endGrowing;
+        private static double holdingTank = 0.0;
+
 
         public static void Run(int year, int month, double liveBiomass, Site site, out double baseFlow, out double stormFlow, out double AET)
         {
@@ -47,9 +50,10 @@ namespace Landis.Extension.Succession.NECN
             double actualET = 0.0;
             double remainingPET = 0.0;
             double availableWaterMax = 0.0;  //amount of water available after precipitation and snowmelt (over-estimate of available water)
-            double availableWaterMin = 0.0;   //amount of water available after stormflow (runoff) evaporation and transpiration, but before baseflow/leaching (under-estimate of available water)
+            //double availableWaterMin = 0.0;   //amount of water available after stormflow (runoff) evaporation and transpiration, but before baseflow/leaching (under-estimate of available water)
             double availableWater = 0.0;     //amount of water deemed available to the trees, which will be the average between the max and min
             double priorWaterAvail = SiteVars.AvailableWater[site];
+            double waterFull = 0.0;
 
             //...Calculate external inputs
             IEcoregion ecoregion = PlugIn.ModelCore.Ecoregion[site];
@@ -91,7 +95,9 @@ namespace Landis.Extension.Succession.NECN
             }
             else
             {
-                soilWaterContent += H2Oinputs;
+                //PH: Accumulate precipitation and snowmelt before adding to soil so that interception and soil evaporation can come out first
+                addToSoil += H2Oinputs;
+                //soilWaterContent += H2Oinputs;
                 //PlugIn.ModelCore.UI.WriteLine("Let it rain and add it to soil! rain={0}, soilWaterContent={1}.", H2Oinputs, soilWaterContent);
             }
 
@@ -107,15 +113,19 @@ namespace Landis.Extension.Succession.NECN
                if (snowMeltFraction > 1.0)
                     snowMeltFraction = 1.0;
 
-               addToSoil = liquidSnowpack * snowMeltFraction;  //Amount of liquidsnowpack that melts = liquidsnowpack multiplied by the fraction that melts.
+               //PH: 
+                addToSoil += liquidSnowpack * snowMeltFraction;  //PH: Add melted snow to addToSoil. Amount of liquidsnowpack that melts = liquidsnowpack multiplied by the fraction that melts.
+                //addToSoil = liquidSnowpack * snowMeltFraction;  //Amount of liquidsnowpack that melts = liquidsnowpack multiplied by the fraction that melts.
               
                 //Subtracted melted snow from snowpack and add it to the soil
                liquidSnowpack = liquidSnowpack - addToSoil;  
-               soilWaterContent += addToSoil;
+               //PH: Add to soil later. 
+                //soilWaterContent += addToSoil;
             }
             
             //Calculate the max amout of water available to trees, an over-estimate of the water available to trees.  It only reflects precip and melting of precip.
-            availableWaterMax = soilWaterContent;
+            //PH: available water may need to be calculated differently with my proposed changes, but I moved this variable down for now so that soilEvaporation comes out first.
+            //availableWaterMax = soilWaterContent;
             
             //...Evaporate water from the snow pack (rewritten by Pulliam 9/94)
             //...Coefficient 0.87 relates to heat of fusion for ice vs. liquid water
@@ -131,36 +141,27 @@ namespace Landis.Extension.Succession.NECN
                 liquidSnowpack = liquidSnowpack - evaporatedSnow;
 
                 //...Decrement remaining pet by energy used to evaporate snow:
-                remainingPET = pet - evaporatedSnow;
+
+                //PH: CENTURY code divides evaporatedSnow by 0.87 so it matches the PET used to melt snow.
+                remainingPET = pet - evaporatedSnow / 0.87;
+                //remainingPET = pet - evaporatedSnow;
                 
                 if (remainingPET < 0.0) 
                     remainingPET = 0.0;
 
                 //Subtract evaporated snowfrom the soil water content
-                soilWaterContent -= evaporatedSnow;
-            }
-
-            //Allow excess water to run off during storm events (stormflow)
-            double waterFull = soilDepth * fieldCapacity;  //units of cm
-            
-            double waterMovement = 0.0;            
-
-            if (soilWaterContent > waterFull)
-            {
-
-                waterMovement = Math.Max((soilWaterContent - waterFull), 0.0); // How much water should move during a storm event, which is based on how much water the soil can hold.
-                soilWaterContent = waterFull;
-                
-                //...Compute storm flow.
-                stormFlow = waterMovement * stormFlowFraction;
-
-                //Subtract stormflow from soil water
-                soilWaterContent -= stormFlow;
-                //PlugIn.ModelCore.UI.WriteLine("Water Runs Off. stormflow={0}.", stormFlow);
+                //PH: Take evaporated snow out of snowmelt instead of soil...or is that double counting evaporation? Could this cause addToSoil to go negative?  
+                //It is already taken out of the snowpack, and is used to decrement PET so that it won't affect AET
+                addToSoil -= evaporatedSnow;
+                if (addToSoil < 0.0)
+                    addToSoil = 0.0;
+                //soilWaterContent -= evaporatedSnow;
             }
             
+            // ********************************************************
             //...Calculate bare soil water loss and interception  when air temperature is above freezing and no snow cover.
             //...Mofified 9/94 to allow interception when t < 0 but no snow cover, Pulliam
+            //PH: I moved this up to remove intercepted precipitation and bare soil evaporation from accumulated precipitation and snowmelt before it goes to the soil.
             if (liquidSnowpack <= 0.0)
             {
                 //...Calculate total canopy cover and litter, put cap on effects:
@@ -180,13 +181,30 @@ namespace Landis.Extension.Succession.NECN
                 double soilEvaporation = System.Math.Min(((bareSoilEvap + canopyIntercept) * H2Oinputs), (0.4 * remainingPET));
                 
                 //Subtract soil evaporation from soil water content
-               soilWaterContent -= soilEvaporation;
+               //PH: Subtract soilEvaporation from addToSoil so it won't drive down soil water. 
+                //PH: SoilEvaporation represents water that evaporates before reaching soil, so should not be subtracted from soil.
+                addToSoil -= soilEvaporation;
+                //soilWaterContent -= soilEvaporation;
             }
-                     
+
+            //PH: Add liquid water to soil
+            soilWaterContent += addToSoil;
+            //Calculate the max amout of water available to trees, an over-estimate of the water available to trees.  It only reflects precip and melting of precip.
+            //PH: Moved down so that soilEvaporation comes out first.
+            availableWaterMax = soilWaterContent;
+            // ********************************************************
+
+
             // Calculate actual evapotranspiration.  This equation is derived from the stand equation for calculating AET from PET
-            //  Bergstr�m, 1992
+            //  Bergström, 1992
+
+            // ********************************************************
+            //PH: Moved up to take evapotranspiration out before excess drains away. This is different from the CENTURY approach, where evaporation is taken out of the add first, but is 
+            //less complex because it does not require partitioning the evaporation if evapotranspiration exceeds addToSoil.
 
             double waterEmpty = wiltingPoint * soilDepth;
+            waterFull = soilDepth * fieldCapacity;  //units of cm
+
 
             if (soilWaterContent > waterFull)
                 actualET = remainingPET;
@@ -198,23 +216,112 @@ namespace Landis.Extension.Succession.NECN
             if (actualET < 0.0)
                 actualET = 0.0;
             AET = actualET;
+            // ********************************************************
 
             //PlugIn.ModelCore.UI.WriteLine("AET {0} = ", AET);
 
             //Subtract transpiration from soil water content
             soilWaterContent -= actualET;
 
+//Allow excess water to run off during storm events (stormflow)
+            double waterMovement = 0.0;            
+
+            if (soilWaterContent > waterFull)
+            {
+
+                waterMovement = Math.Max((soilWaterContent - waterFull), 0.0); // How much water should move during a storm event, which is based on how much water the soil can hold.
+                soilWaterContent = waterFull;
+                
+                //...Compute storm flow.
+                stormFlow = waterMovement * stormFlowFraction;
+
+                // ********************************************************
+                //Subtract stormflow from soil water
+                //PH: I don't see why this should come out of soil water. It should come out of excess water
+                //soilWaterContent -= stormFlow;
+                //PlugIn.ModelCore.UI.WriteLine("Water Runs Off. stormflow={0}.", stormFlow);
+                // ********************************************************
+            }
+
+            // ********************************************************
+            //PH: add new variable to track excess water and calclulate baseFlow
+            //PH: Remove stormFlow from from excess water
+            waterMovement -= stormFlow;
+            holdingTank += waterMovement;
+            // ********************************************************
+
+
+            // ********************************************************
+            //PH: moved up to take out soil evaporation and interception before water is added to soil. 
+            //...Calculate bare soil water loss and interception  when air temperature is above freezing and no snow cover.
+            //...Mofified 9/94 to allow interception when t < 0 but no snow cover, Pulliam
+            //if (liquidSnowpack <= 0.0)
+            //{
+            //...Calculate total canopy cover and litter, put cap on effects:
+            //     double standingBiomass = liveBiomass + deadBiomass;
+            //
+            //     if (standingBiomass > 800.0) standingBiomass = 800.0;
+            //     if (litterBiomass > 400.0) litterBiomass = 400.0;
+
+            //...canopy interception, fraction of  precip (canopyIntercept):
+            //double canopyIntercept = ((0.0003 * litterBiomass) + (0.0006 * standingBiomass)) * OtherData.WaterLossFactor1;
+
+            //...Bare soil evaporation, fraction of precip (bareSoilEvap):
+            //bareSoilEvap = 0.5 * System.Math.Exp((-0.002 * litterBiomass) - (0.004 * standingBiomass)) * OtherData.WaterLossFactor2;
+
+            //...Calculate total surface evaporation losses, maximum allowable is 0.4 * pet. -rm 6/94
+            //remainingPET = pet;
+            //double soilEvaporation = System.Math.Min(((bareSoilEvap + canopyIntercept) * H2Oinputs), (0.4 * remainingPET));
+
+            //Subtract soil evaporation from soil water content
+            //soilWaterContent -= soilEvaporation;
+            //}
+
+            // Calculate actual evapotranspiration.  This equation is derived from the stand equation for calculating AET from PET
+            //  Bergström, 1992
+
+            //double waterEmpty = wiltingPoint * soilDepth;
+
+            //if (soilWaterContent > waterFull)
+            //    actualET = remainingPET;
+            //else
+            //{
+            //    actualET = Math.Max(remainingPET * ((soilWaterContent - waterEmpty) / (waterFull - waterEmpty)), 0.0);
+            //}
+
+            //if (actualET < 0.0)
+            //    actualET = 0.0;
+            //AET = actualET;
+
+            //PlugIn.ModelCore.UI.WriteLine("AET {0} = ", AET);
+
+            //Subtract transpiration from soil water content
+            //soilWaterContent -= actualET;
+            // ********************************************************
+
+
+            // ********************************************************
             //Leaching occurs. Drain baseflow fraction from holding tank.
-            baseFlow = soilWaterContent * baseFlowFraction;
-            
+            //PH: Now baseflow comes from holding tank.
+            baseFlow = holdingTank * baseFlowFraction;
+            //baseFlow = soilWaterContent * baseFlowFraction;
+
             //Subtract baseflow from soil water
-            soilWaterContent -= baseFlow;
-                                                         
+            //PH: Subtract from holding tank instead. To not deplete soil water but still allow estimation of baseFlow.
+            holdingTank -= baseFlow;
+            //soilWaterContent -= baseFlow;
+            // ********************************************************
+
+
             //Calculate the amount of available water after all the evapotranspiration and leaching has taken place (minimum available water)           
-            availableWaterMin = Math.Max(soilWaterContent - waterEmpty, 0.0);
+            availableWater = Math.Max(soilWaterContent - waterEmpty, 0.0);
 
             //Calculate the final amount of available water to the trees, which is the average of the max and min          
-            availableWater = (availableWaterMax + availableWaterMin)/ 2.0;
+            //PH: availableWater is affected by my changes, and soilWaterContent should be higher now.  Therefore, I propose calculating using soilWaterContent directly instead
+            //availableWater = soilWaterContent - waterEmpty;
+            
+            // Here calculate available water at the midpoint of the month
+            //availableWater = (availableWaterMax + availableWaterMin)/ 2.0;
 
             // Compute the ratio of precipitation to PET
             double ratioPrecipPET = 0.0;
@@ -230,7 +337,7 @@ namespace Landis.Extension.Succession.NECN
             SiteVars.SoilWaterContent[site] = soilWaterContent;
             SiteVars.SoilTemperature[site] = CalculateSoilTemp(tmin, tmax, liveBiomass, litterBiomass, month);
             SiteVars.DecayFactor[site] = CalculateDecayFactor((int)OtherData.WType, SiteVars.SoilTemperature[site], relativeWaterContent, ratioPrecipPET, month);
-            SiteVars.AnaerobicEffect[site] = CalculateAnaerobicEffect(drain, ratioPrecipPET, pet, tave, site);
+            SiteVars.AnaerobicEffect[site] = CalculateAnaerobicEffect(drain, ratioPrecipPET, pet, tave, site, month);
             // chihiro; add monthly variables
             SiteVars.MonthlyWaterMovement[site][month]      = waterMovement;
             SiteVars.MonthlyBaseFlow[site][month]           = baseFlow;
@@ -242,7 +349,7 @@ namespace Landis.Extension.Succession.NECN
             SiteVars.MonthlySoilTemperature[site][month]    = SiteVars.SoilTemperature[site];
             SiteVars.MonthlyDecayFactor[site][month]        = SiteVars.DecayFactor[site];
             SiteVars.MonthlyAnaerobicEffect[site][month]    = SiteVars.AnaerobicEffect[site];
-if (month == 0)
+            if (month == 0)
                 SiteVars.DryDays[site] = 0;
             else
                 SiteVars.DryDays[site] += CalculateDryDays(month, beginGrowing, endGrowing, waterEmpty, availableWater, priorWaterAvail);
@@ -387,7 +494,7 @@ if (month == 0)
             return r;
         }
         //---------------------------------------------------------------------------
-        private static double CalculateAnaerobicEffect(double drain, double ratioPrecipPET, double pet, double tave, Site site)
+        private static double CalculateAnaerobicEffect(double drain, double ratioPrecipPET, double pet, double tave, Site site, int month)
         {
 
             //Originally from anerob.f of Century
