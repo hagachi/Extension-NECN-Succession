@@ -38,7 +38,7 @@ namespace Landis.Extension.Succession.NECN
             //     Rewritten by Bill Pulliam - 9/94
             //     Rewritten by Melissa Lucash- 11/2014
 
-            //PlugIn.ModelCore.UI.WriteLine("month={0}.", Main.Month);
+            PlugIn.ModelCore.UI.WriteLine("month={0}.", Main.Month);
         
             //...Initialize Local Variables
             double addToSoil = 0.0;
@@ -179,13 +179,16 @@ namespace Landis.Extension.Succession.NECN
                 //...Calculate total surface evaporation losses, maximum allowable is 0.4 * pet. -rm 6/94
                 remainingPET = pet;
                 double soilEvaporation = System.Math.Min(((bareSoilEvap + canopyIntercept) * H2Oinputs), (0.4 * remainingPET));
-                
+                PlugIn.ModelCore.UI.WriteLine("SWdebug soilEvaporation={0:0.00}, .", soilEvaporation); //Chihiro:
+
                 //Subtract soil evaporation from soil water content
-               //PH: Subtract soilEvaporation from addToSoil so it won't drive down soil water. 
+                //PH: Subtract soilEvaporation from addToSoil so it won't drive down soil water. 
                 //PH: SoilEvaporation represents water that evaporates before reaching soil, so should not be subtracted from soil.
                 addToSoil -= soilEvaporation;
                 //soilWaterContent -= soilEvaporation;
             }
+
+            PlugIn.ModelCore.UI.WriteLine("SWdebug addToSoil={0:0.00}, .", addToSoil); //Chihiro:
 
             //PH: Add liquid water to soil
             soilWaterContent += addToSoil;
@@ -216,14 +219,16 @@ namespace Landis.Extension.Succession.NECN
             if (actualET < 0.0)
                 actualET = 0.0;
             AET = actualET;
+            PlugIn.ModelCore.UI.WriteLine("SWdebug actualET={0:0.00}, .", actualET); //Chihiro:
             // ********************************************************
 
             //PlugIn.ModelCore.UI.WriteLine("AET {0} = ", AET);
 
             //Subtract transpiration from soil water content
             soilWaterContent -= actualET;
+            PlugIn.ModelCore.UI.WriteLine("SWdebug soilWaterContent={0:0.00}, .", soilWaterContent); //Chihiro:
 
-//Allow excess water to run off during storm events (stormflow)
+            //Allow excess water to run off during storm events (stormflow)
             double waterMovement = 0.0;            
 
             if (soilWaterContent > waterFull)
