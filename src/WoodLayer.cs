@@ -40,6 +40,14 @@ namespace Landis.Extension.Succession.NECN
                     throw new ApplicationException(mesg);
                 }
 
+                // Decompose each nursery log C according to the decayRate
+                // Chihiro 2020.01.14
+                //Console.WriteLine(SiteVars.CurrentNurseryLogC[site].Length);
+                for (int i = 0; i < SiteVars.CurrentNurseryLogC[site].Length; i++)
+                {
+                    SiteVars.CurrentNurseryLogC[site][i] *= (1 - decayRate);
+                }
+
                 // Decompose large wood into SOM1 and SOM2 with CO2 loss.
                 SiteVars.SurfaceDeadWood[site].DecomposeLignin(totalCFlow, site);
             }
@@ -137,6 +145,10 @@ namespace Landis.Extension.Succession.NECN
                 SiteVars.SurfaceDeadWood[site].Nitrogen += totalNitrogen;
                 SiteVars.SurfaceDeadWood[site].AdjustLignin(totalC, fracLignin);
                 SiteVars.SurfaceDeadWood[site].AdjustDecayRate(totalC, inputDecayValue);
+                // Update nursery log carbon
+                // Chihiro 2020.01.14
+                SiteVars.OriginalNurseryLogC[site][PlugIn.ModelCore.CurrentTime - 1] += totalC;
+                SiteVars.CurrentNurseryLogC[site][PlugIn.ModelCore.CurrentTime - 1] += totalC;
             }
             else  // Dead Coarse Roots
             {

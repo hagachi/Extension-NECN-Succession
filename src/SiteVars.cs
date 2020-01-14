@@ -30,7 +30,11 @@ namespace Landis.Extension.Succession.NECN
         private static ISiteVar<Layer> surfaceMetabolic;
         private static ISiteVar<Layer> soilStructural;
         private static ISiteVar<Layer> soilMetabolic;
-                       
+
+        // Nursely logs; Chihiro 2020.1.14
+        private static ISiteVar<double[]> originalNurseryLogC;
+        private static ISiteVar<double[]> currentNurseryLogC; // Carefully check the consistensiy with surfaceDeadWood
+
         // Soil layers
         private static ISiteVar<Layer> som1surface;
         private static ISiteVar<Layer> som1soil;
@@ -126,7 +130,11 @@ namespace Landis.Extension.Succession.NECN
             surfaceMetabolic    = PlugIn.ModelCore.Landscape.NewSiteVar<Layer>();
             soilStructural      = PlugIn.ModelCore.Landscape.NewSiteVar<Layer>();
             soilMetabolic       = PlugIn.ModelCore.Landscape.NewSiteVar<Layer>();
-            
+
+            // Nursery Logs: Chihiro 2020.01.14
+            originalNurseryLogC = PlugIn.ModelCore.Landscape.NewSiteVar<double[]>();
+            currentNurseryLogC  = PlugIn.ModelCore.Landscape.NewSiteVar<double[]>();
+
             // Soil Layers
             som1surface         = PlugIn.ModelCore.Landscape.NewSiteVar<Layer>();
             som1soil            = PlugIn.ModelCore.Landscape.NewSiteVar<Layer>();
@@ -212,7 +220,12 @@ namespace Landis.Extension.Succession.NECN
             {
                 surfaceDeadWood[site]       = new Layer(LayerName.Wood, LayerType.Surface);
                 soilDeadWood[site]          = new Layer(LayerName.CoarseRoot, LayerType.Soil);
-                
+
+                // Chihiro add ------------
+                originalNurseryLogC[site]   = new double[PlugIn.ModelCore.EndTime];
+                currentNurseryLogC[site]    = new double[PlugIn.ModelCore.EndTime];
+                // ------------
+
                 surfaceStructural[site]     = new Layer(LayerName.Structural, LayerType.Surface);
                 surfaceMetabolic[site]      = new Layer(LayerName.Metabolic, LayerType.Surface);
                 soilStructural[site]        = new Layer(LayerName.Structural, LayerType.Soil);
@@ -376,6 +389,14 @@ namespace Landis.Extension.Succession.NECN
                 return soilDeadWood;
             }
         }
+        //---------------------------------------------------------------------
+
+        /// <summary>
+        /// The original and current nursery log carbon for the landscape's sites.
+        /// </summary>
+        // Chihiro 2020.01.14
+        public static ISiteVar<double[]> OriginalNurseryLogC { get { return originalNurseryLogC; } }
+        public static ISiteVar<double[]> CurrentNurseryLogC { get { return currentNurseryLogC; } }
         //---------------------------------------------------------------------
 
         /// <summary>

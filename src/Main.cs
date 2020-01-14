@@ -28,6 +28,7 @@ namespace Landis.Extension.Succession.NECN
             
             ISiteCohorts siteCohorts = SiteVars.Cohorts[site];
             IEcoregion ecoregion = PlugIn.ModelCore.Ecoregion[site];
+            //PlugIn.ModelCore.UI.WriteLine("CurrentTime={0}, EndTime={1}.", PlugIn.ModelCore.CurrentTime, PlugIn.ModelCore.EndTime);
 
             for (int y = 0; y < years; ++y) {
 
@@ -103,6 +104,8 @@ namespace Landis.Extension.Succession.NECN
                         siteCohorts.Grow(site, (y == years && isSuccessionTimeStep), false);
 
                     WoodLayer.Decompose(site);
+                    PlugIn.ModelCore.UI.WriteLine("currentNurseryLog:{0},{1},{2}", PlugIn.ModelCore.CurrentTime, Month, string.Join(", ", SiteVars.CurrentNurseryLogC[site]));
+                    //PlugIn.ModelCore.UI.WriteLine("Yr={0}, surfaceDeadWood={1}, originalNurseryLogC={2}, currentNurseryLogC={3}", PlugIn.ModelCore.CurrentTime, SiteVars.OriginalNurseryLogC.ToString(), SiteVars.CurrentNurseryLogC.ToString());
                     LitterLayer.Decompose(site);
                     SoilLayer.Decompose(site);
 
