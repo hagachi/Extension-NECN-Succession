@@ -414,9 +414,31 @@ namespace Landis.Extension.Succession.NECN
             if (!found)
                 PlugIn.ModelCore.UI.WriteLine("A Sufficient Light value was not found for {0}.", species.Name);
 
+            // hotta 2020.01.16 ----------------------------------------------------
+            // modify light probability based on site nursery log carbon
+            double dcarModifier = 1.0;
+            double decayClassAreaRatio = calculateDecayClassAreaRatio(site);
+            double dcaPenalty = dcarModifier * decayClassAreaRatio;
+            lightProbability *= dcaPenalty;
+            // ---------------------------------------------------------------------
+
             return modelCore.GenerateUniform() < lightProbability;
 
         }
+
+        private static double calculateDecayClassAreaRatio(ActiveSite site)
+        {
+            double hight = 28.64;
+            double density = 0.182;
+            double nurseryLogC = computeNurseryLogC(site);
+            double decayClassAreaRatio = 4 * 2 * nurseryLogC / (Math.PI * hight * density) / 10 ^ 4;
+
+            return decayClassAreaRatio;
+
+        }
+
+
+
         //---------------------------------------------------------------------
         /// <summary>
         /// Add a new cohort to a site following reproduction or planting.  Does not include initial communities.
