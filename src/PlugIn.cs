@@ -415,27 +415,91 @@ namespace Landis.Extension.Succession.NECN
                 PlugIn.ModelCore.UI.WriteLine("A Sufficient Light value was not found for {0}.", species.Name);
 
             // hotta 2020.01.16 ----------------------------------------------------
-            // modify light probability based on site nursery log carbon
-            double dcarModifier = 1.0;
-            double decayClassAreaRatio = calculateDecayClassAreaRatio(site);
-            double dcaPenalty = dcarModifier * decayClassAreaRatio;
-            lightProbability *= dcaPenalty;
+            // modify light probability based on the amount of nursery log carbon on the site
+            double nurseryLogPenaltyModifier = 1.0;
+            double nurseryLogPenalty = 1.0;
+            nurseryLogPenalty = nurseryLogPenaltyModifier * ComputeNurseryLogAreaRatio(species, site);
+            PlugIn.ModelCore.UI.WriteLine("original_lightProbability:{0},{1},{2}", PlugIn.ModelCore.CurrentTime, species.Name, lightProbability);
+            lightProbability *= nurseryLogPenalty;
+            PlugIn.ModelCore.UI.WriteLine("nurseryLogPenalty:{0},{1},{2}", PlugIn.ModelCore.CurrentTime, species.Name, nurseryLogPenalty);
+            PlugIn.ModelCore.UI.WriteLine("modified_lightProbability:{0},{1},{2}", PlugIn.ModelCore.CurrentTime, species.Name, lightProbability);
             // ---------------------------------------------------------------------
 
             return modelCore.GenerateUniform() < lightProbability;
 
         }
 
-        private static double calculateDecayClassAreaRatio(ActiveSite site)
+        // Chihiro 2020.01.20 ========================================================
+        //---------------------------------------------------------------------
+        /// <summary>
+        /// Compute the ratio of projected area of nursery logs to the cell area.
+        /// </summary>
+        private static double ComputeNurseryLogAreaRatio(ISpecies species, ActiveSite site)
         {
             double hight = 28.64;
-            double density = 0.182;
-            double nurseryLogC = computeNurseryLogC(site);
-            double decayClassAreaRatio = 4 * 2 * nurseryLogC / (Math.PI * hight * density) / 10 ^ 4;
-
-            return decayClassAreaRatio;
-
+            // Wood density (g cm^-3) of dead wood for each decay class.
+            // Reference: Unidentified spp category in Table 3 of Ugawa et al. (2012)
+            double densityDecayClass3 = 0.255;
+            double densityDecayClass4 = 0.178;
+            double densityDecayClass5 = 0.112;
+            // Compute the amount of nursery log carbon (gC m^-2)
+            double[] nurseryLogC = ComputeNurseryLogC(site);
+            // Compute the area ratio in the site of the nursery log occupies.
+            // We assumed that all fallen tree was elliptical.
+            // Variables:
+            //   decayClassXAreaRatio (-)
+            //   nurseryLogC[X] (gC m^-2)
+            //   height (cm)
+            //   densityDecayClass[X] (gC cm^-3)
+            if (species.Index == 0)
+            {
+                PlugIn.ModelCore.UI.WriteLine("nurseryLogC:{0},{1},{2},{3}", PlugIn.ModelCore.CurrentTime, nurseryLogC[0], nurseryLogC[1], nurseryLogC[2]);
+            }
+            double decayClass3AreaRatio = 4 * 2 * nurseryLogC[0] / (Math.PI * hight * densityDecayClass3) * Math.Pow(10, -4);
+            double decayClass4AreaRatio = 4 * 2 * nurseryLogC[1] / (Math.PI * hight * densityDecayClass4) * Math.Pow(10, -4);
+            double decayClass5AreaRatio = 4 * 2 * nurseryLogC[2] / (Math.PI * hight * densityDecayClass5) * Math.Pow(10, -4);
+            // PlugIn.ModelCore.UI.WriteLine("decayClassAreaRatios:{0},{1},{2},{3}", PlugIn.ModelCore.CurrentTime, decayClass3AreaRatio, decayClass4AreaRatio, decayClass5AreaRatio);
+            return Math.Min(1.0, decayClass3AreaRatio + decayClass4AreaRatio + decayClass5AreaRatio);
         }
+
+        //---------------------------------------------------------------------
+        /// <summary>
+        /// Compute the amount of nursery log carbon based on its decay ratio
+        /// </summary>
+        private static double[] ComputeNurseryLogC(ActiveSite site)
+        {
+            // Define decay rate for each decay class
+            // Reference: Unidentified spp category in Table 3 of Ugawa et al. (2012)
+            double densityDecayClass0 = 0.421;
+            double decayRatio3 = 0.255 / densityDecayClass0;
+            double decayRatio4 = 0.178 / densityDecayClass0;
+            double decayRatio5 = 0.112 / densityDecayClass0;
+            // Initialize nursery log carbon for each decay class
+            double decayClass3 = 0.0;
+            double decayClass4 = 0.0;
+            double decayClass5 = 0.0;
+            // Update the amount of carbon for each decayClass
+            for (int i = 0; i < SiteVars.CurrentDeadWoodC[site].Length; i++)
+            {
+                double decayRatio = SiteVars.CurrentDeadWoodC[site][i] / SiteVars.OriginalDeadWoodC[site][i];
+                // PlugIn.ModelCore.UI.WriteLine("decayRatio:{0},{1}", PlugIn.ModelCore.CurrentTime, decayRatio);
+                if (decayRatio >= decayRatio4 & decayRatio < decayRatio3)
+                {
+                    decayClass3 += SiteVars.CurrentDeadWoodC[site][i];
+                }
+                else if (decayRatio >= decayRatio5 & decayRatio < decayRatio4)
+                {
+                    decayClass4 += SiteVars.CurrentDeadWoodC[site][i];
+                }
+                else if (decayRatio < decayRatio5)
+                {
+                    decayClass5 += SiteVars.CurrentDeadWoodC[site][i];
+                }
+            }
+            // PlugIn.ModelCore.UI.WriteLine("decayClasses:{0},{1},{2},{3}", PlugIn.ModelCore.CurrentTime, decayClass3, decayClass4, decayClass5);
+            return new double[3] { decayClass3, decayClass4, decayClass5 };
+        }
+        // ============================================================================
 
 
 

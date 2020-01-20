@@ -223,6 +223,12 @@ namespace Landis.Extension.Succession.NECN
             SiteVars.SurfaceDeadWood[site].Nitrogen -= nitrogenLoss;
             SiteVars.SourceSink[site].Nitrogen        += nitrogenLoss;
 
+            // Chihiro; 2020.01.20 ===========================
+            // Dead wood pool for computing nursery logs
+            SiteVars.OriginalDeadWoodC[site][PlugIn.ModelCore.CurrentTime - 1] -= carbonLoss;
+            SiteVars.CurrentDeadWoodC[site][PlugIn.ModelCore.CurrentTime - 1]  -= carbonLoss;
+            // ===============================================
+
             // Soil Organic Matter (Duff)
 
             carbonLoss = Math.Round(SiteVars.SOM1surface[site].Carbon * som_Multiplier, 2);

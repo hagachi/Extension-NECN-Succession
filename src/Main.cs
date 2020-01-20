@@ -104,8 +104,7 @@ namespace Landis.Extension.Succession.NECN
                         siteCohorts.Grow(site, (y == years && isSuccessionTimeStep), false);
 
                     WoodLayer.Decompose(site);
-                    PlugIn.ModelCore.UI.WriteLine("currentNurseryLog:{0},{1},{2}", PlugIn.ModelCore.CurrentTime, Month, string.Join(", ", SiteVars.CurrentNurseryLogC[site]));
-                    //PlugIn.ModelCore.UI.WriteLine("Yr={0}, surfaceDeadWood={1}, originalNurseryLogC={2}, currentNurseryLogC={3}", PlugIn.ModelCore.CurrentTime, SiteVars.OriginalNurseryLogC.ToString(), SiteVars.CurrentNurseryLogC.ToString());
+                    PlugIn.ModelCore.UI.WriteLine("currentDeadWoodC:{0},{1},{2}", PlugIn.ModelCore.CurrentTime, Month, string.Join(", ", SiteVars.CurrentDeadWoodC[site]));
                     LitterLayer.Decompose(site);
                     SoilLayer.Decompose(site);
 
