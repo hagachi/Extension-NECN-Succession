@@ -394,6 +394,7 @@ namespace Landis.Extension.Succession.NECN
 
             double lightProbability = 0.0;
             bool found = false;
+            int bestShadeClass = 0;
 
             foreach (ISufficientLight lights in sufficientLight)
             {
@@ -408,20 +409,35 @@ namespace Landis.Extension.Succession.NECN
                     if (siteShade == 4) lightProbability = lights.ProbabilityLight4;
                     if (siteShade == 5) lightProbability = lights.ProbabilityLight5;
                     found = true;
+                    bestShadeClass = ComputeBestShadeClass(lights);
+                    if (PlugIn.ModelCore.CurrentTime == 1)
+                        PlugIn.ModelCore.UI.WriteLine("MaxLight:{0},{1}",species.Name, bestShadeClass);
                 }
             }
 
             if (!found)
                 PlugIn.ModelCore.UI.WriteLine("A Sufficient Light value was not found for {0}.", species.Name);
 
-            // hotta 2020.01.16 ----------------------------------------------------
+            // hotta 2020.01.22 ----------------------------------------------------
             // modify light probability based on the amount of nursery log carbon on the site
-            double nurseryLogPenaltyModifier = 1.0;
-            double nurseryLogPenalty = 1.0;
-            nurseryLogPenalty = nurseryLogPenaltyModifier * ComputeNurseryLogAreaRatio(species, site);
+            double nurseryLogAvailabilityModifier = 1.0; // tuning parameter
+            double nurseryLogAvailability = nurseryLogAvailabilityModifier * ComputeNurseryLogAreaRatio(species, site);
             PlugIn.ModelCore.UI.WriteLine("original_lightProbability:{0},{1},{2}", PlugIn.ModelCore.CurrentTime, species.Name, lightProbability);
-            lightProbability *= nurseryLogPenalty;
-            PlugIn.ModelCore.UI.WriteLine("nurseryLogPenalty:{0},{1},{2}", PlugIn.ModelCore.CurrentTime, species.Name, nurseryLogPenalty);
+            PlugIn.ModelCore.UI.WriteLine("siteShade:{0}", siteShade);
+            PlugIn.ModelCore.UI.WriteLine("siteLAI:{0}", SiteVars.LAI[site]); // TODO; this seems not correct...?
+            if (species.Name == "Picejezo" || species.Name == "Picegleh")
+            {
+                lightProbability *= nurseryLogAvailability; // species which relys on nursery logs
+            }
+            else
+            {
+                // species which does not need nursery logs
+                if (siteShade >= bestShadeClass)
+                {
+                    lightProbability = Math.Max(lightProbability, nurseryLogAvailability);
+                }
+            }
+            PlugIn.ModelCore.UI.WriteLine("nurseryLogPenalty:{0},{1},{2}", PlugIn.ModelCore.CurrentTime, species.Name, nurseryLogAvailability);
             PlugIn.ModelCore.UI.WriteLine("modified_lightProbability:{0},{1},{2}", PlugIn.ModelCore.CurrentTime, species.Name, lightProbability);
             // ---------------------------------------------------------------------
 
@@ -429,7 +445,23 @@ namespace Landis.Extension.Succession.NECN
 
         }
 
-        // Chihiro 2020.01.20 ========================================================
+        // Chihiro 2020.01.22 ===================================================================
+        //---------------------------------------------------------------------
+        /// <summary>
+        /// Compute the most suitable shade class for the species
+        /// </summary>
+        private static int ComputeBestShadeClass(ISufficientLight lights)
+        {
+            int bestShadeClass = 0;
+            double maxProbabilityLight = 0.0;
+            if (lights.ProbabilityLight0 > maxProbabilityLight) bestShadeClass = 0;
+            if (lights.ProbabilityLight1 > maxProbabilityLight) bestShadeClass = 1;
+            if (lights.ProbabilityLight2 > maxProbabilityLight) bestShadeClass = 2;
+            if (lights.ProbabilityLight3 > maxProbabilityLight) bestShadeClass = 3;
+            if (lights.ProbabilityLight4 > maxProbabilityLight) bestShadeClass = 4;
+            if (lights.ProbabilityLight5 > maxProbabilityLight) bestShadeClass = 5;
+            return bestShadeClass;
+        }
         //---------------------------------------------------------------------
         /// <summary>
         /// Compute the ratio of projected area of nursery logs to the cell area.
@@ -451,17 +483,13 @@ namespace Landis.Extension.Succession.NECN
             //   nurseryLogC[X] (gC m^-2)
             //   height (cm)
             //   densityDecayClass[X] (gC cm^-3)
-            if (species.Index == 0)
-            {
-                PlugIn.ModelCore.UI.WriteLine("nurseryLogC:{0},{1},{2},{3}", PlugIn.ModelCore.CurrentTime, nurseryLogC[0], nurseryLogC[1], nurseryLogC[2]);
-            }
+            if (species.Name == "Picejezo") PlugIn.ModelCore.UI.WriteLine("nurseryLogC:{0},{1},{2},{3}", PlugIn.ModelCore.CurrentTime, nurseryLogC[0], nurseryLogC[1], nurseryLogC[2]);
             double decayClass3AreaRatio = 4 * 2 * nurseryLogC[0] / (Math.PI * hight * densityDecayClass3) * Math.Pow(10, -4);
             double decayClass4AreaRatio = 4 * 2 * nurseryLogC[1] / (Math.PI * hight * densityDecayClass4) * Math.Pow(10, -4);
             double decayClass5AreaRatio = 4 * 2 * nurseryLogC[2] / (Math.PI * hight * densityDecayClass5) * Math.Pow(10, -4);
             // PlugIn.ModelCore.UI.WriteLine("decayClassAreaRatios:{0},{1},{2},{3}", PlugIn.ModelCore.CurrentTime, decayClass3AreaRatio, decayClass4AreaRatio, decayClass5AreaRatio);
             return Math.Min(1.0, decayClass3AreaRatio + decayClass4AreaRatio + decayClass5AreaRatio);
         }
-
         //---------------------------------------------------------------------
         /// <summary>
         /// Compute the amount of nursery log carbon based on its decay ratio
