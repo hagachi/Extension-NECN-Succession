@@ -432,7 +432,7 @@ namespace Landis.Extension.Succession.NECN
             else
             {
                 // species which does not need nursery logs
-                if (siteShade >= bestShadeClass)
+                if (species.Name != "sasa_spp" && siteShade >= bestShadeClass)
                 {
                     lightProbability = Math.Max(lightProbability, nurseryLogAvailability);
                 }
