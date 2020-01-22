@@ -67,6 +67,7 @@ namespace Landis.Extension.Succession.NECN
                     SiteVars.MonthlyResp[site][Month] = 0.0;
                     SiteVars.MonthlyStreamN[site][Month] = 0.0;
                     SiteVars.MonthlyLAI[site][Month] = 0.0;
+                    SiteVars.MonthlyLAITree[site][Month] = 0.0; // Chihiro 2020.01.22
                     SiteVars.SourceSink[site].Carbon = 0.0;
                     SiteVars.TotalWoodBiomass[site] = Main.ComputeWoodBiomass((ActiveSite) site);
                     //SiteVars.LAI[site] = Century.ComputeLAI((ActiveSite)site);
@@ -170,6 +171,19 @@ namespace Landis.Extension.Succession.NECN
                     foreach (ICohort cohort in speciesCohorts)
                         woodBiomass += cohort.WoodBiomass;
             return woodBiomass;
+        }
+
+        //---------------------------------------------------------------------
+        // Chihiro 2020.01.22
+        public static double ComputeGrassBiomass(ActiveSite site)
+        {
+            double grassTotal = 0;
+            if (SiteVars.Cohorts[site] != null)
+                foreach (ISpeciesCohorts speciesCohorts in SiteVars.Cohorts[site])
+                    foreach (ICohort cohort in speciesCohorts)
+                        if (cohort.Species.Name == "sasa_spp")
+                            grassTotal += cohort.WoodBiomass;
+            return grassTotal;
         }
 
         //---------------------------------------------------------------------

@@ -34,6 +34,9 @@ namespace Landis.Extension.Succession.NECN
         // Dead C for each year; Chihiro 2020.1.14
         private static ISiteVar<double[]> originalDeadWoodC;
         private static ISiteVar<double[]> currentDeadWoodC; // Carefully check the consistensiy with surfaceDeadWood
+        // LAI for tree spp and grass spp; Chihiro 2020.1.22
+        private static ISiteVar<double> laiTree;
+        private static ISiteVar<double[]> monthlyLAITree;
 
         // Soil layers
         private static ISiteVar<Layer> som1surface;
@@ -134,6 +137,10 @@ namespace Landis.Extension.Succession.NECN
             // Dead wood carbon pools: Chihiro 2020.01.14
             originalDeadWoodC = PlugIn.ModelCore.Landscape.NewSiteVar<double[]>();
             currentDeadWoodC = PlugIn.ModelCore.Landscape.NewSiteVar<double[]>();
+            // LAI for tree spp : Chihiro 2020.01.22
+            laiTree  = PlugIn.ModelCore.Landscape.NewSiteVar<double>();
+            monthlyLAITree = PlugIn.ModelCore.Landscape.NewSiteVar<double[]>();
+
 
             // Soil Layers
             som1surface         = PlugIn.ModelCore.Landscape.NewSiteVar<Layer>();
@@ -224,6 +231,7 @@ namespace Landis.Extension.Succession.NECN
                 // Chihiro add ------------
                 originalDeadWoodC[site]   = new double[PlugIn.ModelCore.EndTime];
                 currentDeadWoodC[site]    = new double[PlugIn.ModelCore.EndTime];
+                monthlyLAITree[site]      = new double[12];
                 // ------------
 
                 surfaceStructural[site]     = new Layer(LayerName.Structural, LayerType.Surface);
@@ -354,7 +362,11 @@ namespace Landis.Extension.Succession.NECN
             //SiteVars.DryDays[site] = 0;
 
             //SiteVars.FireEfflux[site] = 0.0;
-                        
+
+            // Chihiro add 2020.01.22 -----------
+            SiteVars.LAITree[site] = 0.0;
+            // ----------------------------------
+
 
         }
 
@@ -397,6 +409,24 @@ namespace Landis.Extension.Succession.NECN
         // Chihiro 2020.01.14
         public static ISiteVar<double[]> OriginalDeadWoodC { get { return originalDeadWoodC; } }
         public static ISiteVar<double[]> CurrentDeadWoodC { get { return currentDeadWoodC; } }
+        //---------------------------------------------------------------------
+
+        /// <summary>
+        /// A summary of LAI for tree and grass spp (m2/m2)
+        /// </summary>
+        // Chihiro 2020.01.22
+        public static ISiteVar<double> LAITree
+        {
+            get
+            {
+                return laiTree;
+            }
+            set
+            {
+                laiTree = value;
+            }
+        }
+        public static ISiteVar<double[]> MonthlyLAITree { get { return monthlyLAITree; } }
         //---------------------------------------------------------------------
 
         /// <summary>

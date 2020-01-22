@@ -573,9 +573,21 @@ namespace Landis.Extension.Succession.NECN
             }
 
             if (Main.Month == 6)
+            {
                 SiteVars.LAI[site] += lai; //Tracking LAI.
 
+                // Tracking LAI by spp type; Chihiro 2020.01.22 ==========
+                if (cohort.Species.Name != "sasa_spp")
+                    SiteVars.LAITree[site] += lai;
+                // =======================================================
+            }
+
             SiteVars.MonthlyLAI[site][Main.Month] += lai;
+
+            // Tracking Monthly LAI by spp type; Chihiro 2020.01.22 ======
+            if (cohort.Species.Name != "sasa_spp")
+                SiteVars.MonthlyLAITree[site][Main.Month] += lai;
+            // ===========================================================
 
             if (PlugIn.ModelCore.CurrentTime > 0 && OtherData.CalibrateMode)
                 Outputs.CalibrateLog.Write("{0:0.00},{1:0.00},{2:0.00},", lai, tlai, rlai);
@@ -592,7 +604,22 @@ namespace Landis.Extension.Succession.NECN
         private static double calculateCompetition_Limit(ICohort cohort, ActiveSite site)
         {
             double k = -0.14;  // This is the value given for all temperature ecosystems. I started with 0.1
-            double monthly_cumulative_LAI = SiteVars.MonthlyLAI[site][Main.Month];
+
+            // Chihiro 2020.01.22 ==============================================================
+            // If the biomass of the tree species cohort is larger 
+            // than total grass biomass on the site, ignore grass LAI.
+            double monthly_cumulative_LAI = 0.0;
+            if (cohort.Species.Name != "sasa_spp" && cohort.Biomass > Main.ComputeGrassBiomass(site))
+            {
+                monthly_cumulative_LAI = SiteVars.MonthlyLAITree[site][Main.Month];
+            }
+            else
+            {
+                monthly_cumulative_LAI = SiteVars.MonthlyLAI[site][Main.Month];
+            }
+            // =================================================================================
+
+            // double monthly_cumulative_LAI = SiteVars.MonthlyLAI[site][Main.Month];
             double competition_limit = Math.Max(0.0, Math.Exp(k * monthly_cumulative_LAI));
 
             //if (PlugIn.ModelCore.CurrentTime > 0 && OtherData.CalibrateMode)
