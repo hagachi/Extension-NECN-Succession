@@ -723,6 +723,26 @@ namespace Landis.Extension.Succession.NECN
                         outputRaster.WriteBufferPixel();
                     }
                 }
+
+                // Chihiro 2020.01.28 ===========================================
+                string pathLAITree = MapNames.ReplaceTemplateVars(@"NECN\LAITree-{timestep}.img", PlugIn.ModelCore.CurrentTime);
+                using (IOutputRaster<IntPixel> outputRaster = PlugIn.ModelCore.CreateRaster<IntPixel>(pathLAITree, PlugIn.ModelCore.Landscape.Dimensions))
+                {
+                    IntPixel pixel = outputRaster.BufferPixel;
+                    foreach (Site site in PlugIn.ModelCore.Landscape.AllSites)
+                    {
+                        if (site.IsActive)
+                        {
+                            pixel.MapCode.Value = (short)(SiteVars.LAITree[site]);
+                        }
+                        else
+                        {
+                            //  Inactive site
+                            pixel.MapCode.Value = 0;
+                        }
+                        outputRaster.WriteBufferPixel();
+                    }
+                }
             }
         }
         

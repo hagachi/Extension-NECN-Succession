@@ -410,8 +410,8 @@ namespace Landis.Extension.Succession.NECN
                     if (siteShade == 5) lightProbability = lights.ProbabilityLight5;
                     found = true;
                     bestShadeClass = ComputeBestShadeClass(lights);
-                    if (PlugIn.ModelCore.CurrentTime == 1)
-                        PlugIn.ModelCore.UI.WriteLine("MaxLight:{0},{1}",species.Name, bestShadeClass);
+                    // if (PlugIn.ModelCore.CurrentTime == 1)
+                    //     PlugIn.ModelCore.UI.WriteLine("MaxLight:{0},{1}",species.Name, bestShadeClass);
                 }
             }
 
@@ -422,9 +422,9 @@ namespace Landis.Extension.Succession.NECN
             // modify light probability based on the amount of nursery log carbon on the site
             double nurseryLogAvailabilityModifier = 1.0; // tuning parameter
             double nurseryLogAvailability = nurseryLogAvailabilityModifier * ComputeNurseryLogAreaRatio(species, site);
-            PlugIn.ModelCore.UI.WriteLine("original_lightProbability:{0},{1},{2}", PlugIn.ModelCore.CurrentTime, species.Name, lightProbability);
-            PlugIn.ModelCore.UI.WriteLine("siteShade:{0}", siteShade);
-            PlugIn.ModelCore.UI.WriteLine("siteLAI:{0}", SiteVars.LAI[site]); // TODO; this seems not correct...?
+            // PlugIn.ModelCore.UI.WriteLine("original_lightProbability:{0},{1},{2}", PlugIn.ModelCore.CurrentTime, species.Name, lightProbability);
+            // PlugIn.ModelCore.UI.WriteLine("siteShade:{0}", siteShade);
+            // PlugIn.ModelCore.UI.WriteLine("siteLAI:{0}", SiteVars.LAI[site]); // TODO; this seems not correct...?
             if (species.Name == "Picejezo" || species.Name == "Picegleh")
             {
                 lightProbability *= nurseryLogAvailability; // species which relys on nursery logs
@@ -437,8 +437,8 @@ namespace Landis.Extension.Succession.NECN
                     lightProbability = Math.Max(lightProbability, nurseryLogAvailability);
                 }
             }
-            PlugIn.ModelCore.UI.WriteLine("nurseryLogPenalty:{0},{1},{2}", PlugIn.ModelCore.CurrentTime, species.Name, nurseryLogAvailability);
-            PlugIn.ModelCore.UI.WriteLine("modified_lightProbability:{0},{1},{2}", PlugIn.ModelCore.CurrentTime, species.Name, lightProbability);
+            // PlugIn.ModelCore.UI.WriteLine("nurseryLogPenalty:{0},{1},{2}", PlugIn.ModelCore.CurrentTime, species.Name, nurseryLogAvailability);
+            // PlugIn.ModelCore.UI.WriteLine("modified_lightProbability:{0},{1},{2}", PlugIn.ModelCore.CurrentTime, species.Name, lightProbability);
             // ---------------------------------------------------------------------
 
             return modelCore.GenerateUniform() < lightProbability;
@@ -483,7 +483,7 @@ namespace Landis.Extension.Succession.NECN
             //   nurseryLogC[X] (gC m^-2)
             //   height (cm)
             //   densityDecayClass[X] (gC cm^-3)
-            if (species.Name == "Picejezo") PlugIn.ModelCore.UI.WriteLine("nurseryLogC:{0},{1},{2},{3}", PlugIn.ModelCore.CurrentTime, nurseryLogC[0], nurseryLogC[1], nurseryLogC[2]);
+            // if (species.Index == 0) PlugIn.ModelCore.UI.WriteLine("nurseryLogC:{0},{1},{2},{3}", PlugIn.ModelCore.CurrentTime, nurseryLogC[0], nurseryLogC[1], nurseryLogC[2]);
             double decayClass3AreaRatio = 4 * 2 * nurseryLogC[0] / (Math.PI * hight * densityDecayClass3) * Math.Pow(10, -4);
             double decayClass4AreaRatio = 4 * 2 * nurseryLogC[1] / (Math.PI * hight * densityDecayClass4) * Math.Pow(10, -4);
             double decayClass5AreaRatio = 4 * 2 * nurseryLogC[2] / (Math.PI * hight * densityDecayClass5) * Math.Pow(10, -4);
