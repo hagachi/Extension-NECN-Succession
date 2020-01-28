@@ -645,6 +645,45 @@ namespace Landis.Extension.Succession.NECN
 
                 }
 
+                // Chihiro 2020.01.28 ===========================================
+                string pathLAITree = MapNames.ReplaceTemplateVars(@"NECN\LAITree-{timestep}.img", PlugIn.ModelCore.CurrentTime);
+                using (IOutputRaster<IntPixel> outputRaster = PlugIn.ModelCore.CreateRaster<IntPixel>(pathLAITree, PlugIn.ModelCore.Landscape.Dimensions))
+                {
+                    IntPixel pixel = outputRaster.BufferPixel;
+                    foreach (Site site in PlugIn.ModelCore.Landscape.AllSites)
+                    {
+                        if (site.IsActive)
+                        {
+                            pixel.MapCode.Value = (short)(SiteVars.LAITree[site]);
+                        }
+                        else
+                        {
+                            //  Inactive site
+                            pixel.MapCode.Value = 0;
+                        }
+                        outputRaster.WriteBufferPixel();
+                    }
+                }
+
+                string pathDWD = MapNames.ReplaceTemplateVars(@"NECN\DeadWoodBiomass-{timestep}.img", PlugIn.ModelCore.CurrentTime);
+                using (IOutputRaster<IntPixel> outputRaster = PlugIn.ModelCore.CreateRaster<IntPixel>(pathDWD, PlugIn.ModelCore.Landscape.Dimensions))
+                {
+                    IntPixel pixel = outputRaster.BufferPixel;
+                    foreach (Site site in PlugIn.ModelCore.Landscape.AllSites)
+                    {
+                        if (site.IsActive)
+                        {
+                            pixel.MapCode.Value = (int)(SiteVars.SurfaceDeadWood[site].Carbon * 2.0);
+                        }
+                        else
+                        {
+                            //  Inactive site
+                            pixel.MapCode.Value = 0;
+                        }
+                        outputRaster.WriteBufferPixel();
+                    }
+                }
+
             if (PlugIn.Parameters.SmokeModelOutputs)
             {
                 string pathNeedles = MapNames.ReplaceTemplateVars(@"NECN\ConiferNeedleBiomass-{timestep}.img", PlugIn.ModelCore.CurrentTime);
@@ -666,24 +705,24 @@ namespace Landis.Extension.Succession.NECN
                     }
                 }
 
-                string pathDWD = MapNames.ReplaceTemplateVars(@"NECN\DeadWoodBiomass-{timestep}.img", PlugIn.ModelCore.CurrentTime);
-                using (IOutputRaster<IntPixel> outputRaster = PlugIn.ModelCore.CreateRaster<IntPixel>(pathDWD, PlugIn.ModelCore.Landscape.Dimensions))
-                {
-                    IntPixel pixel = outputRaster.BufferPixel;
-                    foreach (Site site in PlugIn.ModelCore.Landscape.AllSites)
-                    {
-                        if (site.IsActive)
-                        {
-                            pixel.MapCode.Value = (int) (SiteVars.SurfaceDeadWood[site].Carbon * 2.0);
-                        }
-                        else
-                        {
-                            //  Inactive site
-                            pixel.MapCode.Value = 0;
-                        }
-                        outputRaster.WriteBufferPixel();
-                    }
-                }
+                //string pathDWD = MapNames.ReplaceTemplateVars(@"NECN\DeadWoodBiomass-{timestep}.img", PlugIn.ModelCore.CurrentTime);
+                //using (IOutputRaster<IntPixel> outputRaster = PlugIn.ModelCore.CreateRaster<IntPixel>(pathDWD, PlugIn.ModelCore.Landscape.Dimensions))
+                //{
+                //    IntPixel pixel = outputRaster.BufferPixel;
+                //    foreach (Site site in PlugIn.ModelCore.Landscape.AllSites)
+                //    {
+                //        if (site.IsActive)
+                //        {
+                //            pixel.MapCode.Value = (int) (SiteVars.SurfaceDeadWood[site].Carbon * 2.0);
+                //        }
+                //        else
+                //        {
+                //            //  Inactive site
+                //            pixel.MapCode.Value = 0;
+                //        }
+                //        outputRaster.WriteBufferPixel();
+                //    }
+                //}
 
                 string pathLitter = MapNames.ReplaceTemplateVars(@"NECN\SurfaceLitterBiomass-{timestep}.img", PlugIn.ModelCore.CurrentTime);
                 using (IOutputRaster<IntPixel> outputRaster = PlugIn.ModelCore.CreateRaster<IntPixel>(pathLitter, PlugIn.ModelCore.Landscape.Dimensions))
@@ -714,26 +753,6 @@ namespace Landis.Extension.Succession.NECN
                         if (site.IsActive)
                         {
                             pixel.MapCode.Value = (int)(SiteVars.SOM1surface[site].Carbon * 2.0);
-                        }
-                        else
-                        {
-                            //  Inactive site
-                            pixel.MapCode.Value = 0;
-                        }
-                        outputRaster.WriteBufferPixel();
-                    }
-                }
-
-                // Chihiro 2020.01.28 ===========================================
-                string pathLAITree = MapNames.ReplaceTemplateVars(@"NECN\LAITree-{timestep}.img", PlugIn.ModelCore.CurrentTime);
-                using (IOutputRaster<IntPixel> outputRaster = PlugIn.ModelCore.CreateRaster<IntPixel>(pathLAITree, PlugIn.ModelCore.Landscape.Dimensions))
-                {
-                    IntPixel pixel = outputRaster.BufferPixel;
-                    foreach (Site site in PlugIn.ModelCore.Landscape.AllSites)
-                    {
-                        if (site.IsActive)
-                        {
-                            pixel.MapCode.Value = (short)(SiteVars.LAITree[site]);
                         }
                         else
                         {
