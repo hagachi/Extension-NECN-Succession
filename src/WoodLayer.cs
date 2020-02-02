@@ -53,8 +53,35 @@ namespace Landis.Extension.Succession.NECN
                 SiteVars.SurfaceDeadWood[site].DecomposeLignin(totalCFlow, site);
             }
 
+            //....LARGE WOOD in grass species.... =================================
+            // Chihiro 2020.02.02
+            double wood2cGrass = SiteVars.SurfaceDeadGrass[site].Carbon;
 
-                //....COARSE ROOTS (SoilDeadWood)....
+            if (wood2cGrass > 0.0000001)
+            {
+
+                double ligninFactor = System.Math.Exp(-1 * OtherData.LigninDecayEffect * SiteVars.SurfaceDeadGrass[site].FractionLignin);
+                double decayRate = Math.Min(1.0, SiteVars.DecayFactor[site]
+                                                * SiteVars.SurfaceDeadGrass[site].DecayValue
+                                                * ligninFactor
+                                                * OtherData.MonthAdjust);
+
+                //Compute total C flow out of large wood
+                double totalCFlow = wood2cGrass * decayRate;
+
+                if (totalCFlow > wood2cGrass)
+                {
+                    string mesg = string.Format("Error: Wood grass decay > wood grass mass. WoodC={0}, DecayFactor={1}, DecayValue={2}, LigninFactor={3}", wood2c, SiteVars.DecayFactor[site], SiteVars.SurfaceDeadGrass[site].DecayValue, ligninFactor);
+                    throw new ApplicationException(mesg);
+                }
+
+                // Decompose large wood into SOM1 and SOM2 with CO2 loss.
+                SiteVars.SurfaceDeadGrass[site].DecomposeLignin(totalCFlow, site);
+            }
+            // =====================================================================
+
+
+            //....COARSE ROOTS (SoilDeadWood)....
             double wood3c = SiteVars.SoilDeadWood[site].Carbon;
 
             if (wood3c > 0.0000001)
@@ -152,6 +179,16 @@ namespace Landis.Extension.Succession.NECN
                 SiteVars.CurrentDeadWoodC[site][PlugIn.ModelCore.CurrentTime - 1] += totalC;
                 // ===============================================
             }
+            // Update dead grass carbon ==========================
+            // Chihiro 2020.02.02
+            else if ((int)name == (int)LayerName.Grass)
+            {
+                SiteVars.SurfaceDeadGrass[site].Carbon += totalC;
+                SiteVars.SurfaceDeadGrass[site].Nitrogen += totalNitrogen;
+                SiteVars.SurfaceDeadGrass[site].AdjustLignin(totalC, fracLignin);
+                SiteVars.SurfaceDeadGrass[site].AdjustDecayRate(totalC, inputDecayValue);
+            }
+            // ===================================================
             else  // Dead Coarse Roots
             {
                 SiteVars.SoilDeadWood[site].Carbon += totalC;
