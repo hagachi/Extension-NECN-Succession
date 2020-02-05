@@ -476,7 +476,7 @@ namespace Landis.Extension.Succession.NECN
                     if (siteShadeAll > bestShadeClass && modelCore.GenerateUniform() < lightProbabilityTree)
                     {
                         isSufficientlight = modelCore.GenerateUniform() < nurseryLogAvailability;
-                        regenType = "nlog";
+                        if (isSufficientlight) regenType = "nlog";
                     }
                 }
             }
