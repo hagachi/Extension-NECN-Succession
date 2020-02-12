@@ -55,7 +55,11 @@ namespace Landis.Extension.Succession.NECN
             IEcoregion ecoregion = PlugIn.ModelCore.Ecoregion[site];
 
             double litterBiomass = (SiteVars.SurfaceStructural[site].Carbon + SiteVars.SurfaceMetabolic[site].Carbon) * 2.0;
-            double deadBiomass = SiteVars.SurfaceDeadWood[site].Carbon / 0.47;
+            // deadBiomass includes both grass and tree wood dead biomass ================
+            // Chihiro 2020.02.02
+            double deadBiomass = (SiteVars.SurfaceDeadWood[site].Carbon + SiteVars.SurfaceDeadGrass[site].Carbon) / 0.47;
+            //double deadBiomass = SiteVars.SurfaceDeadWood[site].Carbon / 0.47;
+            // ===========================================================================
             double soilWaterContent = SiteVars.SoilWaterContent[site];
             double liquidSnowpack = SiteVars.LiquidSnowPack[site];
 
@@ -184,7 +188,7 @@ namespace Landis.Extension.Succession.NECN
             }
                      
             // Calculate actual evapotranspiration.  This equation is derived from the stand equation for calculating AET from PET
-            //  Bergström, 1992
+            //  Bergstrï¿½m, 1992
 
             double waterEmpty = wiltingPoint * soilDepth;
 

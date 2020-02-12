@@ -390,9 +390,15 @@ namespace Landis.Extension.Succession.NECN
         {
 
             //PlugIn.ModelCore.UI.WriteLine("  Calculating Sufficient Light from Succession.");
-            byte siteShade = PlugIn.ModelCore.GetSiteVar<byte>("Shade")[site];
+            //byte siteShade = PlugIn.ModelCore.GetSiteVar<byte>("Shade")[site];
+            byte siteShadeAll  = PlugIn.ModelCore.GetSiteVar<byte>("Shade")[site];
+            byte siteShadeTree = ComputeShadeTree(site);
+            bool isSufficientlight = false;
+            string regenType = "failed";
 
-            double lightProbability = 0.0;
+            //double lightProbability = 0.0;
+            double lightProbabilityAll = 0.0;
+            double lightProbabilityTree = 0.0;
             bool found = false;
             int bestShadeClass = 0;
 
@@ -400,18 +406,37 @@ namespace Landis.Extension.Succession.NECN
             {
 
                 //PlugIn.ModelCore.UI.WriteLine("Sufficient Light:  ShadeClass={0}, Prob0={1}.", lights.ShadeClass, lights.ProbabilityLight0);
+                //if (lights.ShadeClass == species.ShadeTolerance)
+                //{
+                //    if (siteShade == 0) lightProbability = lights.ProbabilityLight0;
+                //    if (siteShade == 1) lightProbability = lights.ProbabilityLight1;
+                //    if (siteShade == 2) lightProbability = lights.ProbabilityLight2;
+                //    if (siteShade == 3) lightProbability = lights.ProbabilityLight3;
+                //    if (siteShade == 4) lightProbability = lights.ProbabilityLight4;
+                //    if (siteShade == 5) lightProbability = lights.ProbabilityLight5;
+                //    found = true;
+                //    bestShadeClass = ComputeBestShadeClass(lights);
+                //    // if (PlugIn.ModelCore.CurrentTime == 1)
+                //    //     PlugIn.ModelCore.UI.WriteLine("MaxLight:{0},{1}",species.Name, bestShadeClass);
+                //}
                 if (lights.ShadeClass == species.ShadeTolerance)
                 {
-                    if (siteShade == 0) lightProbability = lights.ProbabilityLight0;
-                    if (siteShade == 1) lightProbability = lights.ProbabilityLight1;
-                    if (siteShade == 2) lightProbability = lights.ProbabilityLight2;
-                    if (siteShade == 3) lightProbability = lights.ProbabilityLight3;
-                    if (siteShade == 4) lightProbability = lights.ProbabilityLight4;
-                    if (siteShade == 5) lightProbability = lights.ProbabilityLight5;
+                    // determin light probability considering all LAI on the site
+                    if (siteShadeAll == 0) lightProbabilityAll = lights.ProbabilityLight0;
+                    if (siteShadeAll == 1) lightProbabilityAll = lights.ProbabilityLight1;
+                    if (siteShadeAll == 2) lightProbabilityAll = lights.ProbabilityLight2;
+                    if (siteShadeAll == 3) lightProbabilityAll = lights.ProbabilityLight3;
+                    if (siteShadeAll == 4) lightProbabilityAll = lights.ProbabilityLight4;
+                    if (siteShadeAll == 5) lightProbabilityAll = lights.ProbabilityLight5;
+                    // determin light probability considering tree LAI only
+                    if (siteShadeTree == 0) lightProbabilityTree = lights.ProbabilityLight0;
+                    if (siteShadeTree == 1) lightProbabilityTree = lights.ProbabilityLight1;
+                    if (siteShadeTree == 2) lightProbabilityTree = lights.ProbabilityLight2;
+                    if (siteShadeTree == 3) lightProbabilityTree = lights.ProbabilityLight3;
+                    if (siteShadeTree == 4) lightProbabilityTree = lights.ProbabilityLight4;
+                    if (siteShadeTree == 5) lightProbabilityTree = lights.ProbabilityLight5;
                     found = true;
                     bestShadeClass = ComputeBestShadeClass(lights);
-                    // if (PlugIn.ModelCore.CurrentTime == 1)
-                    //     PlugIn.ModelCore.UI.WriteLine("MaxLight:{0},{1}",species.Name, bestShadeClass);
                 }
             }
 
@@ -422,27 +447,50 @@ namespace Landis.Extension.Succession.NECN
             // modify light probability based on the amount of nursery log carbon on the site
             double nurseryLogAvailabilityModifier = 1.0; // tuning parameter
             double nurseryLogAvailability = nurseryLogAvailabilityModifier * ComputeNurseryLogAreaRatio(species, site);
-            // PlugIn.ModelCore.UI.WriteLine("original_lightProbability:{0},{1},{2}", PlugIn.ModelCore.CurrentTime, species.Name, lightProbability);
-            // PlugIn.ModelCore.UI.WriteLine("siteShade:{0}", siteShade);
-            // PlugIn.ModelCore.UI.WriteLine("siteLAI:{0}", SiteVars.LAI[site]); // TODO; this seems not correct...?
-            if (species.Name == "Picejezo" || species.Name == "Picegleh")
+            if (OtherData.CalibrateMode)
             {
-                lightProbability *= nurseryLogAvailability; // species which relys on nursery logs
+                PlugIn.ModelCore.UI.WriteLine("original_lightProbability:{0},{1},{2}", PlugIn.ModelCore.CurrentTime, species.Name, lightProbabilityAll);
+                PlugIn.ModelCore.UI.WriteLine("siteShade:{0},{1}", siteShadeAll, siteShadeTree);
+                PlugIn.ModelCore.UI.WriteLine("siteLAI:{0}", SiteVars.LAI[site]);
+            }
+
+            if (species.Name == "Picejezo" || species.Name == "Picegleh") // species which relys on nursery logs
+            {
+                lightProbabilityAll *= nurseryLogAvailability;
+                isSufficientlight = modelCore.GenerateUniform() < lightProbabilityAll;
+                if (isSufficientlight) regenType = "nlog";
             }
             else
             {
-                // species which does not need nursery logs
-                if (species.Name != "sasa_spp" && siteShade >= bestShadeClass)
+                // 1. Check if threre are too mach shade on the site
+                if (modelCore.GenerateUniform() < lightProbabilityAll)
                 {
-                    lightProbability = Math.Max(lightProbability, nurseryLogAvailability);
+                    isSufficientlight = true;
+                    regenType = "surface";
+                } 
+                else
+                {
+                    // 2. If (1) the light availability is less for the species shade tolerance and 
+                    //       (2) the light environment above grass species layer meets the species requirement,
+                    //    check if the species can establish on the nursery log
+                    if (siteShadeAll > bestShadeClass && modelCore.GenerateUniform() < lightProbabilityTree)
+                    {
+                        isSufficientlight = modelCore.GenerateUniform() < nurseryLogAvailability;
+                        if (isSufficientlight) regenType = "nlog";
+                    }
                 }
             }
-            // PlugIn.ModelCore.UI.WriteLine("nurseryLogPenalty:{0},{1},{2}", PlugIn.ModelCore.CurrentTime, species.Name, nurseryLogAvailability);
-            // PlugIn.ModelCore.UI.WriteLine("modified_lightProbability:{0},{1},{2}", PlugIn.ModelCore.CurrentTime, species.Name, lightProbability);
+
+            if (OtherData.CalibrateMode)
+            {
+                PlugIn.ModelCore.UI.WriteLine("nurseryLogPenalty:{0},{1},{2}", PlugIn.ModelCore.CurrentTime, species.Name, nurseryLogAvailability);
+                PlugIn.ModelCore.UI.WriteLine("modified_lightProbability:{0},{1},{2}", PlugIn.ModelCore.CurrentTime, species.Name, lightProbabilityAll);
+                PlugIn.ModelCore.UI.WriteLine("regeneration_type:{0},{1},{2}", PlugIn.ModelCore.CurrentTime, species.Name, regenType);
+            }
             // ---------------------------------------------------------------------
 
-            return modelCore.GenerateUniform() < lightProbability;
-
+            return isSufficientlight;
+            //return modelCore.GenerateUniform() < lightProbability;
         }
 
         // Chihiro 2020.01.22 ===================================================================
@@ -483,11 +531,14 @@ namespace Landis.Extension.Succession.NECN
             //   nurseryLogC[X] (gC m^-2)
             //   height (cm)
             //   densityDecayClass[X] (gC cm^-3)
-            // if (species.Index == 0) PlugIn.ModelCore.UI.WriteLine("nurseryLogC:{0},{1},{2},{3}", PlugIn.ModelCore.CurrentTime, nurseryLogC[0], nurseryLogC[1], nurseryLogC[2]);
             double decayClass3AreaRatio = 4 * 2 * nurseryLogC[0] / (Math.PI * hight * densityDecayClass3) * Math.Pow(10, -4);
             double decayClass4AreaRatio = 4 * 2 * nurseryLogC[1] / (Math.PI * hight * densityDecayClass4) * Math.Pow(10, -4);
             double decayClass5AreaRatio = 4 * 2 * nurseryLogC[2] / (Math.PI * hight * densityDecayClass5) * Math.Pow(10, -4);
-            // PlugIn.ModelCore.UI.WriteLine("decayClassAreaRatios:{0},{1},{2},{3}", PlugIn.ModelCore.CurrentTime, decayClass3AreaRatio, decayClass4AreaRatio, decayClass5AreaRatio);
+            if (OtherData.CalibrateMode && species.Index == 0)
+            {
+                PlugIn.ModelCore.UI.WriteLine("nurseryLogC:{0},{1},{2},{3}", PlugIn.ModelCore.CurrentTime, nurseryLogC[0], nurseryLogC[1], nurseryLogC[2]);
+                PlugIn.ModelCore.UI.WriteLine("decayClassAreaRatios:{0},{1},{2},{3}", PlugIn.ModelCore.CurrentTime, decayClass3AreaRatio, decayClass4AreaRatio, decayClass5AreaRatio);
+            }
             return Math.Min(1.0, decayClass3AreaRatio + decayClass4AreaRatio + decayClass5AreaRatio);
         }
         //---------------------------------------------------------------------
@@ -526,6 +577,29 @@ namespace Landis.Extension.Succession.NECN
             }
             // PlugIn.ModelCore.UI.WriteLine("decayClasses:{0},{1},{2},{3}", PlugIn.ModelCore.CurrentTime, decayClass3, decayClass4, decayClass5);
             return new double[3] { decayClass3, decayClass4, decayClass5 };
+        }
+
+        // function to compute site shade caused by tree species
+        public static byte ComputeShadeTree(ActiveSite site)
+        {
+            IEcoregion ecoregion = PlugIn.ModelCore.Ecoregion[site];
+            byte finalShade = 0;
+            if (!ecoregion.Active)
+                return 0;
+            for (byte shade = 5; shade >= 1; shade--)
+            {
+                if (PlugIn.ShadeLAI[shade] <= 0)
+                {
+                    string mesg = string.Format("Maximum LAI has not been defined for shade class {0}", shade);
+                    throw new System.ApplicationException(mesg);
+                }
+                if (SiteVars.LAITree[site] >= PlugIn.ShadeLAI[shade])
+                {
+                    finalShade = shade;
+                    break;
+                }
+            }
+            return finalShade;
         }
         // ============================================================================
 

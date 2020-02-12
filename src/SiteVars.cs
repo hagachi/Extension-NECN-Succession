@@ -33,6 +33,7 @@ namespace Landis.Extension.Succession.NECN
 
         // Dead C for each year; Chihiro 2020.1.14
         private static ISiteVar<double[]> originalDeadWoodC;
+        private static ISiteVar<Layer> surfaceDeadGrass;
         private static ISiteVar<double[]> currentDeadWoodC; // Carefully check the consistensiy with surfaceDeadWood
         // LAI for tree spp and grass spp; Chihiro 2020.1.22
         private static ISiteVar<double> laiTree;
@@ -135,7 +136,8 @@ namespace Landis.Extension.Succession.NECN
             soilMetabolic       = PlugIn.ModelCore.Landscape.NewSiteVar<Layer>();
 
             // Dead wood carbon pools: Chihiro 2020.01.14
-            originalDeadWoodC = PlugIn.ModelCore.Landscape.NewSiteVar<double[]>();
+            originalDeadWoodC   = PlugIn.ModelCore.Landscape.NewSiteVar<double[]>();
+            surfaceDeadGrass    = PlugIn.ModelCore.Landscape.NewSiteVar<Layer>();
             currentDeadWoodC = PlugIn.ModelCore.Landscape.NewSiteVar<double[]>();
             // LAI for tree spp : Chihiro 2020.01.22
             laiTree  = PlugIn.ModelCore.Landscape.NewSiteVar<double>();
@@ -229,9 +231,10 @@ namespace Landis.Extension.Succession.NECN
                 soilDeadWood[site]          = new Layer(LayerName.CoarseRoot, LayerType.Soil);
 
                 // Chihiro add ------------
-                originalDeadWoodC[site]   = new double[PlugIn.ModelCore.EndTime];
-                currentDeadWoodC[site]    = new double[PlugIn.ModelCore.EndTime];
-                monthlyLAITree[site]      = new double[12];
+                originalDeadWoodC[site]     = new double[PlugIn.ModelCore.EndTime];
+                surfaceDeadGrass[site]      = new Layer(LayerName.Grass, LayerType.Surface);
+                currentDeadWoodC[site] = new double[PlugIn.ModelCore.EndTime];
+                monthlyLAITree[site]        = new double[12];
                 // ------------
 
                 surfaceStructural[site]     = new Layer(LayerName.Structural, LayerType.Surface);
@@ -365,6 +368,7 @@ namespace Landis.Extension.Succession.NECN
 
             // Chihiro add 2020.01.22 -----------
             SiteVars.LAITree[site] = 0.0;
+            SiteVars.SurfaceDeadGrass[site].NetMineralization = 0.0;
             // ----------------------------------
 
 
@@ -409,6 +413,7 @@ namespace Landis.Extension.Succession.NECN
         // Chihiro 2020.01.14
         public static ISiteVar<double[]> OriginalDeadWoodC { get { return originalDeadWoodC; } }
         public static ISiteVar<double[]> CurrentDeadWoodC { get { return currentDeadWoodC; } }
+        public static ISiteVar<Layer> SurfaceDeadGrass { get { return surfaceDeadGrass; } }
         //---------------------------------------------------------------------
 
         /// <summary>
