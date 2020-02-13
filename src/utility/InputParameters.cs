@@ -42,6 +42,7 @@ namespace Landis.Extension.Succession.NECN
         private string initialDeadSoilMapName;
 
         private bool calibrateMode;
+        private bool reduceOutputs; // Chihiro 2020.02.12
         private bool smokeModelOutputs;
         public WaterType wtype;
         public double probEstablishAdjust;
@@ -186,6 +187,23 @@ namespace Landis.Extension.Succession.NECN
             }
             set {
                 calibrateMode = value;
+            }
+        }
+
+        //---------------------------------------------------------------------
+        /// <summary>
+        /// Determines if reduce unused output maps and logs.
+        /// Chihiro 2020.02.12
+        /// </summary>
+        public bool ReduceOutputs
+        {
+            get
+            {
+                return reduceOutputs;
+            }
+            set
+            {
+                reduceOutputs = value;
             }
         }
 

@@ -37,6 +37,7 @@ namespace Landis.Extension.Succession.NECN
         string InitialDeadSoilMapName { get; set; }
 
         bool CalibrateMode { get; set; }
+        bool ReduceOutputs { get; set; } // Chihiro 2020.02.12
         WaterType WType {get;set;}
         double ProbEstablishAdjustment { get; set; }
         double[] MaximumShadeLAI { get; }

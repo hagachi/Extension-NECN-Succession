@@ -12,6 +12,7 @@ namespace Landis.Extension.Succession.NECN
         // USER INPUTS ------------------------------------------------------------
         public static LitterType[] LitterParameters;
         public static bool CalibrateMode;
+        public static bool ReduceOutputs; // Chihiro, 2020.02.12
         public static double ProbEstablishAdjust;
         public static WaterType WType;
 
@@ -239,6 +240,7 @@ namespace Landis.Extension.Succession.NECN
             LitterParameters[1] = litterParmsSoil;
 
             CalibrateMode       = parameters.CalibrateMode;
+            ReduceOutputs       = parameters.ReduceOutputs; // Chihiro 2020.02.12
             WType = parameters.WType;
             //ProbEstablishAdjust = parameters.ProbEstablishAdjustment;
             //FractionSOM2toCO2   = parameters.FractionSOM2toCO2;
