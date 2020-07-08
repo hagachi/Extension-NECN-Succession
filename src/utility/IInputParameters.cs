@@ -112,6 +112,7 @@ namespace Landis.Extension.Succession.NECN
         double DenitrificationRate { get; }
         double InitialMineralN { get; }
         double InitialFineFuels { get; }
+        double GrassThresholdMultiplier { get; } // added (W.Hotta 2020.07.07)
    
         
     }

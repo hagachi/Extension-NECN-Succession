@@ -233,6 +233,12 @@ namespace Landis.Extension.Succession.NECN
             ReadVar(drsom3);
             parameters.SetDecayRateSOM3(drsom3.Value);
 
+            // W.Hotta 2020.07.07 =============================================
+            InputVar<double> grassTMult = new InputVar<double>("GrassThresholdMultiplier");
+            ReadVar(grassTMult);
+            parameters.SetGrassThresholdMultiplier(grassTMult.Value);
+            // ================================================================
+
             InputVar<string> anppMaps = new InputVar<string>("ANPPMapNames");
             if (ReadOptionalVar(anppMaps))
             {

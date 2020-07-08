@@ -54,6 +54,7 @@ namespace Landis.Extension.Succession.NECN
         private double decayRateSOM1;
         private double decayRateSOM2;
         private double decayRateSOM3;
+        private double grassThresholdMultiplier; // W.Hotta 2020.07.07
         private double[] maximumShadeLAI;
         private double initMineralN;
         private double initFineFuels;
@@ -483,6 +484,17 @@ namespace Landis.Extension.Succession.NECN
                 return decayRateSOM3;
             }
         }
+
+        // W.Hotta 2020.07.07 =================================================
+        public double GrassThresholdMultiplier
+        {
+            get
+            {
+                return grassThresholdMultiplier;
+            }
+        }
+        // ====================================================================
+
         //-----------------------------------------------
         public double DenitrificationRate
         {
@@ -999,7 +1011,14 @@ namespace Landis.Extension.Succession.NECN
         {
             decayRateSOM3 = CheckBiomassParm(newValue, 0.0, 1.0);
         }
-        //---------------------------------------------------------------------
+
+        // W.Hotta 2020.07.07 =================================================
+        public void SetGrassThresholdMultiplier(InputValue<double> newValue)
+        {
+            grassThresholdMultiplier = CheckBiomassParm(newValue, 0.0, 10.0);
+        }
+        // ====================================================================
+
         public void SetDenitrif(InputValue<double> newValue)
         {
             denitrif = CheckBiomassParm(newValue, 0.0, 1.0);
