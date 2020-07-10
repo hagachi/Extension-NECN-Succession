@@ -184,8 +184,10 @@ namespace Landis.Extension.Succession.NECN
                 }
                 Outputs.WritePrimaryLogFile(PlugIn.ModelCore.CurrentTime);
                 Outputs.WriteShortPrimaryLogFile(PlugIn.ModelCore.CurrentTime);
-                if (!OtherData.ReduceOutputs)
+                if (!OtherData.CalibrateMode && !OtherData.ReduceOutputs)
                     Outputs.WriteMaps();
+                // if (!OtherData.ReduceOutputs)
+                // Outputs.WriteMaps();
                 Establishment.LogEstablishment();
             }
 
