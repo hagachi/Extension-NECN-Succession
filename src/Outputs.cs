@@ -466,7 +466,7 @@ namespace Landis.Extension.Succession.NECN
             CalibrateLog.Write("mineralNalloc, resorbedNalloc, ");  // from calculateN_Limit
 
             // These three together:
-            CalibrateLog.Write("limitLAI, limitH20, limitT, limitN, ");  //from ComputeActualANPP
+            CalibrateLog.Write("limitLAI, limitH20, limitT, limitN, limitCompetition, ");  //from ComputeActualANPP, modified by Chihiro, 2020.02.03
             CalibrateLog.Write("maxNPP, Bmax, Bsite, Bcohort, soilTemp, ");  //from ComputeActualANPP
             CalibrateLog.Write("actualWoodNPP, actualLeafNPP, ");  //from ComputeActualANPP
 
@@ -625,7 +625,28 @@ namespace Landis.Extension.Succession.NECN
                     
                 }
 
-                string pathavailablewater = MapNames.ReplaceTemplateVars(@"NECN\AvailableWater-{timestep}.img", PlugIn.ModelCore.CurrentTime);
+                // Chihiro 2020.01.28 ===========================================
+                string pathLAITree = MapNames.ReplaceTemplateVars(@"NECN\LAITree-{timestep}.img", PlugIn.ModelCore.CurrentTime);
+                using (IOutputRaster<IntPixel> outputRaster = PlugIn.ModelCore.CreateRaster<IntPixel>(pathLAITree, PlugIn.ModelCore.Landscape.Dimensions))
+                {
+                    IntPixel pixel = outputRaster.BufferPixel;
+                    foreach (Site site in PlugIn.ModelCore.Landscape.AllSites)
+                    {
+                        if (site.IsActive)
+                        {
+                            pixel.MapCode.Value = (short)(SiteVars.LAITree[site]);
+                        }
+                        else
+                        {
+                            //  Inactive site
+                            pixel.MapCode.Value = 0;
+                        }
+                        outputRaster.WriteBufferPixel();
+                    }
+                }
+
+
+            string pathavailablewater = MapNames.ReplaceTemplateVars(@"NECN\AvailableWater-{timestep}.img", PlugIn.ModelCore.CurrentTime);
                 using (IOutputRaster<IntPixel> outputRaster = PlugIn.ModelCore.CreateRaster<IntPixel>(pathavailablewater, PlugIn.ModelCore.Landscape.Dimensions))
                 {
                     IntPixel pixel = outputRaster.BufferPixel;
