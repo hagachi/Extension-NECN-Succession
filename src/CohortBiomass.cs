@@ -602,9 +602,12 @@ namespace Landis.Extension.Succession.NECN
         private static double calculateCompetition_Limit(ICohort cohort, ActiveSite site)
         {
             double k = -0.14;  // This is the value given for all temperature ecosystems. I started with 0.1
-                               // double monthly_cumulative_LAI = SiteVars.MonthlyLAI[site][Main.Month];
+            // double monthly_cumulative_LAI = SiteVars.MonthlyLAI[site][Main.Month];
 
-            // Chihiro 2020.01.22
+            // Competition between cohorts considering understory and overstory interactions
+            //   If the biomass of tree cohort is larger than total grass biomass on the site, 
+            //   monthly_cummulative_LAI should ignore grass LAI.
+            //
             // double threshold_multiplier
             //// User defined parameter to adjust relationships between AGB and Hight of the cohort
             //// default = 1.0
@@ -614,6 +617,7 @@ namespace Landis.Extension.Succession.NECN
             // else:
             //     monthly_cummulative_LAI = Monthly_LAI_of_tree_& grass_species
             //
+            // Chihiro 2020.01.22
             double monthly_cumulative_LAI = 0.0;
             double grassThresholdMultiplier = PlugIn.Parameters.GrassThresholdMultiplier; // added (W.Hotta 2020.07.07)
             // PlugIn.ModelCore.UI.WriteLine("TreeLAI={0},TreeLAI={0}", SiteVars.MonthlyLAITree[site][Main.Month], SiteVars.MonthlyLAI[site][Main.Month]); // added (W.Hotta 2020.07.07)
