@@ -573,9 +573,19 @@ namespace Landis.Extension.Succession.NECN
             }
 
             if (Main.Month == 6)
+            {
                 SiteVars.LAI[site] += lai; //Tracking LAI.
+                // Tracking LAI of tree species
+                // Chihiro 2020.01.22
+                if (cohort.Species.Name != "sasa_spp") // TODO: "sasa_spp" should be a functional type parameter
+                    SiteVars.LAITree[site] += lai;
+            }
 
             SiteVars.MonthlyLAI[site][Main.Month] += lai;
+            // Tracking LAI of tree species
+            // Chihiro 2020.01.22
+            if (cohort.Species.Name != "sasa_spp")  // TODO: "sasa_spp" should be a functional type parameter
+                SiteVars.MonthlyLAITree[site][Main.Month] += lai;
 
             if (PlugIn.ModelCore.CurrentTime > 0 && OtherData.CalibrateMode)
                 Outputs.CalibrateLog.Write("{0:0.00},{1:0.00},{2:0.00},", lai, tlai, rlai);
@@ -592,7 +602,28 @@ namespace Landis.Extension.Succession.NECN
         private static double calculateCompetition_Limit(ICohort cohort, ActiveSite site)
         {
             double k = -0.14;  // This is the value given for all temperature ecosystems. I started with 0.1
-            double monthly_cumulative_LAI = SiteVars.MonthlyLAI[site][Main.Month];
+                               // double monthly_cumulative_LAI = SiteVars.MonthlyLAI[site][Main.Month];
+
+            // If the biomass of tree cohort is larger than total grass biomass on the site, 
+            // monthly_cummulative_LAI should ignore grass LAI.
+            // Chihiro 2020.01.22
+            double monthly_cumulative_LAI = 0.0;
+            double grassThresholdMultiplier = PlugIn.Parameters.GrassThresholdMultiplier; // added (W.Hotta 2020.07.07)
+            // PlugIn.ModelCore.UI.WriteLine("TreeLAI={0},TreeLAI={0}", SiteVars.MonthlyLAITree[site][Main.Month], SiteVars.MonthlyLAI[site][Main.Month]); // added (W.Hotta 2020.07.07)
+            // PlugIn.ModelCore.UI.WriteLine("Spp={0},Time={1},Mo={2},cohortBiomass={3},grassBiomass={4},LAI={5}", cohort.Species.Name, PlugIn.ModelCore.CurrentTime, Main.Month + 1, cohort.Biomass, Main.ComputeGrassBiomass(site), monthly_cumulative_LAI); // added (W.Hotta 2020.07.07)
+            if (cohort.Species.Name != "sasa_spp" && // TODO: "sasa_spp" should be a functional type parameter
+                cohort.Biomass > Main.ComputeGrassBiomass(site) * grassThresholdMultiplier) // added GrassThresholdMultiplier (W.Hotta 2020.07.07)
+            {
+                monthly_cumulative_LAI = SiteVars.MonthlyLAITree[site][Main.Month];
+                // PlugIn.ModelCore.UI.WriteLine("Higher than Sasa");  // added (W.Hotta 2020.07.07)
+            }
+            else
+            {
+                monthly_cumulative_LAI = SiteVars.MonthlyLAI[site][Main.Month];
+                // PlugIn.ModelCore.UI.WriteLine("Lower than Sasa");  // added (W.Hotta 2020.07.07)
+            }
+            // =================================================================================
+
             double competition_limit = Math.Max(0.0, Math.Exp(k * monthly_cumulative_LAI));
 
             //if (PlugIn.ModelCore.CurrentTime > 0 && OtherData.CalibrateMode)

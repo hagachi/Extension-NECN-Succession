@@ -172,6 +172,19 @@ namespace Landis.Extension.Succession.NECN
         }
 
         //---------------------------------------------------------------------
+        // Chihiro 2020.01.22
+        public static double ComputeGrassBiomass(ActiveSite site)
+        {
+            double grassTotal = 0;
+            if (SiteVars.Cohorts[site] != null)
+                foreach (ISpeciesCohorts speciesCohorts in SiteVars.Cohorts[site])
+                    foreach (ICohort cohort in speciesCohorts)
+                        if (cohort.Species.Name == "sasa_spp") // TODO: this "sasa_spp" should be a functional type parameter
+                            grassTotal += cohort.WoodBiomass;
+            return grassTotal;
+        }
+
+        //---------------------------------------------------------------------
         public static void ComputeTotalCohortCN(ActiveSite site, ISiteCohorts cohorts)
         {
             SiteVars.CohortLeafC[site] = 0;
