@@ -604,9 +604,16 @@ namespace Landis.Extension.Succession.NECN
             double k = -0.14;  // This is the value given for all temperature ecosystems. I started with 0.1
                                // double monthly_cumulative_LAI = SiteVars.MonthlyLAI[site][Main.Month];
 
-            // If the biomass of tree cohort is larger than total grass biomass on the site, 
-            // monthly_cummulative_LAI should ignore grass LAI.
             // Chihiro 2020.01.22
+            // double threshold_multiplier
+            //// User defined parameter to adjust relationships between AGB and Hight of the cohort
+            //// default = 1.0
+            //
+            // if biomass_of_tree_cohort > total_grass_biomass_on_the_site * threshold_multiplier:
+            //     monthly_cummulative_LAI = Monthly_LAI_of_tree_species
+            // else:
+            //     monthly_cummulative_LAI = Monthly_LAI_of_tree_& grass_species
+            //
             double monthly_cumulative_LAI = 0.0;
             double grassThresholdMultiplier = PlugIn.Parameters.GrassThresholdMultiplier; // added (W.Hotta 2020.07.07)
             // PlugIn.ModelCore.UI.WriteLine("TreeLAI={0},TreeLAI={0}", SiteVars.MonthlyLAITree[site][Main.Month], SiteVars.MonthlyLAI[site][Main.Month]); // added (W.Hotta 2020.07.07)
