@@ -111,7 +111,11 @@ namespace Landis.Extension.Succession.NECN
         double DenitrificationRate { get; }
         double InitialMineralN { get; }
         double InitialFineFuels { get; }
-   
-        
+
+        // Multiplier to adjust judgement whether a tree-cohort is larger than grass layer
+        // W.Hotta 2020.07.07
+        double GrassThresholdMultiplier { get; }
+
+
     }
 }
