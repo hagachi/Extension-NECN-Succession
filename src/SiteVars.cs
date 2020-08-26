@@ -24,13 +24,18 @@ namespace Landis.Extension.Succession.NECN
         
         // Dead biomass:
         private static ISiteVar<Layer> surfaceDeadWood;
+        private static ISiteVar<Layer> surfaceDeadGrass; // Track dead wood of grass species; Chihiro 2020.1.14
         private static ISiteVar<Layer> soilDeadWood;
         
         private static ISiteVar<Layer> surfaceStructural;
         private static ISiteVar<Layer> surfaceMetabolic;
         private static ISiteVar<Layer> soilStructural;
         private static ISiteVar<Layer> soilMetabolic;
-                       
+
+        // Dead wood carbon for each year; Chihiro 2020.1.14
+        private static ISiteVar<double[]> originalDeadWoodC;
+        private static ISiteVar<double[]> currentDeadWoodC; // Carefully check the consistensiy with surfaceDeadWood
+
         // Soil layers
         private static ISiteVar<Layer> som1surface;
         private static ISiteVar<Layer> som1soil;
@@ -124,13 +129,19 @@ namespace Landis.Extension.Succession.NECN
             
             // Dead biomass:
             surfaceDeadWood     = PlugIn.ModelCore.Landscape.NewSiteVar<Layer>();
+            surfaceDeadGrass    = PlugIn.ModelCore.Landscape.NewSiteVar<Layer>(); // Dead wood of grass species; Chihiro 2020.01.14
             soilDeadWood        = PlugIn.ModelCore.Landscape.NewSiteVar<Layer>();
             
             surfaceStructural   = PlugIn.ModelCore.Landscape.NewSiteVar<Layer>();
             surfaceMetabolic    = PlugIn.ModelCore.Landscape.NewSiteVar<Layer>();
             soilStructural      = PlugIn.ModelCore.Landscape.NewSiteVar<Layer>();
             soilMetabolic       = PlugIn.ModelCore.Landscape.NewSiteVar<Layer>();
-            
+
+            // Dead wood carbon pools; Chihiro 2020.01.14
+            originalDeadWoodC   = PlugIn.ModelCore.Landscape.NewSiteVar<double[]>();
+            currentDeadWoodC    = PlugIn.ModelCore.Landscape.NewSiteVar<double[]>();
+            // ------------------------------------------
+
             // Soil Layers
             som1surface         = PlugIn.ModelCore.Landscape.NewSiteVar<Layer>();
             som1soil            = PlugIn.ModelCore.Landscape.NewSiteVar<Layer>();
@@ -217,8 +228,14 @@ namespace Landis.Extension.Succession.NECN
             foreach (ActiveSite site in PlugIn.ModelCore.Landscape)
             {
                 surfaceDeadWood[site]       = new Layer(LayerName.Wood, LayerType.Surface);
+                surfaceDeadGrass[site]      = new Layer(LayerName.Grass, LayerType.Surface); // Dead wood of grass species; Chihiro 2020.01.14
                 soilDeadWood[site]          = new Layer(LayerName.CoarseRoot, LayerType.Soil);
-                
+
+                // Dead wood carbons; Chihiro 2020.01.14
+                originalDeadWoodC[site]     = new double[PlugIn.ModelCore.EndTime];
+                currentDeadWoodC[site]      = new double[PlugIn.ModelCore.EndTime];
+                // -------------------------------------
+
                 surfaceStructural[site]     = new Layer(LayerName.Structural, LayerType.Surface);
                 surfaceMetabolic[site]      = new Layer(LayerName.Metabolic, LayerType.Surface);
                 soilStructural[site]        = new Layer(LayerName.Structural, LayerType.Soil);
@@ -324,6 +341,7 @@ namespace Landis.Extension.Succession.NECN
             SiteVars.SourceSink[site]      = new Layer(LayerName.Other, LayerType.Other);
             
             SiteVars.SurfaceDeadWood[site].NetMineralization = 0.0;
+            SiteVars.SurfaceDeadGrass[site].NetMineralization = 0.0; // Dead wood of grass species; Chihiro 2020.01.14
             SiteVars.SurfaceStructural[site].NetMineralization = 0.0;
             SiteVars.SurfaceMetabolic[site].NetMineralization = 0.0;
             
@@ -372,7 +390,18 @@ namespace Landis.Extension.Succession.NECN
                 return surfaceDeadWood;
             }
         }
+        //---------------------------------------------------------------------
 
+        /// <summary>
+        ///  The intact dead woody pools for grass species for the landscape's sites.
+        /// </summary>
+        // Chihiro 2020.01.14
+        public static ISiteVar<Layer> SurfaceDeadGrass
+        {
+            get {
+                return surfaceDeadGrass;
+            }
+        }
         //---------------------------------------------------------------------
 
         /// <summary>
@@ -430,6 +459,14 @@ namespace Landis.Extension.Succession.NECN
                 return soilMetabolic;
             }
         }
+        //---------------------------------------------------------------------
+
+        /// <summary>
+        /// The original and current dead wood carbon for the landscape's sites.
+        /// </summary>
+        // Chihiro 2020.01.14
+        public static ISiteVar<double[]> OriginalDeadWoodC { get { return originalDeadWoodC; } }
+        public static ISiteVar<double[]> CurrentDeadWoodC { get { return currentDeadWoodC; } }
         //---------------------------------------------------------------------
 
         /// <summary>
