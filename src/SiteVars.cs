@@ -90,7 +90,11 @@ namespace Landis.Extension.Succession.NECN
         private static ISiteVar<double> lai;
         private static ISiteVar<double> annualPPT_AET; //Annual water budget calculation. 
         private static ISiteVar<int> dryDays;
-                
+        // LAI for tree spp
+        // Chihiro 2020.1.22
+        private static ISiteVar<double> laiTree;
+        private static ISiteVar<double[]> monthlyLAITree;
+
         public static ISiteVar<double> TotalWoodBiomass;
         public static ISiteVar<int> PrevYearMortality;
         public static ISiteVar<byte> FireSeverity;
@@ -147,6 +151,7 @@ namespace Landis.Extension.Succession.NECN
 
             // Other variables
             monthlyLAI = PlugIn.ModelCore.Landscape.NewSiteVar<double[]>();
+            monthlyLAITree = PlugIn.ModelCore.Landscape.NewSiteVar<double[]>(); // LAI for tree spp; Chihiro 2020.01.22
             mineralN            = PlugIn.ModelCore.Landscape.NewSiteVar<double>();
             resorbedN           = PlugIn.ModelCore.Landscape.NewSiteVar<double>();
             waterMovement       = PlugIn.ModelCore.Landscape.NewSiteVar<double>();
@@ -189,7 +194,8 @@ namespace Landis.Extension.Succession.NECN
             monthlymineralN     = PlugIn.ModelCore.Landscape.NewSiteVar<double[]>();
             frassC              = PlugIn.ModelCore.Landscape.NewSiteVar<double>();
             lai                 = PlugIn.ModelCore.Landscape.NewSiteVar<double>();
-            annualPPT_AET       = PlugIn.ModelCore.Landscape.NewSiteVar<double>();
+            laiTree             = PlugIn.ModelCore.Landscape.NewSiteVar<double>(); // LAI for tree spp; Chihiro 2020.01.22
+            annualPPT_AET = PlugIn.ModelCore.Landscape.NewSiteVar<double>();
             AnnualClimaticWaterDeficit  = PlugIn.ModelCore.Landscape.NewSiteVar<double>();
             SmolderConsumption = PlugIn.ModelCore.Landscape.NewSiteVar<double>();
             FlamingConsumption = PlugIn.ModelCore.Landscape.NewSiteVar<double>(); 
@@ -231,6 +237,7 @@ namespace Landis.Extension.Succession.NECN
                 monthlyStreamN[site]         = new double[12];
                 monthlyResp[site]           = new double[12];
                 monthlyLAI[site] = new double[12];
+                monthlyLAITree[site] = new double[12]; // LAI for tree spp; Chihiro 2020.01.22
                 //monthlymineralN[site]       = new double[12];
 
                 CohortResorbedNallocation[site] = new Dictionary<int, Dictionary<int, double>>();
@@ -338,10 +345,11 @@ namespace Landis.Extension.Succession.NECN
             SiteVars.AnnualPPT_AET[site] = 0.0;
             SiteVars.AnnualClimaticWaterDeficit[site] = 0.0;
             SiteVars.WoodMortality[site] = 0.0;
+            SiteVars.LAITree[site] = 0.0; // LAI for tree spp; Chihiro 2020.01.22
             //SiteVars.DryDays[site] = 0;
 
             //SiteVars.FireEfflux[site] = 0.0;
-                        
+
 
         }
 
@@ -904,6 +912,13 @@ namespace Landis.Extension.Succession.NECN
         //---------------------------------------------------------------------
 
         /// <summary>
+        /// A summary of Monthly LAI for tree spp (m2/m2)
+        /// </summary>
+        // Chihiro 2020.01.22
+        public static ISiteVar<double[]> MonthlyLAITree { get { return monthlyLAITree; } }
+        // --------------------------------------------------------------------
+
+        /// <summary>
         /// Water loss
         /// </summary>
         public static ISiteVar<Layer> SourceSink
@@ -967,6 +982,24 @@ namespace Landis.Extension.Succession.NECN
 
         }
         //---------------------------------------------------------------------
+
+        /// <summary>
+        /// A summary of LAI for tree spp (m2/m2)
+        /// </summary>
+        // Chihiro 2020.01.22
+        public static ISiteVar<double> LAITree
+        {
+            get
+            {
+                return laiTree;
+            }
+            set
+            {
+                laiTree = value;
+            }
+        }
+        // --------------------------------------------------------------------
+
         /// <summary>
         /// A summary of Annual Water Budget (ppt - AET)
         /// </summary>
