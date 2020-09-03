@@ -78,7 +78,6 @@ namespace Landis.Extension.Succession.NECN
         public override void Initialize()
         {
             PlugIn.ModelCore.UI.WriteLine("Initializing {0} ...", ExtensionName);
-            Console.ReadLine();
             Timestep = Parameters.Timestep;
             SuccessionTimeStep = Timestep;
             sufficientLight = Parameters.LightClassProbabilities;
