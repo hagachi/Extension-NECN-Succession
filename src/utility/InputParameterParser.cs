@@ -170,6 +170,14 @@ namespace Landis.Extension.Succession.NECN
             else
                 parameters.CalibrateMode = false;
 
+            // Wataru, 2020.09.03 =============================================
+            InputVar<bool> reduceOutputs = new InputVar<bool>("ReduceOutputs");
+            if (ReadOptionalVar(reduceOutputs))
+                parameters.ReduceOutputs = reduceOutputs.Value;
+            else
+                parameters.CalibrateMode = false;
+            // ==================================================================
+
             InputVar<bool> smokemode = new InputVar<bool>("SmokeModelOutputs");
             if (ReadOptionalVar(smokemode))
                 parameters.SmokeModelOutputs = smokemode.Value;

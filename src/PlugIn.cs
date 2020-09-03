@@ -185,7 +185,9 @@ namespace Landis.Extension.Succession.NECN
                 }
                 Outputs.WritePrimaryLogFile(PlugIn.ModelCore.CurrentTime);
                 Outputs.WriteShortPrimaryLogFile(PlugIn.ModelCore.CurrentTime);
-                Outputs.WriteMaps();
+                // Outputs.WriteMaps(); Wataru, 2020.09.03
+                if (!OtherData.ReduceOutputs) // Wataru, 2020.09.03 
+                    Outputs.WriteMaps();      // Wataru, 2020.09.03
                 Establishment.LogEstablishment();
             }
 
@@ -529,7 +531,8 @@ namespace Landis.Extension.Succession.NECN
             // Compute the availability of nursery log on the site
             double nurseryLogAvailabilityModifier = 1.0; // tuning parameter
             double nurseryLogAvailability = nurseryLogAvailabilityModifier * ComputeNurseryLogAreaRatio(species, site);
-            if (OtherData.CalibrateMode)
+            // if (OtherData.CalibrateMode)
+            if (OtherData.CalibrateMode && !OtherData.ReduceOutputs) //Wataru, 2020.09.03
             {
                 PlugIn.ModelCore.UI.WriteLine("original_lightProbability:{0},{1},{2}", PlugIn.ModelCore.CurrentTime, species.Name, lightProbability);
                 PlugIn.ModelCore.UI.WriteLine("siteShade:{0},{1}", siteShade, siteShadeTree);
@@ -565,7 +568,8 @@ namespace Landis.Extension.Succession.NECN
                 }
             }
 
-            if (OtherData.CalibrateMode)
+            //if (OtherData.CalibrateMode)
+            if (OtherData.CalibrateMode && !OtherData.ReduceOutputs) //Wataru, 2020.09.03
             {
                 PlugIn.ModelCore.UI.WriteLine("nurseryLogPenalty:{0},{1},{2}", PlugIn.ModelCore.CurrentTime, species.Name, nurseryLogAvailability);
                 PlugIn.ModelCore.UI.WriteLine("modified_lightProbability:{0},{1},{2}", PlugIn.ModelCore.CurrentTime, species.Name, lightProbability);
@@ -698,7 +702,8 @@ namespace Landis.Extension.Succession.NECN
             double decayClass3AreaRatio = 4 * 2 * nurseryLogC[0] / (Math.PI * hight * densityDecayClass3) * Math.Pow(10, -4); // Decay class 3
             double decayClass4AreaRatio = 4 * 2 * nurseryLogC[1] / (Math.PI * hight * densityDecayClass4) * Math.Pow(10, -4); // Decay class 4
             double decayClass5AreaRatio = 4 * 2 * nurseryLogC[2] / (Math.PI * hight * densityDecayClass5) * Math.Pow(10, -4); // Decay class 5
-            if (OtherData.CalibrateMode && species.Index == 0)
+            //if (OtherData.CalibrateMode && species.Index == 0)
+            if (OtherData.CalibrateMode && species.Index == 0 && !OtherData.ReduceOutputs)
             {
                 PlugIn.ModelCore.UI.WriteLine("nurseryLogC:{0},{1},{2},{3}", PlugIn.ModelCore.CurrentTime, nurseryLogC[0], nurseryLogC[1], nurseryLogC[2]);
                 PlugIn.ModelCore.UI.WriteLine("decayClassAreaRatios:{0},{1},{2},{3}", PlugIn.ModelCore.CurrentTime, decayClass3AreaRatio, decayClass4AreaRatio, decayClass5AreaRatio);
