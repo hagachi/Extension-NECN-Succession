@@ -56,7 +56,7 @@ namespace Landis.Extension.Succession.NECN
                                             ICore mCore)
         {
             modelCore = mCore;
-            SiteVars.Initialize();
+            //SiteVars.Initialize(); // this use functional type parameter
             InputParametersParser parser = new InputParametersParser();
             Parameters = Landis.Data.Load<IInputParameters>(dataFile, parser);
 
@@ -78,6 +78,7 @@ namespace Landis.Extension.Succession.NECN
         public override void Initialize()
         {
             PlugIn.ModelCore.UI.WriteLine("Initializing {0} ...", ExtensionName);
+            Console.ReadLine();
             Timestep = Parameters.Timestep;
             SuccessionTimeStep = Timestep;
             sufficientLight = Parameters.LightClassProbabilities;
@@ -86,6 +87,7 @@ namespace Landis.Extension.Succession.NECN
 
             FunctionalType.Initialize(Parameters);
             SpeciesData.Initialize(Parameters);
+            SiteVars.Initialize(); // chihiro; this method use functional type data for initializing decay value
             Util.ReadSoilDepthMap(Parameters.SoilDepthMapName);
             Util.ReadSoilDrainMap(Parameters.SoilDrainMapName);
             Util.ReadSoilBaseFlowMap(Parameters.SoilBaseFlowMapName);
