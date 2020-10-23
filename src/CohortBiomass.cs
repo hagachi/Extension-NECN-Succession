@@ -601,7 +601,10 @@ namespace Landis.Extension.Succession.NECN
 
         private static double calculateCompetition_Limit(ICohort cohort, ActiveSite site)
         {
-            double k = -0.14;  // This is the value given for all temperature ecosystems. I started with 0.1
+            // double k = -0.14;  // This is the value given for all temperature ecosystems. I started with 0.1
+            // double k = -0.28;   // W.Hotta (2020.10.11) 
+            double k = -0.42;   // W.Hotta (2020.10.14)
+            // double k = -0.56;   // W.Hotta (2020.10.16)
             // double monthly_cumulative_LAI = SiteVars.MonthlyLAI[site][Main.Month];
 
             // Competition between cohorts considering understory and overstory interactions
