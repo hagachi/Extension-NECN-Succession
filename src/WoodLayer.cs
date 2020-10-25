@@ -26,17 +26,24 @@ namespace Landis.Extension.Succession.NECN
             {
 
                 double ligninFactor = System.Math.Exp(-1 * OtherData.LigninDecayEffect * SiteVars.SurfaceDeadWood[site].FractionLignin);
-                double decayRate = Math.Min(1.0, SiteVars.DecayFactor[site]
+                // default ------------------------------------------------------------------------
+                // double decayRate = Math.Min(1.0, SiteVars.DecayFactor[site]
+                //                                 * SiteVars.SurfaceDeadWood[site].DecayValue
+                //                                 * ligninFactor
+                //                                 * OtherData.MonthAdjust);
+                
+                // Added by W.Hotta (2020.10.25) --------------------------------------------------
+                double decayRate = Math.Min(1.0, SiteVars.DecayFactorDeadWood[site]         // Use DecayFactorDeadWood
                                                 * SiteVars.SurfaceDeadWood[site].DecayValue
                                                 * ligninFactor
                                                 * OtherData.MonthAdjust);
-                
+
                 //Compute total C flow out of large wood
                 double totalCFlow = wood2c * decayRate;
 
                 if (totalCFlow > wood2c)
                 {
-                    string mesg = string.Format("Error: Wood decay > wood mass. WoodC={0}, DecayFactor={1}, DecayValue={2}, LigninFactor={3}", wood2c, SiteVars.DecayFactor[site], SiteVars.SurfaceDeadWood[site].DecayValue, ligninFactor);
+                    string mesg = string.Format("Error: Wood decay > wood mass. WoodC={0}, DecayFactor={1}, DecayValue={2}, LigninFactor={3}", wood2c, SiteVars.DecayFactorDeadWood[site], SiteVars.SurfaceDeadWood[site].DecayValue, ligninFactor);
                     throw new ApplicationException(mesg);
                 }
 
@@ -64,7 +71,14 @@ namespace Landis.Extension.Succession.NECN
             {
 
                 double ligninFactor = System.Math.Exp(-1 * OtherData.LigninDecayEffect * SiteVars.SurfaceDeadGrass[site].FractionLignin);
-                double decayRate = Math.Min(1.0, SiteVars.DecayFactor[site]
+                // default ----------------------------------------------------------------------
+                // double decayRate = Math.Min(1.0, SiteVars.DecayFactor[site]
+                //                                 * SiteVars.SurfaceDeadGrass[site].DecayValue
+                //                                 * ligninFactor
+                //                                 * OtherData.MonthAdjust);
+
+                // Added by W.Hotta (2020.10.25) ----------------------------------------------------------------------
+                double decayRate = Math.Min(1.0, SiteVars.DecayFactorDeadWood[site]         // Use DecayFactorDeadWood
                                                 * SiteVars.SurfaceDeadGrass[site].DecayValue
                                                 * ligninFactor
                                                 * OtherData.MonthAdjust);
@@ -74,7 +88,7 @@ namespace Landis.Extension.Succession.NECN
 
                 if (totalCFlow > wood2cGrass)
                 {
-                    string mesg = string.Format("Error: Wood grass decay > wood grass mass. WoodC={0}, DecayFactor={1}, DecayValue={2}, LigninFactor={3}", wood2c, SiteVars.DecayFactor[site], SiteVars.SurfaceDeadGrass[site].DecayValue, ligninFactor);
+                    string mesg = string.Format("Error: Wood grass decay > wood grass mass. WoodC={0}, DecayFactor={1}, DecayValue={2}, LigninFactor={3}", wood2c, SiteVars.DecayFactorDeadWood[site], SiteVars.SurfaceDeadGrass[site].DecayValue, ligninFactor);
                     throw new ApplicationException(mesg);
                 }
 
