@@ -529,8 +529,12 @@ namespace Landis.Extension.Succession.NECN
             // W.Hotta 2020.01.22
             //
             // Compute the availability of nursery log on the site
-            double nurseryLogAvailabilityModifier = 1.0; // tuning parameter
-            double nurseryLogAvailability = nurseryLogAvailabilityModifier * ComputeNurseryLogAreaRatio(species, site);
+            //   Option1: function type is linear
+            // double nurseryLogAvailabilityModifier = 1.0; // tuning parameter
+            // double nurseryLogAvailability = nurseryLogAvailabilityModifier * ComputeNurseryLogAreaRatio(species, site);
+            //   Option2: function type is power
+            double nurseryLogAvailabilityModifier = 2.0; // tuning parameter (only even)
+            double nurseryLogAvailability = 1 - Math.Pow(ComputeNurseryLogAreaRatio(species, site) - 1, nurseryLogAvailabilityModifier);
             // if (OtherData.CalibrateMode)
             if (OtherData.CalibrateMode && !OtherData.ReduceOutputs) //Wataru, 2020.09.03
             {
