@@ -428,6 +428,7 @@ namespace Landis.Extension.Succession.NECN
         // 
         // Description:
         //     - Modify light probability based on the amount of nursery log on the site
+        //     - Return both True/False and established location (surface, nlog or surface)
         //
         //
         // Psudo-code:
@@ -476,7 +477,7 @@ namespace Landis.Extension.Succession.NECN
         //     return isSufficientlight;
         //
         //
-        public bool SufficientLight(ISpecies species, ActiveSite site)
+        public (bool, string) SufficientLight(ISpecies species, ActiveSite site) // 2020.10.31 Chhiro
         {
 
             //PlugIn.ModelCore.UI.WriteLine("  Calculating Sufficient Light from Succession.");
@@ -581,7 +582,8 @@ namespace Landis.Extension.Succession.NECN
             }
             // ---------------------------------------------------------------------
 
-            return isSufficientlight;
+            return (isSufficientlight, regenType); // 2020.10.31 Chhiro
+            //return isSufficientlight;
             //return modelCore.GenerateUniform() < lightProbability;
         }
         // Original SufficientLight method
@@ -800,10 +802,10 @@ namespace Landis.Extension.Succession.NECN
         /// This is a Delegate method to base succession.
         /// </summary>
 
-        public void AddNewCohort(ISpecies species, ActiveSite site, string reproductionType)
+        public void AddNewCohort(ISpecies species, ActiveSite site, string reproductionType, string estLoc)
         {
             float[] initialBiomass = CohortBiomass.InitialBiomass(species, SiteVars.Cohorts[site], site);
-            SiteVars.Cohorts[site].AddNewCohort(species, 1, initialBiomass[0], initialBiomass[1]);
+            SiteVars.Cohorts[site].AddNewCohort(species, 1, initialBiomass[0], initialBiomass[1], estLoc);
         }
         //---------------------------------------------------------------------
 

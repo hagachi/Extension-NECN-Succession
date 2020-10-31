@@ -227,8 +227,10 @@ namespace Landis.Extension.Succession.NECN
 
             if (PlugIn.ModelCore.CurrentTime > 0 && OtherData.CalibrateMode)
             {
+                Outputs.CalibrateLog.Write("{0},", cohort.EstablishedLoc);
                 //Outputs.CalibrateLog.Write("{0:0.00},{1:0.00},{2:0.00},{3:0.00}, {4:0.00},", limitLAI, limitH20, limitT, limitCapacity, limitN);
                 Outputs.CalibrateLog.Write("{0:0.00},{1:0.00},{2:0.00},{3:0.00},{4:0.00},", limitLAI, limitH20, limitT, limitN, competition_limit); // Chihiro 2020.02.03
+                Outputs.CalibrateLog.Write("{0:0.00},{1:0.00}", SiteVars.MonthlyLAITree[site][Main.Month], SiteVars.MonthlyLAI[site][Main.Month]); // Chihiro 2020.10.31
                 Outputs.CalibrateLog.Write("{0},{1},{2},{3:0.0},{4:0.0},", maxNPP, maxBiomass, (int)siteBiomass, (cohort.WoodBiomass + cohort.LeafBiomass), SiteVars.SoilTemperature[site]);
                 Outputs.CalibrateLog.Write("{0:0.00},{1:0.00},", woodNPP, leafNPP);
             }
@@ -604,8 +606,8 @@ namespace Landis.Extension.Succession.NECN
             // double k = -0.14;  // This is the value given for all temperature ecosystems. I started with 0.1
             // double k = -0.28;   // W.Hotta (2020.10.11) 
             double k = -0.42;   // W.Hotta (2020.10.14)
-            // double k = -0.56;   // W.Hotta (2020.10.16)
-            // double monthly_cumulative_LAI = SiteVars.MonthlyLAI[site][Main.Month];
+                                // double k = -0.56;   // W.Hotta (2020.10.16)
+                                // double monthly_cumulative_LAI = SiteVars.MonthlyLAI[site][Main.Month];
 
             // Competition between cohorts considering understory and overstory interactions
             //   If the biomass of tree cohort is larger than total grass biomass on the site, 
@@ -615,7 +617,8 @@ namespace Landis.Extension.Succession.NECN
             //// User defined parameter to adjust relationships between AGB and Hight of the cohort
             //// default = 1.0
             //
-            // if biomass_of_tree_cohort > total_grass_biomass_on_the_site * threshold_multiplier:
+            // if (biomass_of_tree_cohort > total_grass_biomass_on_the_site * threshold_multiplier) OR
+            //    (cohort.EstablishedLocation is "nursery log"):
             //     monthly_cummulative_LAI = Monthly_LAI_of_tree_species
             // else:
             //     monthly_cummulative_LAI = Monthly_LAI_of_tree_& grass_species
@@ -626,7 +629,8 @@ namespace Landis.Extension.Succession.NECN
             // PlugIn.ModelCore.UI.WriteLine("TreeLAI={0},TreeLAI={0}", SiteVars.MonthlyLAITree[site][Main.Month], SiteVars.MonthlyLAI[site][Main.Month]); // added (W.Hotta 2020.07.07)
             // PlugIn.ModelCore.UI.WriteLine("Spp={0},Time={1},Mo={2},cohortBiomass={3},grassBiomass={4},LAI={5}", cohort.Species.Name, PlugIn.ModelCore.CurrentTime, Main.Month + 1, cohort.Biomass, Main.ComputeGrassBiomass(site), monthly_cumulative_LAI); // added (W.Hotta 2020.07.07)
             if (cohort.Species.Name != "sasa_spp" && // TODO: "sasa_spp" should be a functional type parameter
-                cohort.Biomass > Main.ComputeGrassBiomass(site) * grassThresholdMultiplier) // added GrassThresholdMultiplier (W.Hotta 2020.07.07)
+                ((cohort.Biomass > Main.ComputeGrassBiomass(site) * grassThresholdMultiplier) || // added GrassThresholdMultiplier (W.Hotta 2020.07.07)
+                 (cohort.EstablishedLoc == "nlog"))) // if the cohort is located on nuersery log, LAI of grass species is ignored (Chihiro 2020.10.31)
             {
                 monthly_cumulative_LAI = SiteVars.MonthlyLAITree[site][Main.Month];
                 // PlugIn.ModelCore.UI.WriteLine("Higher than Sasa");  // added (W.Hotta 2020.07.07)

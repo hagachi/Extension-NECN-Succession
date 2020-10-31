@@ -109,7 +109,9 @@ namespace Landis.Extension.Succession.NECN
             foreach (ICohort cohort in sortedCohorts)
             {
                 //foreach(ICohort cohort in cohorts)
-                SiteVars.Cohorts[site].AddNewCohort(cohort.Species, cohort.Age, cohort.WoodBiomass, cohort.LeafBiomass);
+                // 2020.10.31 Chihiro
+                // in initial community, established location is always surface
+                SiteVars.Cohorts[site].AddNewCohort(cohort.Species, cohort.Age, cohort.WoodBiomass, cohort.LeafBiomass, "surface");
             }
             return SiteVars.Cohorts[site];
         }
