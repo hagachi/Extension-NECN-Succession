@@ -21,6 +21,9 @@ namespace Landis.Extension.Succession.NECN
         public static MetadataTable<MonthlyLog> monthlyLog; 
         public static MetadataTable<PrimaryLog> primaryLog;
         public static MetadataTable<PrimaryLogShort> primaryLogShort;
+        // Chihiro 2020.11.01
+        // Add from commit id 589d35d3fa4567147286d7674c0fdacc4bc5e7cc
+        public static MetadataTable<EstablishmentLog> establishmentLog;
 
 
         //---------------------------------------------------------------------
