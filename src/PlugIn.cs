@@ -43,6 +43,15 @@ namespace Landis.Extension.Succession.NECN
         public static int B_MAX;
         private ICommunity initialCommunity;
 
+        // Chihiro 2020.11.01
+        // Add from commit id bcae092e4ca805add9df6b4aea7d9160068fdf4b
+        public static int[] SpeciesByPlant;
+        public static int[] SpeciesBySerotiny;
+        public static int[] SpeciesByResprout;
+        public static int[] SpeciesBySeed;
+        public static int[] SpeciesOnSurface;
+        public static int[] SpeciesOnNlog;
+
         //---------------------------------------------------------------------
 
         public PlugIn()
@@ -134,6 +143,8 @@ namespace Landis.Extension.Succession.NECN
 
             if (Parameters.CalibrateMode)
                 Outputs.CreateCalibrateLogFile();
+            // Chihiro 2020.11.01
+            // Add from commit id 589d35d3fa4567147286d7674c0fdacc4bc5e7cc
             //Establishment.InitializeLogFile();
 
             B_MAX = 0;
@@ -161,6 +172,15 @@ namespace Landis.Extension.Succession.NECN
                 SiteVars.InitializeDisturbances();
 
             ClimateRegionData.AnnualNDeposition = new Landis.Library.Parameters.Ecoregions.AuxParm<double>(PlugIn.ModelCore.Ecoregions);
+            // Chihiro 2020.11.01
+            // Add from commit id bcae092e4ca805add9df6b4aea7d9160068fdf4b
+            SpeciesByPlant = new int[ModelCore.Species.Count];
+            SpeciesByResprout = new int[ModelCore.Species.Count];
+            SpeciesBySerotiny = new int[ModelCore.Species.Count];
+            SpeciesBySeed = new int[ModelCore.Species.Count];
+            SpeciesOnSurface = new int[ModelCore.Species.Count];
+            SpeciesOnNlog = new int[ModelCore.Species.Count];
+
 
             //base.RunReproductionFirst();
 
@@ -185,6 +205,9 @@ namespace Landis.Extension.Succession.NECN
                 }
                 Outputs.WritePrimaryLogFile(PlugIn.ModelCore.CurrentTime);
                 Outputs.WriteShortPrimaryLogFile(PlugIn.ModelCore.CurrentTime);
+                // Chihiro 2020.11.01
+                // Add from commit id bcae092e4ca805add9df6b4aea7d9160068fdf4b
+                Outputs.WriteReproductionLog(PlugIn.ModelCore.CurrentTime);
                 // Outputs.WriteMaps(); Wataru, 2020.09.03
                 if (!OtherData.ReduceOutputs) // Wataru, 2020.09.03 
                     Outputs.WriteMaps();      // Wataru, 2020.09.03
@@ -806,6 +829,22 @@ namespace Landis.Extension.Succession.NECN
         {
             float[] initialBiomass = CohortBiomass.InitialBiomass(species, SiteVars.Cohorts[site], site);
             SiteVars.Cohorts[site].AddNewCohort(species, 1, initialBiomass[0], initialBiomass[1], estLoc);
+
+            // Chihiro 2020.11.01
+            // Add from commit id bcae092e4ca805add9df6b4aea7d9160068fdf4b
+            if (reproductionType == "plant")
+                SpeciesByPlant[species.Index]++;
+            else if (reproductionType == "serotiny")
+                SpeciesBySerotiny[species.Index]++;
+            else if (reproductionType == "resprout")
+                SpeciesByResprout[species.Index]++;
+            else if (reproductionType == "seed")
+                SpeciesBySeed[species.Index]++;
+
+            if (estLoc == "surface")
+                SpeciesOnSurface[species.Index]++;
+            else if (estLoc == "nlog")
+                SpeciesOnNlog[species.Index]++;
         }
         //---------------------------------------------------------------------
 

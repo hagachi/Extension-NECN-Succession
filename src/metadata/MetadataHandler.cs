@@ -45,6 +45,8 @@ namespace Landis.Extension.Succession.NECN
             // Chihiro 2020.11.01
             // Add from commit id 589d35d3fa4567147286d7674c0fdacc4bc5e7cc
             Outputs.establishmentLog = new MetadataTable<EstablishmentLog>("NECN-prob-establish-log.csv");
+            // Add from commit id bcae092e4ca805add9df6b4aea7d9160068fdf4b
+            Outputs.reproductionLog = new MetadataTable<ReproductionLog>("NECN-reproduction-log.csv");
 
             OutputMetadata tblOut_monthly = new OutputMetadata()
             {
@@ -76,6 +78,20 @@ namespace Landis.Extension.Succession.NECN
             tblOut_primaryShort.RetriveFields(typeof(PrimaryLogShort));
             Extension.OutputMetadatas.Add(tblOut_primaryShort);
 
+            // Chihiro 2020.11.01
+            // Add from commit id bcae092e4ca805add9df6b4aea7d9160068fdf4b
+            OutputMetadata tblOut_repro = new OutputMetadata()
+            {
+                Type = OutputType.Table,
+                Name = "ReproductionLog",
+                FilePath = Outputs.reproductionLog.FilePath,
+                Visualize = false,
+            };
+            tblOut_repro.RetriveFields(typeof(ReproductionLog));
+            Extension.OutputMetadatas.Add(tblOut_repro);
+
+            // Chihiro 2020.11.01
+            // Add from commit id 589d35d3fa4567147286d7674c0fdacc4bc5e7cc
             OutputMetadata tblOut_pest = new OutputMetadata()
             {
                 Type = OutputType.Table,

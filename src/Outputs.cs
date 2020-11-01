@@ -24,6 +24,31 @@ namespace Landis.Extension.Succession.NECN
         // Chihiro 2020.11.01
         // Add from commit id 589d35d3fa4567147286d7674c0fdacc4bc5e7cc
         public static MetadataTable<EstablishmentLog> establishmentLog;
+        // Add from commit id bcae092e4ca805add9df6b4aea7d9160068fdf4b
+        public static MetadataTable<ReproductionLog> reproductionLog;
+
+
+        public static void WriteReproductionLog(int CurrentTime)
+        {
+            foreach (ISpecies spp in PlugIn.ModelCore.Species)
+            {
+                reproductionLog.Clear();
+                ReproductionLog rl = new ReproductionLog();
+
+                rl.Time = CurrentTime;
+                rl.SpeciesName = spp.Name;
+                rl.NumCohortsPlanting = PlugIn.SpeciesByPlant[spp.Index];
+                rl.NumCohortsSerotiny = PlugIn.SpeciesBySerotiny[spp.Index];
+                rl.NumCohortsSeed = PlugIn.SpeciesBySeed[spp.Index];
+                rl.NumCohortsResprout = PlugIn.SpeciesByResprout[spp.Index];
+                rl.NumCohortsSurface = PlugIn.SpeciesOnSurface[spp.Index];
+                rl.NumCohortsNlog = PlugIn.SpeciesOnNlog[spp.Index];
+
+                reproductionLog.AddObject(rl);
+                reproductionLog.WriteToFile();
+            }
+
+        }
 
 
         //---------------------------------------------------------------------
