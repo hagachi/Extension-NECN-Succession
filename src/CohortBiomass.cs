@@ -230,7 +230,7 @@ namespace Landis.Extension.Succession.NECN
                 Outputs.CalibrateLog.Write("{0},", cohort.EstablishedLoc);
                 //Outputs.CalibrateLog.Write("{0:0.00},{1:0.00},{2:0.00},{3:0.00}, {4:0.00},", limitLAI, limitH20, limitT, limitCapacity, limitN);
                 Outputs.CalibrateLog.Write("{0:0.00},{1:0.00},{2:0.00},{3:0.00},{4:0.00},", limitLAI, limitH20, limitT, limitN, competition_limit); // Chihiro 2020.02.03
-                Outputs.CalibrateLog.Write("{0:0.00},{1:0.00}", SiteVars.MonthlyLAITree[site][Main.Month], SiteVars.MonthlyLAI[site][Main.Month]);
+                Outputs.CalibrateLog.Write("{0:0.00},{1:0.00},{2:0.00}", SiteVars.MonthlyLAI[site][Main.Month], SiteVars.MonthlyLAITree[site][Main.Month], SiteVars.MonthlyLAITree[site][Main.Month] + SiteVars.MonthlyLAIGrassLastMonth[site]);
                 Outputs.CalibrateLog.Write("{0},{1},{2},{3:0.0},{4:0.0},", maxNPP, maxBiomass, (int)siteBiomass, (cohort.WoodBiomass + cohort.LeafBiomass), SiteVars.SoilTemperature[site]);
                 Outputs.CalibrateLog.Write("{0:0.00},{1:0.00},", woodNPP, leafNPP);
             }
@@ -584,10 +584,16 @@ namespace Landis.Extension.Succession.NECN
             }
 
             SiteVars.MonthlyLAI[site][Main.Month] += lai;
-            // Tracking LAI of tree species
-            // Chihiro 2020.01.22
-            if (cohort.Species.Name != "sasa_spp")  // TODO: "sasa_spp" should be a functional type parameter
+            // Tracking LAI of tree and grass species separately
+            // Chihiro 2020.01.22, modified on 2020.11.01
+            if (cohort.Species.Name == "sasa_spp")  // TODO: "sasa_spp" should be a functional type parameter
+            {
+                SiteVars.MonthlyLAIGrass[site][Main.Month] += lai;
+            }
+            else
+            {
                 SiteVars.MonthlyLAITree[site][Main.Month] += lai;
+            }
 
             if (PlugIn.ModelCore.CurrentTime > 0 && OtherData.CalibrateMode)
                 Outputs.CalibrateLog.Write("{0:0.00},{1:0.00},{2:0.00},", lai, tlai, rlai);
@@ -637,7 +643,8 @@ namespace Landis.Extension.Succession.NECN
             }
             else
             {
-                monthly_cumulative_LAI = SiteVars.MonthlyLAI[site][Main.Month];
+                monthly_cumulative_LAI = SiteVars.MonthlyLAITree[site][Main.Month] + SiteVars.MonthlyLAIGrassLastMonth[site];
+                //monthly_cumulative_LAI = SiteVars.MonthlyLAI[site][Main.Month];
                 // PlugIn.ModelCore.UI.WriteLine("Lower than Sasa");  // added (W.Hotta 2020.07.07)
             }
             // =================================================================================

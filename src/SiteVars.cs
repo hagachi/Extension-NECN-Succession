@@ -101,6 +101,10 @@ namespace Landis.Extension.Succession.NECN
         // Chihiro 2020.1.22
         private static ISiteVar<double> laiTree;
         private static ISiteVar<double[]> monthlyLAITree;
+        // LAI for grass spp
+        // Chihiro 2020.11.01
+        private static ISiteVar<double[]> monthlyLAIGrass;
+        private static ISiteVar<double> monthlyLAIGrassLastMonth;
 
         public static ISiteVar<double> TotalWoodBiomass;
         public static ISiteVar<int> PrevYearMortality;
@@ -165,6 +169,8 @@ namespace Landis.Extension.Succession.NECN
             // Other variables
             monthlyLAI = PlugIn.ModelCore.Landscape.NewSiteVar<double[]>();
             monthlyLAITree = PlugIn.ModelCore.Landscape.NewSiteVar<double[]>(); // LAI for tree spp; Chihiro 2020.01.22
+            monthlyLAIGrass = PlugIn.ModelCore.Landscape.NewSiteVar<double[]>(); // LAI for grass spp; Chihiro 2020.11.01
+            monthlyLAIGrassLastMonth = PlugIn.ModelCore.Landscape.NewSiteVar<double>(); // LAI for grass spp; Chihiro 2020.11.01
             mineralN            = PlugIn.ModelCore.Landscape.NewSiteVar<double>();
             resorbedN           = PlugIn.ModelCore.Landscape.NewSiteVar<double>();
             waterMovement       = PlugIn.ModelCore.Landscape.NewSiteVar<double>();
@@ -259,6 +265,7 @@ namespace Landis.Extension.Succession.NECN
                 monthlyResp[site]           = new double[12];
                 monthlyLAI[site] = new double[12];
                 monthlyLAITree[site] = new double[12]; // LAI for tree spp; Chihiro 2020.01.22
+                monthlyLAIGrass[site] = new double[12]; // LAI for grass spp; Chihiro 2020.11.01
                 //monthlymineralN[site]       = new double[12];
 
                 CohortResorbedNallocation[site] = new Dictionary<int, Dictionary<int, double>>();
@@ -991,6 +998,20 @@ namespace Landis.Extension.Succession.NECN
         /// </summary>
         // Chihiro 2020.01.22
         public static ISiteVar<double[]> MonthlyLAITree { get { return monthlyLAITree; } }
+        // --------------------------------------------------------------------
+
+        /// <summary>
+        /// A summary of Monthly LAI for grass spp (m2/m2)
+        /// </summary>
+        // Chihiro 2020.11.01
+        public static ISiteVar<double[]> MonthlyLAIGrass { get { return monthlyLAIGrass; } }
+        // --------------------------------------------------------------------
+
+        /// <summary>
+        /// A summary of Monthly LAI for grass spp at last month (m2/m2)
+        /// </summary>
+        // Chihiro 2020.11.01
+        public static ISiteVar<double> MonthlyLAIGrassLastMonth { get { return monthlyLAIGrassLastMonth; } }
         // --------------------------------------------------------------------
 
         /// <summary>
