@@ -5,7 +5,7 @@
     <AssemblyName>Landis.Extension.Succession.NECN-v6</AssemblyName>
     <AssemblyTitle>Landis.Extension.Succession.NECN-v6</AssemblyTitle>
     <AssemblyCopyright>Landis-II-Foundation</AssemblyCopyright>
-    <AssemblyVersion>6.3</AssemblyVersion>
+    <AssemblyVersion>6.3.1.1</AssemblyVersion>
     <TargetFramework>netstandard2.0</TargetFramework>
     <GeneratePackageOnBuild>false</GeneratePackageOnBuild>
     <RepositoryUrl>https://github.com/LANDIS-II-Foundation/Extension-NECN-Succession</RepositoryUrl>
@@ -16,7 +16,7 @@
     <Authors>LANDIS-II Foundation</Authors>
     <Product>Landis.Extension.Succession.NECN-v6</Product>
     <Copyright>Landis-II-Foundation</Copyright>
-    <Version>6.3</Version>
+    <Version>6.3.1.1</Version>
     <PackageTags>LANDIS-II;Landis;Extension;Succession;Carbon;Nitrogen</PackageTags>
     <Description></Description>
     <PackageReleaseNotes>.NET Standard 2.0 update. 6.3 includes new succession and climate libraries.</PackageReleaseNotes>
