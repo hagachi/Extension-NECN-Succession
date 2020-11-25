@@ -170,6 +170,21 @@ namespace Landis.Extension.Succession.NECN
             else
                 parameters.CalibrateMode = false;
 
+            // ====================================================================
+            // Chihiro 2020.11.25
+            InputVar<bool> reduceoutputs = new InputVar<bool>("ReduceOutputs");
+            if (ReadOptionalVar(reduceoutputs))
+                parameters.ReduceOutputs = reduceoutputs.Value;
+            else
+                parameters.ReduceOutputs = false;
+
+            InputVar<double> kcomplimit = new InputVar<double>("KCompLimit");
+            if (ReadOptionalVar(kcomplimit))
+                parameters.KCompLimit = kcomplimit.Value;
+            else
+                parameters.KCompLimit = -0.14; // Default data
+            // ====================================================================
+
             InputVar<bool> smokemode = new InputVar<bool>("SmokeModelOutputs");
             if (ReadOptionalVar(smokemode))
                 parameters.SmokeModelOutputs = smokemode.Value;

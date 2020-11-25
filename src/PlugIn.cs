@@ -193,10 +193,15 @@ namespace Landis.Extension.Succession.NECN
                     Outputs.WriteMonthlyLogFile(month);
                 }
                 Outputs.WritePrimaryLogFile(PlugIn.ModelCore.CurrentTime);
-                Outputs.WriteShortPrimaryLogFile(PlugIn.ModelCore.CurrentTime);
-                Outputs.WriteMaps();
-                Outputs.WriteReproductionLog(PlugIn.ModelCore.CurrentTime);
-                Establishment.LogEstablishment();
+
+                // Reduce outputs for improving computation speed
+                if (!OtherData.ReduceOutputs)
+                {
+                    Outputs.WriteShortPrimaryLogFile(PlugIn.ModelCore.CurrentTime);
+                    Outputs.WriteMaps();
+                    Outputs.WriteReproductionLog(PlugIn.ModelCore.CurrentTime);
+                    Establishment.LogEstablishment();
+                }
             }
 
         }
