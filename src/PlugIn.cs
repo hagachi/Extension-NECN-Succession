@@ -557,7 +557,7 @@ namespace Landis.Extension.Succession.NECN
             // double nurseryLogAvailabilityModifier = 1.0; // tuning parameter
             // double nurseryLogAvailability = nurseryLogAvailabilityModifier * ComputeNurseryLogAreaRatio(species, site);
             //   Option2: function type is power
-            double nurseryLogAvailabilityModifier = 4.0; // tuning parameter (only even)
+            double nurseryLogAvailabilityModifier = 2.0; // tuning parameter (only even)
             double nurseryLogAvailability = 1 - Math.Pow(ComputeNurseryLogAreaRatio(species, site) - 1, nurseryLogAvailabilityModifier);
             // if (OtherData.CalibrateMode)
             if (OtherData.CalibrateMode && !OtherData.ReduceOutputs) //Wataru, 2020.09.03
@@ -587,7 +587,7 @@ namespace Landis.Extension.Succession.NECN
                 {
                     // 2. If (1) the site shade is darker than the best shade class for the species and 
                     //       (2) the light availability above grass species layer meets the species requirement,
-                    if (siteShade > bestShadeClass && modelCore.GenerateUniform() < lightProbabilityTree && species.Name != "sasa_spp")
+                    if (siteShade > bestShadeClass && modelCore.GenerateUniform() < lightProbabilityTree)
                     {
                         // 3. check if threre are sufficient amounts of downed logs?
                         isSufficientlight = modelCore.GenerateUniform() < nurseryLogAvailability;
