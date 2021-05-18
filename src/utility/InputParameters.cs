@@ -42,6 +42,8 @@ namespace Landis.Extension.Succession.NECN
         private string initialDeadSoilMapName;
 
         private bool calibrateMode;
+        private bool reduceOutputs; // Chihiro, 2020.05.09
+        private double kCompLimit; // Chihiro, 2021.05.09
         private bool smokeModelOutputs;
         public WaterType wtype;
         public double probEstablishAdjust;
@@ -187,6 +189,38 @@ namespace Landis.Extension.Succession.NECN
             }
             set {
                 calibrateMode = value;
+            }
+        }
+
+        //---------------------------------------------------------------------
+        /// <summary>
+        /// Determines whether maps and short log files is output during calibration mode 
+        /// </summary>
+        public bool ReduceOutputs
+        {
+            get
+            {
+                return reduceOutputs;
+            }
+            set
+            {
+                reduceOutputs = value;
+            }
+        }
+
+        //---------------------------------------------------------------------
+        /// <summary>
+        /// k used in competition_limit function
+        /// </summary>
+        public double KCompLimit
+        {
+            get
+            {
+                return kCompLimit;
+            }
+            set
+            {
+                kCompLimit = value;
             }
         }
 

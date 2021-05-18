@@ -229,6 +229,7 @@ namespace Landis.Extension.Succession.NECN
             {
                 //Outputs.CalibrateLog.Write("{0:0.00},{1:0.00},{2:0.00},{3:0.00}, {4:0.00},", limitLAI, limitH20, limitT, limitCapacity, limitN);
                 Outputs.CalibrateLog.Write("{0:0.00},{1:0.00},{2:0.00},{3:0.00},{4:0.00},", limitLAI, limitH20, limitT, limitN, competition_limit); // Chihiro 2020.02.03
+                Outputs.CalibrateLog.Write("{0:0.00},{1:0.00},{2:0.00}", SiteVars.MonthlyLAI[site][Main.Month], SiteVars.MonthlyLAITree[site][Main.Month], SiteVars.MonthlyLAITree[site][Main.Month] + SiteVars.MonthlyLAI_GrassesLastMonth[site]);
                 Outputs.CalibrateLog.Write("{0},{1},{2},{3:0.0},{4:0.0},", maxNPP, maxBiomass, (int)siteBiomass, (cohort.WoodBiomass + cohort.LeafBiomass), SiteVars.SoilTemperature[site]);
                 Outputs.CalibrateLog.Write("{0:0.00},{1:0.00},", woodNPP, leafNPP);
             }
@@ -586,6 +587,8 @@ namespace Landis.Extension.Succession.NECN
             // Chihiro 2020.01.22
             if (cohort.Species.Name != "sasa_spp")  // TODO: "sasa_spp" should be a functional type parameter
                 SiteVars.MonthlyLAITree[site][Main.Month] += lai;
+            else
+                SiteVars.MonthlyLAIGrass[site][Main.Month] += lai; // Chihiro 2021.05.09
 
             if (PlugIn.ModelCore.CurrentTime > 0 && OtherData.CalibrateMode)
                 Outputs.CalibrateLog.Write("{0:0.00},{1:0.00},{2:0.00},", lai, tlai, rlai);
@@ -601,7 +604,8 @@ namespace Landis.Extension.Succession.NECN
 
         private static double calculateCompetition_Limit(ICohort cohort, ActiveSite site)
         {
-            double k = -0.14;  // This is the value given for all temperature ecosystems. I started with 0.1
+            //double k = -0.14;  // This is the value given for all temperature ecosystems. I started with 0.1
+            double k = OtherData.KCompLimit; // Chihiro 2021.05.09
             // double monthly_cumulative_LAI = SiteVars.MonthlyLAI[site][Main.Month];
 
             // Competition between cohorts considering understory and overstory interactions
@@ -630,7 +634,7 @@ namespace Landis.Extension.Succession.NECN
             }
             else
             {
-                monthly_cumulative_LAI = SiteVars.MonthlyLAI[site][Main.Month];
+                monthly_cumulative_LAI = SiteVars.MonthlyLAITree[site][Main.Month] + SiteVars.MonthlyLAI_GrassesLastMonth[site];
                 // PlugIn.ModelCore.UI.WriteLine("Lower than Sasa");  // added (W.Hotta 2020.07.07)
             }
             // =================================================================================

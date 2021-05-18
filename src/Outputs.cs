@@ -467,6 +467,7 @@ namespace Landis.Extension.Succession.NECN
 
             // These three together:
             CalibrateLog.Write("limitLAI, limitH20, limitT, limitN, limitCompetition, ");  //from ComputeActualANPP, modified by Chihiro, 2020.02.03
+            CalibrateLog.Write("siteLAI, siteLAItree, siteLAItreegrass, "); // Chihiro, 2021.05.09
             CalibrateLog.Write("maxNPP, Bmax, Bsite, Bcohort, soilTemp, ");  //from ComputeActualANPP
             CalibrateLog.Write("actualWoodNPP, actualLeafNPP, ");  //from ComputeActualANPP
 
