@@ -229,7 +229,7 @@ namespace Landis.Extension.Succession.NECN
             {
                 //Outputs.CalibrateLog.Write("{0:0.00},{1:0.00},{2:0.00},{3:0.00}, {4:0.00},", limitLAI, limitH20, limitT, limitCapacity, limitN);
                 Outputs.CalibrateLog.Write("{0:0.00},{1:0.00},{2:0.00},{3:0.00},{4:0.00},", limitLAI, limitH20, limitT, limitN, competition_limit); // Chihiro 2020.02.03
-                Outputs.CalibrateLog.Write("{0:0.00},{1:0.00},{2:0.00}", SiteVars.MonthlyLAI[site][Main.Month], SiteVars.MonthlyLAITree[site][Main.Month], SiteVars.MonthlyLAITree[site][Main.Month] + SiteVars.MonthlyLAI_GrassesLastMonth[site]);
+                Outputs.CalibrateLog.Write("{0:0.00},{1:0.00},{2:0.00},", SiteVars.MonthlyLAI[site][Main.Month], SiteVars.MonthlyLAITree[site][Main.Month], (SiteVars.MonthlyLAITree[site][Main.Month] + SiteVars.MonthlyLAI_GrassesLastMonth[site]));
                 Outputs.CalibrateLog.Write("{0},{1},{2},{3:0.0},{4:0.0},", maxNPP, maxBiomass, (int)siteBiomass, (cohort.WoodBiomass + cohort.LeafBiomass), SiteVars.SoilTemperature[site]);
                 Outputs.CalibrateLog.Write("{0:0.00},{1:0.00},", woodNPP, leafNPP);
             }
