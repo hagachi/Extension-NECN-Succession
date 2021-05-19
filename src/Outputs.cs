@@ -471,7 +471,8 @@ namespace Landis.Extension.Succession.NECN
             CalibrateLog.Write("maxNPP, Bmax, Bsite, Bcohort, soilTemp, ");  //from ComputeActualANPP
             CalibrateLog.Write("actualWoodNPP, actualLeafNPP, ");  //from ComputeActualANPP
 
-            CalibrateLog.Write("MortalityBIOwood, MortalityBIOleaf, ");  // from ComputeGrowthMortality
+            //CalibrateLog.Write("MortalityBIOwood, MortalityBIOleaf, ");  // from ComputeGrowthMortality
+            CalibrateLog.Write("MortalityBIOwood, mbwNPPwood, mbwFract, mbwFixed, MortalityBIOleaf,"); //M_wood, NPPwood, M_wood_NPP, M_wood_fixed, M_leaf
             CalibrateLog.Write("NPPwood_C, NPPleaf_C, ");  //from ComputeNPPcarbon
             CalibrateLog.Write("resorbedNused, mineralNused, Ndemand,");  // from AdjustAvailableN
             CalibrateLog.WriteLine("deltaWood, deltaLeaf, totalMortalityWood, totalMortalityLeaf");  // from ComputeChange

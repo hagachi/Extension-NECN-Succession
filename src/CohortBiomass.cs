@@ -339,7 +339,8 @@ namespace Landis.Extension.Succession.NECN
             }
 
             if (PlugIn.ModelCore.CurrentTime > 0 && OtherData.CalibrateMode)
-                Outputs.CalibrateLog.Write("{0:0.00},{1:0.00},", M_wood, M_leaf);
+                //Outputs.CalibrateLog.Write("{0:0.00},{1:0.00},", M_wood, M_leaf);
+                Outputs.CalibrateLog.Write("{0:0.00},{1:0.00},{2:0.00},{3:0.00},{4:0.00},", M_wood, NPPwood, M_wood_NPP, M_wood_fixed, M_leaf);
 
             SiteVars.WoodMortality[site] += (M_wood);
 
