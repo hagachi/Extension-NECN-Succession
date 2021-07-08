@@ -38,7 +38,7 @@ namespace Landis.Extension.Succession.NECN
 
         bool CalibrateMode { get; set; }
         bool ReduceOutputs { get; set; } // Chihiro, 2021.05.09
-        double KCompLimit { get; set; } //  Chihiro, 2021.05.09
+        //double KCompLimit { get; set; } //  Chihiro, 2021.05.09
         WaterType WType {get;set;}
         double ProbEstablishAdjustment { get; set; }
         double[] MaximumShadeLAI { get; }
@@ -102,6 +102,7 @@ namespace Landis.Extension.Succession.NECN
         Landis.Library.Parameters.Species.AuxParm<double> FineRootCN {get;}
         Landis.Library.Parameters.Species.AuxParm<int> MaxANPP { get; }
         Landis.Library.Parameters.Species.AuxParm<int> MaxBiomass { get; }
+        Landis.Library.Parameters.Species.AuxParm<double> KCompLimit { get; } // Chihiro, 2021.07.08
 
         double AtmosNslope {get;}
         double AtmosNintercept {get;}

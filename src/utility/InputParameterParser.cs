@@ -178,11 +178,11 @@ namespace Landis.Extension.Succession.NECN
             else
                 parameters.ReduceOutputs = false;
 
-            InputVar<double> kcomplimit = new InputVar<double>("KCompLimit");
-            if (ReadOptionalVar(kcomplimit))
-                parameters.KCompLimit = kcomplimit.Value;
-            else
-                parameters.KCompLimit = -0.14; // Default data
+            //InputVar<double> kcomplimit = new InputVar<double>("KCompLimit");
+            //if (ReadOptionalVar(kcomplimit))
+            //    parameters.KCompLimit = kcomplimit.Value;
+            //else
+            //    parameters.KCompLimit = -0.14; // Default data
             // ====================================================================
 
             InputVar<bool> smokemode = new InputVar<bool>("SmokeModelOutputs");
@@ -414,6 +414,7 @@ namespace Landis.Extension.Succession.NECN
             InputVar<double> fRootCN = new InputVar<double>("Fine Root CN Ratio");
             InputVar<int> maxANPP = new InputVar<int>("Maximum ANPP");
             InputVar<int> maxBiomass = new InputVar<int>("Maximum Aboveground Biomass");
+            InputVar<double> kCompLimit = new InputVar<double>("k parameter for calculating competition limit"); // Chihiro, 2021.07.08
             string lastColumn = "the " + maxBiomass.Name + " column";
 
             while (! AtEndOfInput && CurrentName != Names.FunctionalGroupParameters) {
@@ -476,6 +477,11 @@ namespace Landis.Extension.Succession.NECN
 
                 ReadValue(maxBiomass, currentLine);
                 parameters.SetMaxBiomass(species, maxBiomass.Value);
+
+                // Chihiro, 2021.07.08 -------------
+                ReadValue(kCompLimit, currentLine);
+                parameters.SetKCompLimit(species, kCompLimit.Value);
+                // -----------
 
                 CheckNoDataAfter(lastColumn, currentLine);
                 GetNextLine();

@@ -43,7 +43,7 @@ namespace Landis.Extension.Succession.NECN
 
         private bool calibrateMode;
         private bool reduceOutputs; // Chihiro, 2020.05.09
-        private double kCompLimit; // Chihiro, 2021.05.09
+        //private double kCompLimit; // Chihiro, 2021.05.09
         private bool smokeModelOutputs;
         public WaterType wtype;
         public double probEstablishAdjust;
@@ -85,7 +85,8 @@ namespace Landis.Extension.Succession.NECN
         private Landis.Library.Parameters.Species.AuxParm<double> fineRootCN;
         private Landis.Library.Parameters.Species.AuxParm<int> maxANPP;
         private Landis.Library.Parameters.Species.AuxParm<int> maxBiomass;
-        
+        private Landis.Library.Parameters.Species.AuxParm<double> kCompLimit;  // Chihiro, 2021.07.08
+
         private List<ISufficientLight> sufficientLight;
 
 
@@ -209,20 +210,20 @@ namespace Landis.Extension.Succession.NECN
         }
 
         //---------------------------------------------------------------------
-        /// <summary>
-        /// k used in competition_limit function
-        /// </summary>
-        public double KCompLimit
-        {
-            get
-            {
-                return kCompLimit;
-            }
-            set
-            {
-                kCompLimit = value;
-            }
-        }
+        ///// <summary>
+        ///// k used in competition_limit function
+        ///// </summary>
+        //public double KCompLimit
+        //{
+        //    get
+        //    {
+        //        return kCompLimit;
+        //    }
+        //    set
+        //    {
+        //        kCompLimit = value;
+        //    }
+        //}
 
         //---------------------------------------------------------------------
         /// <summary>
@@ -447,6 +448,14 @@ namespace Landis.Extension.Succession.NECN
             }
         }
         //---------------------------------------------------------------------
+
+        public Landis.Library.Parameters.Species.AuxParm<double> KCompLimit
+        {
+            get
+            {
+                return kCompLimit;
+            }
+        }
 
         /// <summary>
         /// Definitions of sufficient light probabilities.
@@ -992,6 +1001,14 @@ namespace Landis.Extension.Succession.NECN
         }
         //---------------------------------------------------------------------
 
+        // Chihiro, 2021.07.08
+        public void SetKCompLimit(ISpecies species, InputValue<double> newValue)
+        {
+            Debug.Assert(species != null);
+            kCompLimit[species] = CheckBiomassParm(newValue, -1.0, 0.0);
+        }
+        //---------------------------------------------------------------------
+
         public void SetAtmosNslope(InputValue<double> newValue)
         {
             atmosNslope = CheckBiomassParm(newValue, -1.0, 2.0);
@@ -1081,6 +1098,7 @@ namespace Landis.Extension.Succession.NECN
             fineRootCN              = new Landis.Library.Parameters.Species.AuxParm<double>(speciesDataset);
             maxANPP                 = new Landis.Library.Parameters.Species.AuxParm<int>(speciesDataset);
             maxBiomass              = new Landis.Library.Parameters.Species.AuxParm<int>(speciesDataset);
+            kCompLimit              = new Landis.Library.Parameters.Species.AuxParm<double>(speciesDataset);  // Chihiro, 2021.07.08
 
             maximumShadeLAI = new double[6];
 

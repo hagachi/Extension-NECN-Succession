@@ -13,7 +13,7 @@ namespace Landis.Extension.Succession.NECN
         public static LitterType[] LitterParameters;
         public static bool CalibrateMode;
         public static bool ReduceOutputs; // Chihiro, 2021.05.09
-        public static double KCompLimit;  // Chihiro, 2021.05.09
+        //public static double KCompLimit;  // Chihiro, 2021.05.09
         public static double ProbEstablishAdjust;
         public static WaterType WType;
 
@@ -242,7 +242,7 @@ namespace Landis.Extension.Succession.NECN
 
             CalibrateMode       = parameters.CalibrateMode;
             ReduceOutputs = parameters.ReduceOutputs; // Chihiro, 2021.05.09
-            KCompLimit = parameters.KCompLimit; // Chihiro, 2021.05.09
+            //KCompLimit = parameters.KCompLimit; // Chihiro, 2021.05.09
             WType = parameters.WType;
             //ProbEstablishAdjust = parameters.ProbEstablishAdjustment;
             //FractionSOM2toCO2   = parameters.FractionSOM2toCO2;
