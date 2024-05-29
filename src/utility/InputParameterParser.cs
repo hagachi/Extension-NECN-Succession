@@ -166,6 +166,10 @@ namespace Landis.Extension.Succession.NECN
             ReadVar(deadSoilMapName);
             parameters.InitialDeadSoilMapName = deadSoilMapName.Value;
 
+            InputVar<string> managementMapName = new InputVar<string>("ManagementMapName");
+            ReadVar(managementMapName);
+            parameters.ManagementMapName = managementMapName.Value;
+
             InputVar<bool> calimode = new InputVar<bool>("CalibrateMode");
             if (ReadOptionalVar(calimode))
                 parameters.CalibrateMode = calimode.Value;
@@ -446,6 +450,8 @@ namespace Landis.Extension.Succession.NECN
                     parameters.SetMaxANPP(species, System.Convert.ToInt32(row["MaximumANPP"]));
                     parameters.SetMaxBiomass(species, System.Convert.ToInt32(row["MaximumBiomass"]));
                     parameters.Grass[species] = ReadGrass(row);
+                    parameters.SetEstablishmentModiferForest(species, System.Convert.ToDouble(row["EstablishmentModiferForest"]));
+                    parameters.SetEstablishmentModiferFarmland(species, System.Convert.ToDouble(row["EstablishmentModiferFarmland"]));
                 }
             }
             else

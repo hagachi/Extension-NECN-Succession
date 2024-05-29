@@ -45,6 +45,9 @@ namespace Landis.Extension.Succession.NECN
         private static ISiteVar<double> soilPercentSand;
         private static ISiteVar<double> soilPercentClay;
 
+        // Management Layers; 2024/05/29 ch add
+        private static ISiteVar<int> managementCode;
+
         
         // Similar to soil layers with respect to their pools:
         private static ISiteVar<Layer> stream;
@@ -148,7 +151,10 @@ namespace Landis.Extension.Succession.NECN
             soilWiltingPoint = PlugIn.ModelCore.Landscape.NewSiteVar<double>();
             soilPercentSand = PlugIn.ModelCore.Landscape.NewSiteVar<double>();
             soilPercentClay = PlugIn.ModelCore.Landscape.NewSiteVar<double>();
-            
+
+            // Management code Layer
+            managementCode = PlugIn.ModelCore.Landscape.NewSiteVar<int>();
+
             // Other Layers
             stream              = PlugIn.ModelCore.Landscape.NewSiteVar<Layer>();
             sourceSink          = PlugIn.ModelCore.Landscape.NewSiteVar<Layer>();
@@ -496,6 +502,11 @@ namespace Landis.Extension.Succession.NECN
         public static ISiteVar<double> SoilPercentSand { get { return soilPercentSand; } }
         public static ISiteVar<double> SoilPercentClay { get { return soilPercentClay; } }
         //---------------------------------------------------------------------
+
+        /// <summary>
+        /// The management areas; 2024/05/29 ch add
+        /// </summary>
+        public static ISiteVar<int> ManagementCode { get { return managementCode; } }
 
         /// <summary>
         /// Leaching to a stream - using the soil layer object is a cheat

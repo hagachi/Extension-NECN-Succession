@@ -49,6 +49,24 @@ namespace Landis.Extension.Succession.NECN
             minMultiplier = System.Math.Min(minJanTempMultiplier, minMultiplier);
 
             establishProbability += minMultiplier;
+
+            // Check if the species can established on a certain ecoregions
+            /// ch: 2024-05-29
+            /// if the site is a forest then
+            ///     establishProbability *= modiferForest
+            /// else the site is a farmland then
+            ///     establishProbability *= modiferFarmland
+            ///
+            int managementCode = SiteVars.ManagementCode[site];
+            if (managementCode < 100) // forest
+            {
+                establishProbability *= SpeciesData.EstablishmentModiferForest[species];
+            }
+            else // farmland
+            {
+                establishProbability *= SpeciesData.EstablishmentModiferFarmland[species];
+            }
+
             establishProbability *= PlugIn.ProbEstablishAdjust;
 
             avgSoilMoisturelimit[species.Index, climateRegion.Index] += soilMultiplier;

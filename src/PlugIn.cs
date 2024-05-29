@@ -111,6 +111,9 @@ namespace Landis.Extension.Succession.NECN
                 Parameters.InitialSOM3CMapName,
                 Parameters.InitialSOM3NMapName);
             ReadMaps.ReadDeadWoodMaps(Parameters.InitialDeadSurfaceMapName, Parameters.InitialDeadSoilMapName);
+            // 2024/05/29 ch add
+            ReadMaps.ReadManagementAreaMap(Parameters.ManagementMapName);
+
 
             //Initialize climate.
             Climate.Initialize(Parameters.ClimateConfigFile, false, modelCore);

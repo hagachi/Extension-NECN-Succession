@@ -35,6 +35,7 @@ namespace Landis.Extension.Succession.NECN
         string InitialSOM3NMapName { get; set; }
         string InitialDeadSurfaceMapName { get; set; }
         string InitialDeadSoilMapName { get; set; }
+        string ManagementMapName { get; set; } // 2024/05/29 ch add
 
         bool CalibrateMode { get; set; }
         WaterType WType {get;set;}
@@ -103,6 +104,9 @@ namespace Landis.Extension.Succession.NECN
         Landis.Library.Parameters.Species.AuxParm<double> FineRootCN {get;}
         Landis.Library.Parameters.Species.AuxParm<int> MaxANPP { get; }
         Landis.Library.Parameters.Species.AuxParm<int> MaxBiomass { get; }
+        // 2024/05/29 ch add
+        Landis.Library.Parameters.Species.AuxParm<double> EstablishmentModiferForest { get; }
+        Landis.Library.Parameters.Species.AuxParm<double> EstablishmentModiferFarmland { get; }
 
         double AtmosNslope {get;}
         double AtmosNintercept {get;}

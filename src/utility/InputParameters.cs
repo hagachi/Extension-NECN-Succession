@@ -40,6 +40,7 @@ namespace Landis.Extension.Succession.NECN
         private string initialSOM3NMapName;
         private string initialDeadSurfaceMapName;
         private string initialDeadSoilMapName;
+        private string managementMapName; // 2024/05/29 ch add
 
         private bool calibrateMode;
         private bool smokeModelOutputs;
@@ -83,7 +84,9 @@ namespace Landis.Extension.Succession.NECN
         private Landis.Library.Parameters.Species.AuxParm<double> fineRootCN;
         private Landis.Library.Parameters.Species.AuxParm<int> maxANPP;
         private Landis.Library.Parameters.Species.AuxParm<int> maxBiomass;
-        
+        private Landis.Library.Parameters.Species.AuxParm<double> establishmentModiferForest;
+        private Landis.Library.Parameters.Species.AuxParm<double> establishmentModiferFarmland;
+
         private List<ISufficientLight> sufficientLight;
         private Landis.Library.Parameters.Species.AuxParm<bool> grass;
         private double grassThresholdMultiplier; // W.Hotta 2020.07.07
@@ -429,6 +432,20 @@ namespace Landis.Extension.Succession.NECN
             get
             {
                 return maxBiomass;
+            }
+        }
+        public Landis.Library.Parameters.Species.AuxParm<double> EstablishmentModiferForest
+        {
+            get
+            {
+                return establishmentModiferForest;
+            }
+        }
+        public Landis.Library.Parameters.Species.AuxParm<double> EstablishmentModiferFarmland
+        {
+            get
+            {
+                return establishmentModiferFarmland;
             }
         }
         //---------------------------------------------------------------------
@@ -804,6 +821,23 @@ namespace Landis.Extension.Succession.NECN
         }
         //---------------------------------------------------------------------
 
+
+        public string ManagementMapName
+        {
+            get
+            {
+                return managementMapName;
+            }
+            set
+            {
+                string path = value;
+                if (path.Trim(null).Length == 0)
+                    throw new InputValueException(path, "\"{0}\" is not a valid path.", path);
+                managementMapName = value;
+            }
+        }
+        //---------------------------------------------------------------------
+        
         public void SetMaximumShadeLAI(byte                   shadeClass,
                                           //IEcoregion             ecoregion,
                                           InputValue<double> newValue)
@@ -1047,6 +1081,17 @@ namespace Landis.Extension.Succession.NECN
             Debug.Assert(species != null);
             maxBiomass[species] = VerifyRange(newValue, 2, 100000);
         }
+        // --------------------------------------------------------------------
+        public void SetEstablishmentModiferForest(ISpecies species, double newValue)
+        {
+            Debug.Assert(species != null);
+            establishmentModiferForest[species] = VerifyRange(newValue, 0, 1);
+        }
+        public void SetEstablishmentModiferFarmland(ISpecies species, double newValue)
+        {
+            Debug.Assert(species != null);
+            establishmentModiferFarmland[species] = VerifyRange(newValue, 0, 1);
+        }
         //---------------------------------------------------------------------
 
         public void SetAtmosNslope(InputValue<double> newValue)
@@ -1137,6 +1182,8 @@ namespace Landis.Extension.Succession.NECN
             fineRootCN              = new Landis.Library.Parameters.Species.AuxParm<double>(speciesDataset);
             maxANPP                 = new Landis.Library.Parameters.Species.AuxParm<int>(speciesDataset);
             maxBiomass              = new Landis.Library.Parameters.Species.AuxParm<int>(speciesDataset);
+            establishmentModiferForest = new Landis.Library.Parameters.Species.AuxParm<double>(speciesDataset);
+            establishmentModiferFarmland = new Landis.Library.Parameters.Species.AuxParm<double>(speciesDataset);
 
             maximumShadeLAI = new double[6];
             sufficientLight         = new List<ISufficientLight>();

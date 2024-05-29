@@ -37,6 +37,8 @@ namespace Landis.Extension.Succession.NECN
         public static Landis.Library.Parameters.Species.AuxParm<int> Max_ANPP;
         public static Landis.Library.Parameters.Species.AuxParm<int> Max_Biomass;
         public static Landis.Library.Parameters.Species.AuxParm<bool> Grass;
+        public static Landis.Library.Parameters.Species.AuxParm<double> EstablishmentModiferForest;
+        public static Landis.Library.Parameters.Species.AuxParm<double> EstablishmentModiferFarmland;
 
         //---------------------------------------------------------------------
         public static void Initialize(IInputParameters parameters)
@@ -61,6 +63,8 @@ namespace Landis.Extension.Succession.NECN
             Max_ANPP            = parameters.MaxANPP;
             Max_Biomass         = parameters.MaxBiomass;
             Grass = parameters.Grass;
+            EstablishmentModiferForest = parameters.EstablishmentModiferForest;
+            EstablishmentModiferFarmland = parameters.EstablishmentModiferFarmland;
 
             foreach (ISpecies spp in PlugIn.ModelCore.Species)
             {
